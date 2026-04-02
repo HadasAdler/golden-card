@@ -540,9 +540,50 @@ body{
 .modal-close:hover{background:var(--cream-mid)}
 
 /* ─── STEP 3: BRANDING ─── */
-.brand-sec{padding:48px 20px 80px;max-width:680px;margin:0 auto}
+/* Email-sent banner */
+.email-sent-banner{
+  background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(249,185,21,.08));
+  border:1.5px solid rgba(34,211,238,.35);
+  border-radius:var(--r-lg);padding:22px 24px;
+  margin:0 0 28px;animation:fadeUp .4s ease both;
+}
+.esb-title{font-size:20px;font-weight:900;color:#fff;margin-bottom:10px;line-height:1.35}
+.esb-sub{font-size:15px;color:rgba(250,248,244,.85);line-height:1.65}
+.esb-url-wrap{
+  margin-top:16px;background:rgba(0,0,0,.25);border-radius:var(--r);
+  padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.esb-url-label{font-size:12px;font-weight:700;color:var(--turquoise);white-space:nowrap;text-transform:uppercase;letter-spacing:.5px}
+.esb-url-link{font-size:13px;color:rgba(250,248,244,.9);word-break:break-all;flex:1}
+.esb-copy-btn{
+  background:var(--turquoise);color:#0a192f;border:none;border-radius:8px;
+  padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;
+}
+
+/* Split-screen wrapper */
+.brand-wrap{
+  display:flex;gap:40px;align-items:flex-start;
+  max-width:1080px;margin:0 auto;padding:40px 24px 80px;
+}
+/* Right col = preview (sticky) */
+.brand-preview-col{
+  flex:0 0 280px;position:sticky;top:80px;
+}
+/* Left col = options */
+.brand-options-col{flex:1;min-width:0}
+
+.brand-preview-label{
+  text-align:center;font-size:11px;font-weight:700;
+  color:var(--turquoise);letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px;
+}
+/* Mobile: stack */
+@media(max-width:700px){
+  .brand-wrap{flex-direction:column-reverse;gap:24px;padding:24px 16px 60px}
+  .brand-preview-col{position:static;flex:none;width:100%}
+}
+
 .sec-title{font-size:clamp(22px,4vw,30px);font-weight:800;color:var(--text-on-navy);margin-bottom:8px}
-.sec-sub{font-size:14.5px;color:var(--text-on-navy-dim);margin-bottom:32px}
+.sec-sub{font-size:15px;color:var(--text-on-navy-dim);margin-bottom:28px}
 .brand-card{
   background:rgba(250,248,244,.06);
   border:1px solid rgba(250,248,244,.12);
@@ -636,11 +677,29 @@ body{
   display:inline-block;background:rgba(255,255,255,.2);
   border-radius:100px;padding:6px 14px;font-size:11px;font-weight:700;
 }
+/* auto review URL box */
+.auto-url-box{
+  background:rgba(34,211,238,.08);
+  border:1.5px solid rgba(34,211,238,.3);
+  border-radius:var(--r);padding:16px 18px;
+  text-align:center;
+}
+.auto-url-label{font-size:12px;font-weight:700;color:var(--turquoise);letter-spacing:.5px;margin-bottom:8px;text-transform:uppercase}
+.auto-url-val{
+  font-size:12.5px;color:rgba(250,248,244,.85);word-break:break-all;
+  background:rgba(0,0,0,.2);border-radius:6px;padding:8px 10px;margin-bottom:10px;line-height:1.5;
+}
+.auto-url-copy{
+  background:var(--turquoise);color:#0a192f;border:none;border-radius:8px;
+  padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;width:100%;font-family:inherit;
+}
+.auto-url-copy:hover{opacity:.85}
+
 .brand-next-btn{
-  width:100%;padding:16px;
+  width:100%;padding:18px;
   background:var(--orange);
   border:none;border-radius:var(--r-lg);
-  color:#0a192f;font-size:16px;font-weight:700;
+  color:#0a192f;font-size:17px;font-weight:800;
   cursor:pointer;transition:all .22s;font-family:inherit;box-shadow:var(--sh-o);
 }
 .brand-next-btn:hover{transform:translateY(-1px)}
@@ -1421,67 +1480,74 @@ body{
 
 <!-- ══ STEP 3 — BRANDING ══ -->
 <section class="sec" id="s3">
-  <div class="brand-sec">
-    <h2 class="sec-title anim">עצבו את הכרטיס שלכם 🎨</h2>
-    <p class="sec-sub anim anim-d1">כרטיס המלצות לגוגל שנראה בדיוק כמו המותג שלכם</p>
+  <div class="brand-wrap">
 
-    <div class="phone-frame-wrap">
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div class="gc-preview" id="gcPreview" style="background:#0b1d3a;color:#faf8f4">
-            <div class="gc-logo" id="gcLogoWrap"><span id="gcLogoEmoji">⭐</span><img id="gcLogoImg" src="" alt=""></div>
-            <div class="gc-name" id="gcName">שם העסק שלכם</div>
-            <div class="gc-tag">השאירו לנו ביקורת</div>
-            <div class="gc-stars">★★★★★</div>
-            <div class="gc-cta">לחצו כאן →</div>
+    <!-- עמודה ימין: תצוגה מקדימה חיה (Preview) -->
+    <div class="brand-preview-col">
+      <div class="brand-preview-label">תצוגה מקדימה חיה</div>
+      <div class="phone-frame-wrap" style="margin:0 0 20px">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="gc-preview" id="gcPreview" style="background:#0b1d3a;color:#faf8f4">
+              <div class="gc-logo" id="gcLogoWrap"><span id="gcLogoEmoji">⭐</span><img id="gcLogoImg" src="" alt=""></div>
+              <div class="gc-name" id="gcName">שם העסק שלכם</div>
+              <div class="gc-tag">השאירו לנו ביקורת</div>
+              <div class="gc-stars">★★★★★</div>
+              <div class="gc-cta">לחצו כאן ←</div>
+            </div>
+          </div>
+          <div class="phone-bar"></div>
+        </div>
+      </div>
+      <!-- URL ייחודי שנוצר אוטומטית -->
+      <div class="auto-url-box" id="autoUrlBox" style="display:none">
+        <div class="auto-url-label">🔗 הקישור הייחודי שלכם לביקורת</div>
+        <div class="auto-url-val" id="autoUrlVal"></div>
+        <button class="auto-url-copy" onclick="copyReviewUrl()">העתק קישור</button>
+      </div>
+    </div>
+
+    <!-- עמודה שמאל: אפשרויות עיצוב -->
+    <div class="brand-options-col">
+      <!-- באנר אחרי שליחת מייל -->
+      <div class="email-sent-banner" id="emailSentBanner" style="display:none">
+        <div class="esb-title">הדוח המפורט נשלח אלייך ומחכה לך במייל! 📩</div>
+        <div class="esb-sub">בינתיים יצרנו עבורך כתובת URL ייחודית לעסק שלך שמובילה ישירות לכתיבת ביקורת בגוגל. ריבוי המלצות יקפיץ אותך בתוצאות החיפוש ובמודלי AI כמו ChatGPT ו-Gemini</div>
+      </div>
+
+      <h2 class="sec-title anim">עצבו את הכרטיס שלכם 🎨</h2>
+      <p class="sec-sub anim anim-d1">כרטיס המלצות לגוגל שנראה בדיוק כמו המותג שלכם</p>
+
+      <div class="brand-card anim">
+        <div class="brand-card-title">📸 לוגו</div>
+        <div class="logo-upload-area" id="logoArea">
+          <input type="file" id="logoFile" accept="image/*" onchange="handleLogo(this)">
+          <div class="logo-upload-icon">🖼️</div>
+          <div class="logo-upload-text">לחצו להעלאת הלוגו שלכם<br><small style="opacity:.6">PNG / JPG / SVG עד 5MB</small></div>
+          <img class="logo-preview" id="logoPreview" src="" alt="">
+        </div>
+      </div>
+
+      <div class="brand-card anim anim-d1">
+        <div class="brand-card-title">🎨 צבע הכרטיס</div>
+        <div class="color-row">
+          <div class="color-swatch sel" style="background:#0b1d3a" data-c="#0b1d3a" onclick="pickColor(this)"></div>
+          <div class="color-swatch" style="background:#1e3a5f" data-c="#1e3a5f" onclick="pickColor(this)"></div>
+          <div class="color-swatch" style="background:#7c3aed" data-c="#7c3aed" onclick="pickColor(this)"></div>
+          <div class="color-swatch" style="background:#be123c" data-c="#be123c" onclick="pickColor(this)"></div>
+          <div class="color-swatch" style="background:#1e7e34" data-c="#1e7e34" onclick="pickColor(this)"></div>
+          <div class="color-swatch" style="background:#c8a84b" data-c="#c8a84b" onclick="pickColor(this)"></div>
+          <div class="color-swatch" style="background:#111111" data-c="#111111" onclick="pickColor(this)"></div>
+          <div class="custom-color-wrap">
+            <input type="color" id="customColor" value="#0b1d3a" oninput="pickCustomColor(this)">
+            <span class="custom-color-label">אחר</span>
           </div>
         </div>
-        <div class="phone-bar"></div>
       </div>
+
+      <button class="brand-next-btn anim anim-d2" onclick="goToReport()">צפה בדו״ח המלא שלי ←</button>
     </div>
 
-    <div class="brand-card anim">
-      <div class="brand-card-title">📸 לוגו</div>
-      <div class="logo-upload-area" id="logoArea">
-        <input type="file" id="logoFile" accept="image/*" onchange="handleLogo(this)">
-        <div class="logo-upload-icon">🖼️</div>
-        <div class="logo-upload-text">לחצו להעלאת הלוגו שלכם<br><small style="opacity:.6">PNG / JPG / SVG עד 5MB</small></div>
-        <img class="logo-preview" id="logoPreview" src="" alt="">
-      </div>
-    </div>
-
-    <div class="brand-card anim anim-d1">
-      <div class="brand-card-title">🎨 צבע הכרטיס</div>
-      <div class="color-row">
-        <div class="color-swatch sel" style="background:#0b1d3a" data-c="#0b1d3a" onclick="pickColor(this)"></div>
-        <div class="color-swatch" style="background:#1e3a5f" data-c="#1e3a5f" onclick="pickColor(this)"></div>
-        <div class="color-swatch" style="background:#7c3aed" data-c="#7c3aed" onclick="pickColor(this)"></div>
-        <div class="color-swatch" style="background:#be123c" data-c="#be123c" onclick="pickColor(this)"></div>
-        <div class="color-swatch" style="background:#1e7e34" data-c="#1e7e34" onclick="pickColor(this)"></div>
-        <div class="color-swatch" style="background:#c8a84b" data-c="#c8a84b" onclick="pickColor(this)"></div>
-        <div class="color-swatch" style="background:#111111" data-c="#111111" onclick="pickColor(this)"></div>
-        <div class="custom-color-wrap">
-          <input type="color" id="customColor" value="#0b1d3a" oninput="pickCustomColor(this)">
-          <span class="custom-color-label">אחר</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="brand-card anim anim-d2">
-      <div class="brand-card-title">🔗 קישור לדף הביקורות</div>
-      <div class="url-field">
-        <label for="reviewUrl">קישור ל-Google Review שלכם</label>
-        <input type="url" id="reviewUrl" placeholder="https://g.page/r/..." oninput="brand.url=this.value">
-      </div>
-      <div class="qr-note">
-        <span class="qr-note-icon">📄</span>
-        <span class="qr-note-text">
-          <strong>הקוד QR ייוצר אוטומטית</strong> — בסיום ההזמנה תשלח אליכם קובץ PDF מעוצב להדפסה, עם קוד QR שמוביל ישירות לדף הביקורות שלכם.
-        </span>
-      </div>
-    </div>
-
-    <button class="brand-next-btn anim anim-d3" onclick="goToReport()">צפה בדו״ח המלא שלי ←</button>
   </div>
 </section>
 
@@ -2339,7 +2405,7 @@ function openAnalysis() {
         { icon:'★', iconCls:'ic-rating',    label:'דירוג נוכחי בגוגל', val: rating.toFixed(1)+' / 5.0',    cls: ratingCls },
         { icon:'◉', iconCls:'ic-reviews',   label:'ביקורות קיימות',    val: reviews.toLocaleString(),       cls: '' },
         { icon:'◑', iconCls:'ic-time',      label:'ביקורת אחרונה',     val: lastReviewDisplay,              cls: '' },
-        { icon:'◆', iconCls:'ic-stability', label:'ציון יציבות',       val: 'ממתין לאבחון עומק',           sub: 'יופיע בדוח המלא', cls: 'sm' }
+        { icon:'◆', iconCls:'ic-stability', label:'ציון יציבות',       val: 'יופיע בדו\u05f4ח המלא',      sub: '', cls: 'sm' }
       ];
       document.getElementById('analysisItems').innerHTML = cards.map(function(item, i) {
         var valClass = 'analysis-item-val'+(item.cls?' '+item.cls:'')+((!item.cls && item.val.length>10)?' sm':'');
@@ -2428,7 +2494,39 @@ function submitLead() {
     document.getElementById('gcName').textContent = n;
     document.getElementById('scName').textContent = n;
     updatePdfMock();
+
+    // הצג באנר "הדוח נשלח"
+    var banner = document.getElementById('emailSentBanner');
+    if (banner) banner.style.display = 'block';
+
+    // צור קישור ביקורת אוטומטי מ-Place ID
+    var pid = biz ? biz.placeId : null;
+    if (pid) {
+      brand.url = 'https://search.google.com/local/writereview?placeid=' + encodeURIComponent(pid);
+      var urlBox = document.getElementById('autoUrlBox');
+      var urlVal = document.getElementById('autoUrlVal');
+      if (urlBox && urlVal) {
+        urlVal.textContent = brand.url;
+        urlBox.style.display = 'block';
+      }
+    }
   }, 900);
+}
+
+// ── Copy review URL ──
+function copyReviewUrl() {
+  var url = brand.url || '';
+  if (!url) return;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function(){
+      var btn = document.querySelector('.auto-url-copy');
+      if (btn) { btn.textContent = 'הועתק! ✓'; setTimeout(function(){ btn.textContent = 'העתק קישור'; }, 2000); }
+    });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
 }
 
 // ── Branding ──
