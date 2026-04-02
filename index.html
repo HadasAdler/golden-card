@@ -704,6 +704,71 @@ body{
 }
 .brand-next-btn:hover{transform:translateY(-1px)}
 
+/* ─── STEP 2b: CHECK EMAIL GATE ─── */
+.check-email-sec{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:80px 24px 60px;min-height:75vh;max-width:560px;margin:0 auto;
+}
+.check-email-icon{font-size:80px;margin-bottom:32px;animation:fadeUp .5s ease both;line-height:1}
+.check-email-title{
+  font-size:clamp(26px,5vw,38px);font-weight:900;color:#fff;
+  margin-bottom:14px;line-height:1.2;
+}
+.check-email-hl{color:var(--turquoise)}
+.check-email-sub{
+  font-size:clamp(17px,3vw,21px);font-weight:700;color:var(--orange);margin-bottom:28px;line-height:1.4;
+}
+.check-email-box{
+  background:rgba(250,248,244,.06);border:1.5px solid rgba(250,248,244,.12);
+  border-radius:var(--r-lg);padding:24px 28px;max-width:440px;width:100%;
+  margin-bottom:24px;
+}
+.check-email-box-text{font-size:15px;color:rgba(250,248,244,.85);line-height:1.75}
+.check-email-spam{font-size:13px;color:var(--text-on-navy-dim);margin-bottom:32px}
+.check-email-demo-btn{
+  background:transparent;border:1.5px solid rgba(34,211,238,.4);
+  color:var(--turquoise);border-radius:var(--r);padding:12px 24px;
+  font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;
+  transition:all .2s;
+}
+.check-email-demo-btn:hover{background:rgba(34,211,238,.1)}
+
+/* ─── S3 analysis summary (big, above design) ─── */
+.s3-analysis-top{
+  max-width:1080px;margin:0 auto;padding:36px 24px 0;
+}
+.s3-analysis-biz{
+  font-size:clamp(22px,4vw,32px);font-weight:900;color:#fff;margin-bottom:6px;text-align:center;
+}
+.s3-analysis-sub{font-size:16px;color:var(--text-on-navy-dim);margin-bottom:28px;text-align:center}
+/* analysis cards shown in s3 at 150% size */
+.s3-analysis-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px;
+}
+@media(max-width:640px){.s3-analysis-grid{grid-template-columns:repeat(2,1fr)}}
+.s3-card{
+  background:rgba(250,248,244,.07);border:1px solid rgba(250,248,244,.12);
+  border-radius:var(--r-lg);padding:22px 16px;text-align:center;animation:fadeUp .4s ease both;
+}
+.s3-card-icon{
+  font-size:40px;display:flex;align-items:center;justify-content:center;
+  width:64px;height:64px;border-radius:50%;margin:0 auto 12px;font-weight:900;
+}
+.s3-card-icon.ic-rating  {background:rgba(249,185,21,.2);border:2px solid rgba(249,185,21,.4);color:#f9b915}
+.s3-card-icon.ic-reviews {background:rgba(34,211,238,.2);border:2px solid rgba(34,211,238,.4);color:#22d3ee}
+.s3-card-icon.ic-time    {background:rgba(167,139,250,.2);border:2px solid rgba(167,139,250,.4);color:#a78bfa}
+.s3-card-icon.ic-stability{background:rgba(74,222,128,.2);border:2px solid rgba(74,222,128,.4);color:#4ade80}
+.s3-card-label{font-size:13px;color:rgba(250,248,244,.7);font-weight:700;margin-bottom:8px;display:block}
+.s3-card-val{font-size:clamp(22px,4vw,30px);font-weight:900;display:block;color:#fff;line-height:1.2}
+.s3-card-val.good{color:#4ade80}.s3-card-val.warn{color:var(--orange)}.s3-card-val.bad{color:#f87171}
+.s3-card-val.sm{font-size:clamp(16px,2.5vw,20px)}
+.s3-divider{
+  width:100%;max-width:1080px;margin:0 auto 0;padding:0 24px 8px;
+  display:flex;align-items:center;gap:12px;
+}
+.s3-divider::before,.s3-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(34,211,238,.3),transparent)}
+.s3-divider-text{font-size:11px;color:var(--turquoise);font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap}
+
 /* ─── STEP 4: REPORT ─── */
 .report-sec{
   padding:40px 20px 100px;
@@ -1478,8 +1543,33 @@ body{
   </div>
 </div>
 
+<!-- ══ STEP 2b — CHECK EMAIL GATE ══ -->
+<section class="sec" id="s2b">
+  <div class="check-email-sec">
+    <div class="check-email-icon">📩</div>
+    <h2 class="check-email-title">האבחון המפורט<br><span class="check-email-hl">בדרך אלייך!</span></h2>
+    <div class="check-email-sub">המסמך המלא מחכה לך עכשיו בתיבת המייל</div>
+    <div class="check-email-box">
+      <div class="check-email-box-text">
+        שלחנו אליכם קישור אישי לצפייה בממצאים המלאים ובממשק עיצוב הכרטיס שלכם.<br><br>
+        לחצו על הקישור במייל כדי לפתוח את הדוח המלא.
+      </div>
+    </div>
+    <div class="check-email-spam">לא מצאתם? בדקו בתיקיית הספאם</div>
+    <button class="check-email-demo-btn" onclick="openResultsPage()">תצוגה מקדימה - פתח ממצאים</button>
+  </div>
+</section>
+
 <!-- ══ STEP 3 — BRANDING ══ -->
 <section class="sec" id="s3">
+  <!-- ניתוח ראשוני - מוצג גדול בראש הדף -->
+  <div class="s3-analysis-top" id="s3AnalysisTop" style="display:none">
+    <div class="s3-analysis-biz">📊 אבחון: <span id="s3BizName">—</span></div>
+    <div class="s3-analysis-sub">נתונים אמיתיים מגוגל - עודכנו זה עתה</div>
+    <div class="s3-analysis-grid" id="s3Cards"></div>
+    <div class="s3-divider"><span class="s3-divider-text">עיצוב הכרטיס שלכם</span></div>
+  </div>
+
   <div class="brand-wrap">
 
     <!-- עמודה ימין: תצוגה מקדימה חיה (Preview) -->
@@ -1509,12 +1599,6 @@ body{
 
     <!-- עמודה שמאל: אפשרויות עיצוב -->
     <div class="brand-options-col">
-      <!-- באנר אחרי שליחת מייל -->
-      <div class="email-sent-banner" id="emailSentBanner" style="display:none">
-        <div class="esb-title">הדוח המפורט נשלח אלייך ומחכה לך במייל! 📩</div>
-        <div class="esb-sub">בינתיים יצרנו עבורך כתובת URL ייחודית לעסק שלך שמובילה ישירות לכתיבת ביקורת בגוגל. ריבוי המלצות יקפיץ אותך בתוצאות החיפוש ובמודלי AI כמו ChatGPT ו-Gemini</div>
-      </div>
-
       <h2 class="sec-title anim">עצבו את הכרטיס שלכם 🎨</h2>
       <p class="sec-sub anim anim-d1">כרטיס המלצות לגוגל שנראה בדיוק כמו המותג שלכם</p>
 
@@ -1639,7 +1723,7 @@ body{
         <div class="pi-row">קובץ PDF מעוצב עם קוד QR להדפסה</div>
         <div class="pi-row">מדריך הפצה מקצועי</div>
         <div class="pi-row">עדכונים ושינויי עיצוב ללא עלות נוספת</div>
-        <div class="pi-row">תמיכה בוואטסאפ עד 30 יום</div>
+        <div class="pi-row">תמיכה אישית בדוא"ל עד 30 יום</div>
       </div>
       <button class="pay-btn" id="paybtn">
         <div class="pay-btn-main">אני רוצה את הכרטיס שלי</div>
@@ -1677,8 +1761,8 @@ body{
           <strong>איזה כיף! התשלום עבר בהצלחה. המערכת מוכנה!</strong>
           <span>הקישור האישי וקוד ה-QR יחכו לכם במייל בדקות הקרובות.</span>
           <span class="confirm-spam">לא קיבלתם מייל? יש לבדוק בתיבת הספאם.</span>
-          <a class="confirm-wa-btn" href="https://wa.me/972524444468?text=%D7%94%D7%99%D7%99+%D7%94%D7%93%D7%A1%2C+%D7%A8%D7%9B%D7%A9%D7%AA%D7%99+%D7%9B%D7%A8%D7%98%D7%99%D7%A1+%D7%94%D7%9E%D7%9C%D7%A6%D7%95%D7%AA+%D7%95%D7%9C%D7%90+%D7%A7%D7%99%D7%91%D7%9C%D7%AA%D7%99+%D7%9E%D7%99%D7%99%D7%9C" target="_blank" rel="noopener">
-            <span>💬</span> לא קיבלתם? לחצו כאן לוואטסאפ
+          <a class="confirm-wa-btn" href="mailto:support@nextvoice.ai" style="text-decoration:none">
+            <span>✉️</span> לא קיבלתם? צרו קשר במייל
           </a>
         </div>
       </div>
@@ -2426,6 +2510,15 @@ function openAnalysis() {
       // עדכן analysisText לשיתוף
       analysisText = 'האבחון של '+biz.name+':\n★ דירוג: '+rating.toFixed(1)+' | ביקורות: '+reviews+'\n🕐 ביקורת אחרונה: '+lastReviewDisplay+'\n'+window.location.href;
 
+      // שמור snapshot עולמי של תוצאות האבחון
+      window._analysisSnapshot = {
+        bizName: biz.name,
+        rating: rating,
+        reviews: reviews,
+        lastReviewDisplay: lastReviewDisplay,
+        ratingCls: ratingCls
+      };
+
       loading.style.display = 'none';
       resultEl.style.display = 'block';
       resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -2487,31 +2580,94 @@ function submitLead() {
   btn.disabled = true;
   setTimeout(function(){
     closeModal();
-    goTo('s3', 3);
     btn.innerHTML = 'הצג לי את האבחון ←';
     btn.disabled = false;
     var n = bizName || (biz?biz.name:'שם העסק');
     document.getElementById('gcName').textContent = n;
-    document.getElementById('scName').textContent = n;
+    if (document.getElementById('scName')) document.getElementById('scName').textContent = n;
     updatePdfMock();
-
-    // הצג באנר "הדוח נשלח"
-    var banner = document.getElementById('emailSentBanner');
-    if (banner) banner.style.display = 'block';
 
     // צור קישור ביקורת אוטומטי מ-Place ID
     var pid = biz ? biz.placeId : null;
     if (pid) {
       brand.url = 'https://search.google.com/local/writereview?placeid=' + encodeURIComponent(pid);
-      var urlBox = document.getElementById('autoUrlBox');
-      var urlVal = document.getElementById('autoUrlVal');
-      if (urlBox && urlVal) {
-        urlVal.textContent = brand.url;
-        urlBox.style.display = 'block';
-      }
     }
+
+    // שמור snapshot לניווט דרך מייל
+    try {
+      localStorage.setItem('_gcLead', JSON.stringify({ name: n, placeId: pid, brandUrl: brand.url }));
+      if (window._analysisSnapshot) {
+        localStorage.setItem('_gcAnalysis', JSON.stringify(window._analysisSnapshot));
+      }
+    } catch(e){}
+
+    // עבור לדף "בדוק את המייל שלך"
+    goTo('s2b', 2);
   }, 900);
 }
+
+// ── פתיחת דף הממצאים (מהמייל או מכפתור דמו) ──
+function openResultsPage() {
+  // נסה לשחזר snapshot מ-localStorage
+  try {
+    var snap = JSON.parse(localStorage.getItem('_gcAnalysis') || 'null');
+    if (snap && !window._analysisSnapshot) window._analysisSnapshot = snap;
+    var savedLead = JSON.parse(localStorage.getItem('_gcLead') || 'null');
+    if (savedLead) {
+      if (!biz) biz = { name: savedLead.name, placeId: savedLead.placeId };
+      if (savedLead.brandUrl) brand.url = savedLead.brandUrl;
+    }
+  } catch(e){}
+
+  // הצג s3
+  goTo('s3', 3);
+
+  // אכלס URL box
+  if (brand.url) {
+    var urlBox = document.getElementById('autoUrlBox');
+    var urlVal = document.getElementById('autoUrlVal');
+    if (urlBox && urlVal) { urlVal.textContent = brand.url; urlBox.style.display = 'block'; }
+  }
+
+  // אכלס ניתוח בראש s3
+  var snap2 = window._analysisSnapshot;
+  if (snap2) {
+    var top = document.getElementById('s3AnalysisTop');
+    var nameEl = document.getElementById('s3BizName');
+    var cardsEl = document.getElementById('s3Cards');
+    if (top && nameEl && cardsEl) {
+      nameEl.textContent = snap2.bizName || (biz ? biz.name : '');
+      var s3cards = [
+        { icon:'★', cls:'ic-rating',    label:'דירוג נוכחי בגוגל', val: (snap2.rating||0).toFixed(1)+' / 5.0', vcls: snap2.ratingCls||'' },
+        { icon:'◉', cls:'ic-reviews',   label:'ביקורות קיימות',    val: (snap2.reviews||0).toLocaleString(),    vcls: '' },
+        { icon:'◑', cls:'ic-time',      label:'ביקורת אחרונה',     val: snap2.lastReviewDisplay||'לא זמין',     vcls: '' },
+        { icon:'◆', cls:'ic-stability', label:'ציון יציבות',       val: 'יופיע בדו\u05f4ח המלא',               vcls: 'sm' }
+      ];
+      cardsEl.innerHTML = s3cards.map(function(c,i){
+        return '<div class="s3-card" style="animation-delay:'+(i*0.1)+'s">'
+          +'<div class="s3-card-icon '+c.cls+'">'+c.icon+'</div>'
+          +'<span class="s3-card-label">'+c.label+'</span>'
+          +'<span class="s3-card-val'+(c.vcls?' '+c.vcls:'')+'">'+escHtml(c.val)+'</span>'
+          +'</div>';
+      }).join('');
+      top.style.display = 'block';
+      // עדכן שם בכרטיס
+      document.getElementById('gcName').textContent = snap2.bizName || '';
+    }
+  }
+}
+
+// ── בדיקת URL params בטעינת הדף ──
+(function(){
+  try {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('open') === '1' || params.get('r') === '1') {
+      window.addEventListener('DOMContentLoaded', function(){
+        setTimeout(openResultsPage, 100);
+      });
+    }
+  } catch(e){}
+})();
 
 // ── Copy review URL ──
 function copyReviewUrl() {
