@@ -150,13 +150,15 @@ body{
   pointer-events:none;
 }
 .hero-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(34,211,238,.12);border:1.5px solid rgba(34,211,238,.4);
   color:var(--turquoise);border-radius:100px;
-  padding:8px 20px;font-size:14px;font-weight:600;
-  margin-bottom:28px;
+  padding:11px 26px;font-size:17px;font-weight:700;
+  margin-bottom:32px;
+  letter-spacing:.2px;
+  box-shadow:0 0 24px rgba(34,211,238,.12);
 }
-.hero-badge::before{content:'★';font-size:13px}
+.hero-badge::before{content:'★';font-size:16px}
 .hero-h1{
   font-size:clamp(30px,6vw,44px);font-weight:800;
   text-align:center;line-height:1.25;
@@ -233,7 +235,7 @@ body{
   background:var(--orange);
   color:#0a192f;border-color:transparent;
   box-shadow:var(--sh-o);cursor:pointer;
-  animation:pulse 1.8s ease infinite;
+  animation:none;
 }
 .search-btn.cta-ready:hover{
   transform:translateY(-1px);
@@ -272,19 +274,29 @@ body{
 .biz-card{
   width:100%;max-width:560px;
   background:#fff;border-radius:var(--r-lg);
-  padding:14px 18px;margin-bottom:12px;
+  padding:16px 20px;margin-bottom:12px;
   display:flex;align-items:center;gap:14px;
-  box-shadow:0 4px 24px rgba(0,0,0,.18);
+  box-shadow:0 4px 28px rgba(0,0,0,.2);
   animation:fadeUp .3s ease both;
+  position:relative;
 }
 .biz-card-pin{
-  width:40px;height:40px;border-radius:50%;
-  background:var(--cream-dark);
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(34,211,238,.12);border:1.5px solid rgba(34,211,238,.3);
   display:flex;align-items:center;justify-content:center;
-  font-size:18px;flex-shrink:0;
+  font-size:20px;flex-shrink:0;
 }
-.biz-card-name{font-weight:700;font-size:15px;color:var(--text);line-height:1.3}
-.biz-card-addr{font-size:12.5px;color:var(--text-s);margin-top:2px}
+.biz-card-body{flex:1;min-width:0}
+.biz-card-name{font-weight:800;font-size:16px;color:var(--text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.biz-card-sub{font-size:12.5px;color:var(--turquoise-d);margin-top:3px;font-weight:600}
+.biz-card-clear{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--cream-dark);border:none;
+  font-size:14px;color:var(--text-s);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .15s;
+}
+.biz-card-clear:hover{background:#fee2e2;color:#dc2626}
 
 /* ── Analysis preview ── */
 .analysis-wrap{
@@ -318,22 +330,53 @@ body{
   font-size:14px;font-weight:700;color:var(--turquoise);
   display:flex;align-items:center;gap:8px;
 }
-.analysis-items{padding:4px 0}
+.analysis-items{
+  display:flex;gap:10px;padding:16px;
+  flex-wrap:wrap;
+}
 .analysis-item{
-  display:flex;align-items:center;gap:12px;
-  padding:13px 20px;
-  border-bottom:1px solid rgba(250,248,244,.06);
+  flex:1;min-width:130px;
+  background:rgba(250,248,244,.06);
+  border:1px solid rgba(250,248,244,.1);
+  border-radius:var(--r);
+  padding:16px 14px;text-align:center;
   animation:fadeUp .3s ease both;
 }
-.analysis-item:last-child{border-bottom:none}
-.analysis-item-icon{font-size:18px;flex-shrink:0;width:28px;text-align:center}
-.analysis-item-label{font-size:13px;color:var(--text-on-navy-dim);flex:1}
-.analysis-item-val{font-size:14px;font-weight:700;color:var(--text-on-navy)}
+.analysis-item-icon{
+  font-size:28px;margin-bottom:8px;
+  display:block;
+}
+.analysis-item-val{
+  font-size:22px;font-weight:800;
+  color:var(--text-on-navy);
+  display:block;line-height:1.2;margin-bottom:6px;
+}
 .analysis-item-val.good{color:#4ade80}
 .analysis-item-val.warn{color:var(--orange)}
-.analysis-cta-wrap{padding:16px 20px 20px}
+.analysis-item-label{font-size:11.5px;color:var(--text-on-navy-dim);line-height:1.4;display:block}
+
+/* תיבת הבטחות */
+.report-promise{
+  margin:0 16px 4px;
+  background:rgba(34,211,238,.06);
+  border:1px solid rgba(34,211,238,.2);
+  border-radius:var(--r);
+  padding:16px 18px;
+}
+.report-promise-title{
+  font-size:13px;font-weight:700;
+  color:var(--turquoise);margin-bottom:12px;
+}
+.report-promise-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+.report-promise-list li{
+  font-size:12.5px;color:var(--text-on-navy-dim);
+  display:flex;align-items:flex-start;gap:8px;line-height:1.5;
+}
+.report-promise-list li::before{content:attr(data-icon);font-size:14px;flex-shrink:0;margin-top:1px}
+
+.analysis-cta-wrap{padding:14px 16px 20px}
 .analysis-cta-btn{
-  width:100%;padding:15px;
+  width:100%;padding:16px;
   background:var(--orange);color:#0a192f;
   border:none;border-radius:var(--r-lg);
   font-size:15.5px;font-weight:700;cursor:pointer;
@@ -341,6 +384,30 @@ body{
   box-shadow:var(--sh-o);transition:all .22s;
 }
 .analysis-cta-btn:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(249,185,21,.42)}
+
+/* Insight cards */
+.insight-row{
+  display:flex;gap:10px;
+  margin-top:36px;width:100%;max-width:560px;
+  flex-wrap:wrap;
+}
+.insight-card{
+  flex:1;min-width:140px;
+  background:rgba(250,248,244,.05);
+  border:1px solid rgba(250,248,244,.1);
+  border-radius:var(--r);
+  padding:16px 14px;text-align:center;
+  animation:fadeUp .5s ease both;
+}
+.insight-pct{
+  font-size:22px;font-weight:800;
+  color:var(--orange);
+  margin-bottom:8px;
+}
+.insight-text{
+  font-size:11.5px;color:var(--text-on-navy-dim);
+  line-height:1.5;
+}
 
 /* כפתור שיתוף קטן בראש הדף */
 .top-share-btn{
@@ -1232,10 +1299,11 @@ body{
   </div>
   <div class="biz-card" id="bizCard" style="display:none">
     <div class="biz-card-pin">📍</div>
-    <div>
+    <div class="biz-card-body">
       <div class="biz-card-name" id="bizCardName"></div>
-      <div class="biz-card-addr" id="bizCardAddr"></div>
+      <div class="biz-card-sub">קבל/י אבחון שיווקי בחינם</div>
     </div>
+    <button class="biz-card-clear" onclick="clearBizSelection()" title="בטל בחירה">✕</button>
   </div>
   <button class="search-btn anim anim-d4" id="searchCta" onclick="openAnalysis()" disabled>קבל אבחון שיווקי בחינם ←</button>
   <div class="analysis-wrap" id="analysisWrap" style="display:none">
@@ -1246,16 +1314,33 @@ body{
     <div class="analysis-result" id="analysisResult" style="display:none">
       <div class="analysis-header">📊 אבחון ראשוני — <span id="analysisName"></span></div>
       <div class="analysis-items" id="analysisItems"></div>
+      <div class="report-promise">
+        <div class="report-promise-title">הכנו עבורך דוח מקיף בחינם הכולל:</div>
+        <ul class="report-promise-list">
+          <li data-icon="🔍">ניתוח פערים — איפה המתחרים שלך עוקפים אותך ואיך לסגור את הפער</li>
+          <li data-icon="⭐">מפת דרכים לדירוג 5 כוכבים — שלבים פרקטיים להפיכת כל לקוח לממליץ</li>
+          <li data-icon="✅">צ׳ק-ליסט אופטימיזציה — מה חסר בפרופיל שלך כדי להופיע ב-Top 3 בגוגל</li>
+        </ul>
+      </div>
       <div class="analysis-cta-wrap">
         <button class="analysis-cta-btn" onclick="openModal()">שלח לי את הדו״ח המלא למייל ←</button>
       </div>
     </div>
   </div>
 
-  <div class="trust-row anim anim-d4">
-    <div class="trust-item ti-lock">נתונים מאובטחים</div>
-    <div class="trust-item ti-star">4.9 ★ מ-312 עסקים</div>
-    <div class="trust-item ti-fast">תוצאות מיידיות</div>
+  <div class="insight-row anim anim-d4">
+    <div class="insight-card" style="animation-delay:.1s">
+      <div class="insight-pct">70%</div>
+      <div class="insight-text">דירוג גבוה מעלה את סיכויי הסגירה מול מתחרים</div>
+    </div>
+    <div class="insight-card" style="animation-delay:.2s">
+      <div class="insight-pct">🔝</div>
+      <div class="insight-text">ביקורות טריות הן המפתח להופעה ב-Top 3 בחיפוש המקומי</div>
+    </div>
+    <div class="insight-card" style="animation-delay:.3s">
+      <div class="insight-pct">💬</div>
+      <div class="insight-text">מענה לביקורות בונה אמון מיידי אצל לקוחות חדשים</div>
+    </div>
   </div>
 </section>
 
@@ -2090,7 +2175,6 @@ function _onBizChosen() {
   // הצג כרטיס עסק נבחר
   var card = document.getElementById('bizCard');
   document.getElementById('bizCardName').textContent = biz.name;
-  document.getElementById('bizCardAddr').textContent = biz.city || '';
   card.style.display = 'flex';
 
   // הסתר אנליזה ישנה אם קיימת
@@ -2105,7 +2189,7 @@ function _onBizChosen() {
   var cta = document.getElementById('searchCta');
   cta.disabled = false;
   cta.classList.add('cta-ready');
-  cta.textContent = '📊 קבל אבחון שיווקי בחינם ←';
+  cta.innerHTML = '<span style="display:block;font-size:15px;font-weight:800">📊 קבל אבחון שיווקי בחינם</span><span style="display:block;font-size:12px;opacity:.75;margin-top:3px;font-weight:600">עבור: '+escHtml(biz.name)+'</span>';
 
   if (biz.name) document.getElementById('mBiz').value = biz.name;
 
@@ -2113,6 +2197,19 @@ function _onBizChosen() {
     { name: biz.name, placeId: biz.placeId, source: biz.source });
 
   setTimeout(function(){ card.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 150);
+}
+
+// ביטול בחירת עסק — חזרה לחיפוש
+function clearBizSelection() {
+  biz = null;
+  searchInput.value = '';
+  document.getElementById('bizCard').style.display = 'none';
+  document.getElementById('analysisWrap').style.display = 'none';
+  var cta = document.getElementById('searchCta');
+  cta.disabled = true;
+  cta.classList.remove('cta-ready');
+  cta.textContent = 'קבל אבחון שיווקי בחינם ←';
+  searchInput.focus();
 }
 
 // פתח תצוגת אבחון ראשוני לפני הפופאפ
@@ -2141,13 +2238,13 @@ function openAnalysis() {
     var items = document.getElementById('analysisItems');
     items.innerHTML = [
       { icon:'⭐', label:'דירוג נוכחי בגוגל', val: rating+' / 5.0', cls:'warn' },
-      { icon:'💬', label:'ביקורות קיימות', val: reviews+' ביקורות', cls:'' },
-      { icon:'📈', label:'פוטנציאל צמיחה אם תוסיפו '+missing+' ביקורות', val:'+'+potential+'%', cls:'good' }
+      { icon:'💬', label:'ביקורות קיימות', val: reviews+'', cls:'' },
+      { icon:'📈', label:'פוטנציאל צמיחה', val:'+'+potential+'%', cls:'good' }
     ].map(function(item, i) {
-      return '<div class="analysis-item" style="animation-delay:'+(i*0.1)+'s">'
-        +'<div class="analysis-item-icon">'+item.icon+'</div>'
-        +'<div class="analysis-item-label">'+item.label+'</div>'
-        +'<div class="analysis-item-val'+( item.cls?' '+item.cls:'')+'">'+ item.val+'</div>'
+      return '<div class="analysis-item" style="animation-delay:'+(i*0.12)+'s">'
+        +'<span class="analysis-item-icon">'+item.icon+'</span>'
+        +'<span class="analysis-item-val'+(item.cls?' '+item.cls:'')+'">'+ item.val+'</span>'
+        +'<span class="analysis-item-label">'+item.label+'</span>'
         +'</div>';
     }).join('');
 
