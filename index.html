@@ -139,7 +139,7 @@ body{
 .hero-sec{
   flex-direction:column;align-items:center;
   min-height:100vh;
-  padding:48px 20px 80px;
+  padding:56px 20px 48px;
   background:linear-gradient(160deg,var(--navy) 0%,var(--navy-mid) 60%,#0d2547 100%);
   position:relative;overflow:hidden;
 }
@@ -158,8 +158,8 @@ body{
 }
 .hero-badge::before{content:'★';font-size:13px}
 .hero-h1{
-  font-size:clamp(26px,5vw,42px);font-weight:800;
-  text-align:center;line-height:1.28;
+  font-size:clamp(30px,6vw,44px);font-weight:800;
+  text-align:center;line-height:1.25;
   color:var(--text-on-navy);
   max-width:640px;margin-bottom:18px;
 }
@@ -177,7 +177,7 @@ body{
 .hero-sub strong{color:var(--turquoise);font-weight:700}
 
 /* Search */
-.search-wrap{width:100%;max-width:560px;position:relative;margin-bottom:16px}
+.search-wrap{width:100%;max-width:560px;position:relative;margin-bottom:16px;z-index:9998}
 .search-input-row{
   display:flex;align-items:stretch;
   background:rgba(250,248,244,.06);
@@ -246,8 +246,9 @@ body{
 .sdrop{
   position:absolute;top:calc(100% + 6px);right:0;left:0;
   background:#fff;border-radius:var(--r);
-  box-shadow:var(--sh-lg);border:1px solid var(--border);
-  overflow:hidden;z-index:50;display:none;
+  box-shadow:0 8px 40px rgba(0,0,0,.28);border:1px solid var(--border);
+  overflow:hidden;z-index:9999;display:none;
+  -webkit-overflow-scrolling:touch;
 }
 .sdrop.open{display:block;animation:slideDown .18s ease}
 .di{
@@ -267,23 +268,20 @@ body{
 .di-empty{cursor:default;opacity:.7}
 .di-empty:hover{background:none}
 
-/* Share button */
-.share-row{
-  display:none;align-items:center;gap:10px;
-  margin-top:14px;animation:fadeIn .4s ease;
-}
-.share-row.show{display:flex}
-.share-btn{
-  display:flex;align-items:center;gap:8px;
-  background:rgba(250,248,244,.07);
-  border:1px solid rgba(250,248,244,.18);
-  color:var(--text-on-navy);
-  padding:9px 18px;border-radius:100px;
-  font-size:13px;font-weight:600;cursor:pointer;
+/* כפתור שיתוף קטן בראש הדף */
+.top-share-btn{
+  position:absolute;top:18px;left:18px;
+  display:flex;align-items:center;gap:6px;
+  background:rgba(250,248,244,.09);
+  border:1px solid rgba(250,248,244,.2);
+  color:rgba(250,248,244,.75);
+  padding:7px 14px;border-radius:100px;
+  font-size:12.5px;font-weight:600;cursor:pointer;
   transition:all .2s;font-family:inherit;
+  z-index:10;
 }
-.share-btn:hover{background:rgba(250,248,244,.13);border-color:rgba(250,248,244,.3)}
-.share-hint{font-size:12px;color:var(--text-on-navy-dim)}
+.top-share-btn:hover{background:rgba(250,248,244,.16);color:var(--cream)}
+.top-share-btn span{font-size:14px}
 
 /* Trust row */
 .trust-row{
@@ -1127,6 +1125,7 @@ body{
 
 <!-- ══ STEP 1 — HERO ══ -->
 <section class="sec hero-sec on" id="s1">
+  <button class="top-share-btn" onclick="doShareSite()" title="שתף את האתר"><span>🔗</span> שתף</button>
   <div class="anim"><div class="hero-badge">כרטיס המלצות לגוגל</div></div>
   <h1 class="hero-h1 anim anim-d1">
     חפשו את העסק שלכם<br>
@@ -1136,7 +1135,7 @@ body{
   <p class="hero-sub anim anim-d2">
     גלו איפה אתם עומדים ביחס למתחרים שלכם<br>
     ב<strong>״פרופיל העסק בגוגל״</strong><br>
-    <span style="font-size:12.5px;opacity:.6">— כך העסק שלכם מופיע במפות ובחיפוש של גוגל —</span>
+    <span style="font-size:13px;color:var(--cream);opacity:.9;font-weight:500">— כך העסק שלכם מופיע במפות ובחיפוש של גוגל —</span>
   </p>
 
   <div class="search-wrap anim anim-d3">
@@ -1148,11 +1147,6 @@ body{
     <div class="sdrop" id="sdrop"></div>
   </div>
   <button class="search-btn anim anim-d4" id="searchCta" onclick="openModal()" disabled>קבל אבחון שיווקי בחינם ←</button>
-
-  <div class="share-row" id="shareRow">
-    <button class="share-btn" onclick="doShare()"><span>📤</span> שתף את האבחון שלי</button>
-    <span class="share-hint">שתף תוצאות עם שותף/ה</span>
-  </div>
 
   <div class="trust-row anim anim-d4">
     <div class="trust-item ti-lock">נתונים מאובטחים</div>
@@ -1991,7 +1985,6 @@ function _onBizChosen() {
   var gap = Math.max(0, 4.8 - biz.rating);
   var growthPct = Math.min(60, Math.round(gap * 22));
   analysisText = 'האבחון של '+biz.name+':\n★ דירוג: '+biz.rating+' | ביקורות: '+biz.count+'\n📈 פוטנציאל צמיחה: +'+growthPct+'%\n'+window.location.href;
-  document.getElementById('shareRow').classList.add('show');
 
   var cta = document.getElementById('searchCta');
   cta.disabled = false;
@@ -2004,15 +1997,18 @@ function _onBizChosen() {
   setTimeout(function(){ cta.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 150);
 }
 
-function doShare() {
+// שיתוף הקישור לאתר עצמו
+function doShareSite() {
+  var url = 'https://review-me.org/audit';
+  var title = 'כרטיס המלצות לגוגל — NextVoice AI';
+  var text = 'גלה כמה ביקורות גוגל חסרות לך — אבחון שיווקי חינמי ב-30 שניות';
   if (navigator.share) {
-    navigator.share({ title: 'האבחון של '+(biz?biz.name:'העסק שלי'), text: analysisText, url: window.location.href }).catch(function(){});
+    navigator.share({ title: title, text: text, url: url }).catch(function(){});
   } else {
-    navigator.clipboard.writeText(analysisText).then(function(){
-      alert('הטקסט הועתק — הדבק אותו בוואטסאפ');
-    }).catch(function(){
-      prompt('העתק:', analysisText);
-    });
+    navigator.clipboard.writeText(url).then(function(){
+      var btn = document.querySelector('.top-share-btn');
+      if (btn) { btn.textContent = '✓ הקישור הועתק'; setTimeout(function(){ btn.innerHTML = '<span>🔗</span> שתף'; }, 2000); }
+    }).catch(function(){ prompt('העתק את הקישור:', url); });
   }
 }
 
