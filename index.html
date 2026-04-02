@@ -236,6 +236,8 @@ body{
   color:#0a192f;border-color:transparent;
   box-shadow:var(--sh-o);cursor:pointer;
   animation:none;
+  padding:20px 32px;
+  line-height:1.4;
 }
 .search-btn.cta-ready:hover{
   transform:translateY(-1px);
@@ -287,8 +289,8 @@ body{
   font-size:20px;flex-shrink:0;
 }
 .biz-card-body{flex:1;min-width:0}
-.biz-card-name{font-weight:800;font-size:20px;color:var(--text);line-height:1.25;overflow:hidden;text-overflow:ellipsis}
-.biz-card-sub{font-size:14px;color:var(--turquoise-d);margin-top:5px;font-weight:600}
+.biz-card-name{font-weight:800;font-size:22px;color:var(--text);line-height:1.2;word-break:break-word}
+.biz-card-addr{font-size:13px;color:var(--text-s);margin-top:4px;font-weight:400;line-height:1.4}
 .biz-card-clear{
   width:32px;height:32px;border-radius:50%;
   background:var(--navy);border:none;
@@ -343,21 +345,27 @@ body{
   animation:fadeUp .3s ease both;
 }
 .analysis-item-icon{
-  font-size:30px;margin-bottom:10px;
+  font-size:28px;
   display:flex;align-items:center;justify-content:center;
   width:52px;height:52px;border-radius:50%;
-  background:rgba(250,248,244,.1);
-  margin-left:auto;margin-right:auto;
+  margin-left:auto;margin-right:auto;margin-bottom:10px;
+}
+.analysis-item-icon.ic-rating  { background:rgba(249,185,21,.2);  border:1.5px solid rgba(249,185,21,.4); }
+.analysis-item-icon.ic-reviews { background:rgba(34,211,238,.2);  border:1.5px solid rgba(34,211,238,.4); }
+.analysis-item-icon.ic-time    { background:rgba(167,139,250,.2); border:1.5px solid rgba(167,139,250,.4); }
+.analysis-item-label{
+  font-size:13px;color:#fff;font-weight:700;
+  line-height:1.3;display:block;margin-bottom:8px;
 }
 .analysis-item-val{
-  font-size:24px;font-weight:800;
+  font-size:26px;font-weight:800;
   color:#fff;
-  display:block;line-height:1.2;margin-bottom:6px;
+  display:block;line-height:1.2;
 }
 .analysis-item-val.good{color:#4ade80}
 .analysis-item-val.warn{color:var(--orange)}
 .analysis-item-val.bad{color:#f87171}
-.analysis-item-label{font-size:12px;color:rgba(250,248,244,.7);line-height:1.4;display:block}
+.analysis-item-val.sm{font-size:16px}
 
 /* תיבת הבטחות */
 .report-promise{
@@ -368,16 +376,16 @@ body{
   padding:18px 20px;
 }
 .report-promise-title{
-  font-size:14px;font-weight:800;
-  color:#fff;margin-bottom:14px;
+  font-size:17px;font-weight:800;
+  color:#fff;margin-bottom:16px;
   letter-spacing:.1px;
 }
-.report-promise-list{list-style:none;display:flex;flex-direction:column;gap:11px}
+.report-promise-list{list-style:none;display:flex;flex-direction:column;gap:14px}
 .report-promise-list li{
-  font-size:13.5px;color:rgba(250,248,244,.85);
-  display:flex;align-items:flex-start;gap:10px;line-height:1.55;
+  font-size:15px;color:rgba(250,248,244,.9);
+  display:flex;align-items:flex-start;gap:12px;line-height:1.6;
 }
-.report-promise-list li::before{content:attr(data-icon);font-size:15px;flex-shrink:0;margin-top:1px}
+.report-promise-list li::before{content:attr(data-icon);font-size:18px;flex-shrink:0;margin-top:1px}
 
 .analysis-cta-wrap{padding:14px 16px 20px}
 .analysis-cta-btn{
@@ -1307,7 +1315,7 @@ body{
     <div class="biz-card-pin">📍</div>
     <div class="biz-card-body">
       <div class="biz-card-name" id="bizCardName"></div>
-      <div class="biz-card-sub">קבל/י אבחון שיווקי בחינם</div>
+      <div class="biz-card-addr" id="bizCardAddr"></div>
     </div>
     <button class="biz-card-clear" onclick="clearBizSelection()" title="בטל בחירה">✕</button>
   </div>
@@ -2181,6 +2189,10 @@ function _onBizChosen() {
   // הצג כרטיס עסק נבחר
   var card = document.getElementById('bizCard');
   document.getElementById('bizCardName').textContent = biz.name;
+  // כתובת: השתמש ב-city שנשמר מה-Autocomplete
+  var addrEl = document.getElementById('bizCardAddr');
+  addrEl.textContent = biz.city || '';
+
   card.style.display = 'flex';
 
   // הסתר אנליזה ישנה אם קיימת
@@ -2188,14 +2200,14 @@ function _onBizChosen() {
   document.getElementById('analysisResult').style.display = 'none';
   document.getElementById('analysisLoading').style.display = 'flex';
 
-  var gap = Math.max(0, 4.8 - biz.rating);
-  var growthPct = Math.min(60, Math.round(gap * 22));
-  analysisText = 'האבחון של '+biz.name+':\n★ דירוג: '+biz.rating+' | ביקורות: '+biz.count+'\n📈 פוטנציאל צמיחה: +'+growthPct+'%\n'+window.location.href;
+  analysisText = '';   // יתעדכן לאחר שליפת נתונים אמיתיים
 
   var cta = document.getElementById('searchCta');
   cta.disabled = false;
   cta.classList.add('cta-ready');
-  cta.innerHTML = '<span style="display:block;font-size:15px;font-weight:800">📊 קבל אבחון שיווקי בחינם</span><span style="display:block;font-size:12px;opacity:.75;margin-top:3px;font-weight:600">עבור: '+escHtml(biz.name)+'</span>';
+  cta.innerHTML =
+    '<span style="display:block;font-size:19px;font-weight:800;line-height:1.2">📊 קבל אבחון שיווקי בחינם</span>'
+    +'<span style="display:block;font-size:14px;opacity:.8;margin-top:5px;font-weight:600">עבור: '+escHtml(biz.name)+'</span>';
 
   if (biz.name) document.getElementById('mBiz').value = biz.name;
 
@@ -2260,15 +2272,18 @@ function openAnalysis() {
 
       var ratingCls = rating >= 4.5 ? 'good' : rating >= 4.0 ? 'warn' : 'bad';
 
-      document.getElementById('analysisItems').innerHTML = [
-        { icon:'⭐', label:'דירוג נוכחי בגוגל',    val: rating.toFixed(1)+' / 5.0', cls: ratingCls },
-        { icon:'💬', label:'ביקורות קיימות',        val: reviews.toLocaleString(),   cls: '' },
-        { icon:'🕐', label:'ביקורת אחרונה נכתבה',  val: lastReview,                 cls: '' }
-      ].map(function(item, i) {
+      // סדר: label (לבן, מעל) → value (מספר גדול, מתחת)
+      var cards = [
+        { icon:'⭐', iconCls:'ic-rating',  label:'דירוג נוכחי בגוגל',   val: rating.toFixed(1)+' / 5.0', cls: ratingCls },
+        { icon:'💬', iconCls:'ic-reviews', label:'ביקורות קיימות',       val: reviews.toLocaleString(),   cls: '' },
+        { icon:'🕐', iconCls:'ic-time',    label:'ביקורת אחרונה',        val: lastReview,                 cls: '' }
+      ];
+      document.getElementById('analysisItems').innerHTML = cards.map(function(item, i) {
+        var valClass = 'analysis-item-val'+(item.cls?' '+item.cls:'')+(item.val.length>10?' sm':'');
         return '<div class="analysis-item" style="animation-delay:'+(i*0.12)+'s">'
-          +'<span class="analysis-item-icon">'+item.icon+'</span>'
-          +'<span class="analysis-item-val'+(item.cls?' '+item.cls:'')+'" style="font-size:'+(item.val.length>8?'16px':'24px')+'">'+ escHtml(item.val)+'</span>'
+          +'<span class="analysis-item-icon '+item.iconCls+'">'+item.icon+'</span>'
           +'<span class="analysis-item-label">'+item.label+'</span>'
+          +'<span class="'+valClass+'">'+ escHtml(item.val)+'</span>'
           +'</div>';
       }).join('');
 
