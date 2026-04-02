@@ -153,7 +153,7 @@ body{
   display:inline-flex;align-items:center;gap:6px;
   background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);
   color:var(--turquoise);border-radius:100px;
-  padding:6px 16px;font-size:12.5px;font-weight:600;
+  padding:8px 20px;font-size:14px;font-weight:600;
   margin-bottom:28px;
 }
 .hero-badge::before{content:'★';font-size:13px}
@@ -268,6 +268,80 @@ body{
 .di-empty{cursor:default;opacity:.7}
 .di-empty:hover{background:none}
 
+/* ── Selected business card ── */
+.biz-card{
+  width:100%;max-width:560px;
+  background:#fff;border-radius:var(--r-lg);
+  padding:14px 18px;margin-bottom:12px;
+  display:flex;align-items:center;gap:14px;
+  box-shadow:0 4px 24px rgba(0,0,0,.18);
+  animation:fadeUp .3s ease both;
+}
+.biz-card-pin{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--cream-dark);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.biz-card-name{font-weight:700;font-size:15px;color:var(--text);line-height:1.3}
+.biz-card-addr{font-size:12.5px;color:var(--text-s);margin-top:2px}
+
+/* ── Analysis preview ── */
+.analysis-wrap{
+  width:100%;max-width:560px;
+  margin-top:14px;
+  animation:fadeUp .35s ease both;
+}
+.analysis-loading{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:22px;
+  background:rgba(250,248,244,.07);
+  border:1px solid rgba(250,248,244,.12);
+  border-radius:var(--r-lg);
+  color:var(--text-on-navy-dim);font-size:14.5px;
+}
+.analysis-spinner{
+  width:20px;height:20px;border-radius:50%;
+  border:2.5px solid rgba(250,248,244,.2);
+  border-top-color:var(--turquoise);
+  animation:spin .8s linear infinite;flex-shrink:0;
+}
+.analysis-result{
+  background:rgba(250,248,244,.06);
+  border:1px solid rgba(34,211,238,.2);
+  border-radius:var(--r-lg);
+  overflow:hidden;
+}
+.analysis-header{
+  padding:16px 20px 12px;
+  border-bottom:1px solid rgba(250,248,244,.08);
+  font-size:14px;font-weight:700;color:var(--turquoise);
+  display:flex;align-items:center;gap:8px;
+}
+.analysis-items{padding:4px 0}
+.analysis-item{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 20px;
+  border-bottom:1px solid rgba(250,248,244,.06);
+  animation:fadeUp .3s ease both;
+}
+.analysis-item:last-child{border-bottom:none}
+.analysis-item-icon{font-size:18px;flex-shrink:0;width:28px;text-align:center}
+.analysis-item-label{font-size:13px;color:var(--text-on-navy-dim);flex:1}
+.analysis-item-val{font-size:14px;font-weight:700;color:var(--text-on-navy)}
+.analysis-item-val.good{color:#4ade80}
+.analysis-item-val.warn{color:var(--orange)}
+.analysis-cta-wrap{padding:16px 20px 20px}
+.analysis-cta-btn{
+  width:100%;padding:15px;
+  background:var(--orange);color:#0a192f;
+  border:none;border-radius:var(--r-lg);
+  font-size:15.5px;font-weight:700;cursor:pointer;
+  font-family:inherit;
+  box-shadow:var(--sh-o);transition:all .22s;
+}
+.analysis-cta-btn:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(249,185,21,.42)}
+
 /* כפתור שיתוף קטן בראש הדף */
 .top-share-btn{
   position:absolute;top:18px;left:18px;
@@ -311,6 +385,7 @@ body{
   width:100%;max-width:520px;
   animation:fadeUp .3s ease;
   max-height:92vh;overflow-y:auto;
+  position:relative;
 }
 .modal-handle{
   width:40px;height:4px;border-radius:4px;
@@ -339,6 +414,15 @@ body{
 }
 .modal-btn:hover{transform:translateY(-1px)}
 .modal-privacy{font-size:11px;color:var(--text-l);text-align:center;margin-top:12px}
+.modal-close{
+  position:absolute;top:16px;left:16px;
+  width:34px;height:34px;border-radius:50%;
+  background:var(--cream-dark);border:none;
+  font-size:18px;cursor:pointer;color:var(--text-s);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.modal-close:hover{background:var(--cream-mid)}
 
 /* ─── STEP 3: BRANDING ─── */
 .brand-sec{padding:48px 20px 80px;max-width:680px;margin:0 auto}
@@ -1146,7 +1230,27 @@ body{
     </div>
     <div class="sdrop" id="sdrop"></div>
   </div>
-  <button class="search-btn anim anim-d4" id="searchCta" onclick="openModal()" disabled>קבל אבחון שיווקי בחינם ←</button>
+  <div class="biz-card" id="bizCard" style="display:none">
+    <div class="biz-card-pin">📍</div>
+    <div>
+      <div class="biz-card-name" id="bizCardName"></div>
+      <div class="biz-card-addr" id="bizCardAddr"></div>
+    </div>
+  </div>
+  <button class="search-btn anim anim-d4" id="searchCta" onclick="openAnalysis()" disabled>קבל אבחון שיווקי בחינם ←</button>
+  <div class="analysis-wrap" id="analysisWrap" style="display:none">
+    <div class="analysis-loading" id="analysisLoading">
+      <div class="analysis-spinner"></div>
+      <span>בודק נתוני עסק...</span>
+    </div>
+    <div class="analysis-result" id="analysisResult" style="display:none">
+      <div class="analysis-header">📊 אבחון ראשוני — <span id="analysisName"></span></div>
+      <div class="analysis-items" id="analysisItems"></div>
+      <div class="analysis-cta-wrap">
+        <button class="analysis-cta-btn" onclick="openModal()">שלח לי את הדו״ח המלא למייל ←</button>
+      </div>
+    </div>
+  </div>
 
   <div class="trust-row anim anim-d4">
     <div class="trust-item ti-lock">נתונים מאובטחים</div>
@@ -1158,6 +1262,7 @@ body{
 <!-- ══ STEP 2 — MODAL ══ -->
 <div class="modal-ov" id="modal">
   <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-handle"></div>
     <div class="modal-title">הכינו את האבחון שלכם 🎯</div>
     <p class="modal-sub">מלאו פרטים ותוצאות האבחון יישלחו אליכם מיד</p>
@@ -1982,6 +2087,17 @@ function selectBiz(id) {
 
 // לוגיקה משותפת — לאחר בחירת עסק (מכל מקור)
 function _onBizChosen() {
+  // הצג כרטיס עסק נבחר
+  var card = document.getElementById('bizCard');
+  document.getElementById('bizCardName').textContent = biz.name;
+  document.getElementById('bizCardAddr').textContent = biz.city || '';
+  card.style.display = 'flex';
+
+  // הסתר אנליזה ישנה אם קיימת
+  document.getElementById('analysisWrap').style.display = 'none';
+  document.getElementById('analysisResult').style.display = 'none';
+  document.getElementById('analysisLoading').style.display = 'flex';
+
   var gap = Math.max(0, 4.8 - biz.rating);
   var growthPct = Math.min(60, Math.round(gap * 22));
   analysisText = 'האבחון של '+biz.name+':\n★ דירוג: '+biz.rating+' | ביקורות: '+biz.count+'\n📈 פוטנציאל צמיחה: +'+growthPct+'%\n'+window.location.href;
@@ -1989,12 +2105,56 @@ function _onBizChosen() {
   var cta = document.getElementById('searchCta');
   cta.disabled = false;
   cta.classList.add('cta-ready');
-  cta.textContent = '✓ '+biz.name+' — קבל אבחון שיווקי בחינם ←';
+  cta.textContent = '📊 קבל אבחון שיווקי בחינם ←';
+
+  if (biz.name) document.getElementById('mBiz').value = biz.name;
 
   console.log('%c📍 עסק נבחר', 'color:#22d3ee;font-weight:bold',
     { name: biz.name, placeId: biz.placeId, source: biz.source });
 
-  setTimeout(function(){ cta.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 150);
+  setTimeout(function(){ card.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 150);
+}
+
+// פתח תצוגת אבחון ראשוני לפני הפופאפ
+function openAnalysis() {
+  if (!biz) return;
+  var wrap = document.getElementById('analysisWrap');
+  var loading = document.getElementById('analysisLoading');
+  var result = document.getElementById('analysisResult');
+
+  wrap.style.display = 'block';
+  loading.style.display = 'flex';
+  result.style.display = 'none';
+  wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // סימולציה של טעינת נתונים
+  setTimeout(function() {
+    // צור נתוני דמה "מותאמים" לפי שם העסק
+    var seed = biz.name.length % 5;
+    var rating = (3.8 + seed * 0.2).toFixed(1);
+    var reviews = 20 + seed * 15 + Math.floor(biz.name.charCodeAt(0) % 40);
+    var potential = Math.min(55, Math.max(18, 50 - seed * 4));
+    var missing = Math.ceil((4.8 - parseFloat(rating)) / 0.1);
+
+    document.getElementById('analysisName').textContent = biz.name;
+
+    var items = document.getElementById('analysisItems');
+    items.innerHTML = [
+      { icon:'⭐', label:'דירוג נוכחי בגוגל', val: rating+' / 5.0', cls:'warn' },
+      { icon:'💬', label:'ביקורות קיימות', val: reviews+' ביקורות', cls:'' },
+      { icon:'📈', label:'פוטנציאל צמיחה אם תוסיפו '+missing+' ביקורות', val:'+'+potential+'%', cls:'good' }
+    ].map(function(item, i) {
+      return '<div class="analysis-item" style="animation-delay:'+(i*0.1)+'s">'
+        +'<div class="analysis-item-icon">'+item.icon+'</div>'
+        +'<div class="analysis-item-label">'+item.label+'</div>'
+        +'<div class="analysis-item-val'+( item.cls?' '+item.cls:'')+'">'+ item.val+'</div>'
+        +'</div>';
+    }).join('');
+
+    loading.style.display = 'none';
+    result.style.display = 'block';
+    result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 1800);
 }
 
 // שיתוף הקישור לאתר עצמו
