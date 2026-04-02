@@ -25,8 +25,8 @@ module.exports = async function handler(req, res) {
   try {
     const url = new URL('https://maps.googleapis.com/maps/api/place/details/json');
     url.searchParams.set('place_id', placeId.trim());
-    // מביא רק rating ו-user_ratings_total — מינימום שדות = מינימום עלות
-    url.searchParams.set('fields', 'rating,user_ratings_total,name');
+    // reviews מחזיר עד 5 הביקורות האחרונות עם relative_time_description
+    url.searchParams.set('fields', 'rating,user_ratings_total,name,reviews');
     url.searchParams.set('language', 'he');
     url.searchParams.set('key', key);
 
@@ -44,11 +44,19 @@ module.exports = async function handler(req, res) {
 
     const result = data.result || {};
 
+    // זמן הביקורת האחרונה — reviews ממוינות מהחדשה לישנה
+    const reviews = Array.isArray(result.reviews) ? result.reviews : [];
+    const lastReview = reviews[0] || null;
+    const lastReviewTime = lastReview
+      ? (lastReview.relative_time_description || null)
+      : null;
+
     return res.status(200).json({
-      status: 'OK',
-      rating:      typeof result.rating === 'number'              ? result.rating      : null,
-      reviewCount: typeof result.user_ratings_total === 'number'  ? result.user_ratings_total : null,
-      name:        result.name || null
+      status:          'OK',
+      rating:          typeof result.rating === 'number'             ? result.rating             : null,
+      reviewCount:     typeof result.user_ratings_total === 'number' ? result.user_ratings_total : null,
+      name:            result.name || null,
+      lastReviewTime:  lastReviewTime   // e.g. "לפני שבועיים" / "a week ago"
     });
 
   } catch (err) {

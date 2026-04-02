@@ -150,20 +150,20 @@ body{
   pointer-events:none;
 }
 .hero-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(34,211,238,.12);border:1.5px solid rgba(34,211,238,.4);
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(34,211,238,.14);border:2px solid rgba(34,211,238,.5);
   color:var(--turquoise);border-radius:100px;
-  padding:11px 26px;font-size:17px;font-weight:700;
-  margin-bottom:32px;
-  letter-spacing:.2px;
-  box-shadow:0 0 24px rgba(34,211,238,.12);
+  padding:13px 30px;font-size:20px;font-weight:800;
+  margin-bottom:36px;
+  letter-spacing:.3px;
+  box-shadow:0 0 32px rgba(34,211,238,.18),0 2px 12px rgba(0,0,0,.2);
 }
-.hero-badge::before{content:'★';font-size:16px}
+.hero-badge::before{content:'★';font-size:18px}
 .hero-h1{
-  font-size:clamp(30px,6vw,44px);font-weight:800;
-  text-align:center;line-height:1.25;
-  color:var(--text-on-navy);
-  max-width:640px;margin-bottom:18px;
+  font-size:clamp(32px,7vw,48px);font-weight:800;
+  text-align:center;line-height:1.22;
+  color:#fff;
+  max-width:640px;margin-bottom:20px;
 }
 .hero-h1 em{
   font-style:normal;
@@ -172,9 +172,9 @@ body{
   color:var(--orange);
 }
 .hero-sub{
-  font-size:17px;color:var(--text-on-navy-dim);
-  text-align:center;max-width:520px;margin-bottom:40px;
-  line-height:1.8;
+  font-size:18px;color:rgba(250,248,244,.85);
+  text-align:center;max-width:520px;margin-bottom:44px;
+  line-height:1.85;
 }
 .hero-sub strong{color:var(--turquoise);font-weight:700}
 
@@ -287,16 +287,16 @@ body{
   font-size:20px;flex-shrink:0;
 }
 .biz-card-body{flex:1;min-width:0}
-.biz-card-name{font-weight:800;font-size:16px;color:var(--text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.biz-card-sub{font-size:12.5px;color:var(--turquoise-d);margin-top:3px;font-weight:600}
+.biz-card-name{font-weight:800;font-size:20px;color:var(--text);line-height:1.25;overflow:hidden;text-overflow:ellipsis}
+.biz-card-sub{font-size:14px;color:var(--turquoise-d);margin-top:5px;font-weight:600}
 .biz-card-clear{
-  width:30px;height:30px;border-radius:50%;
-  background:var(--cream-dark);border:none;
-  font-size:14px;color:var(--text-s);
+  width:32px;height:32px;border-radius:50%;
+  background:var(--navy);border:none;
+  font-size:15px;color:#fff;
   cursor:pointer;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;transition:all .15s;
+  flex-shrink:0;transition:all .15s;font-weight:700;
 }
-.biz-card-clear:hover{background:#fee2e2;color:#dc2626}
+.biz-card-clear:hover{background:#dc2626}
 
 /* ── Analysis preview ── */
 .analysis-wrap{
@@ -343,37 +343,41 @@ body{
   animation:fadeUp .3s ease both;
 }
 .analysis-item-icon{
-  font-size:28px;margin-bottom:8px;
-  display:block;
+  font-size:30px;margin-bottom:10px;
+  display:flex;align-items:center;justify-content:center;
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(250,248,244,.1);
+  margin-left:auto;margin-right:auto;
 }
 .analysis-item-val{
-  font-size:22px;font-weight:800;
-  color:var(--text-on-navy);
+  font-size:24px;font-weight:800;
+  color:#fff;
   display:block;line-height:1.2;margin-bottom:6px;
 }
 .analysis-item-val.good{color:#4ade80}
 .analysis-item-val.warn{color:var(--orange)}
 .analysis-item-val.bad{color:#f87171}
-.analysis-item-label{font-size:11.5px;color:var(--text-on-navy-dim);line-height:1.4;display:block}
+.analysis-item-label{font-size:12px;color:rgba(250,248,244,.7);line-height:1.4;display:block}
 
 /* תיבת הבטחות */
 .report-promise{
   margin:0 16px 4px;
-  background:rgba(34,211,238,.06);
-  border:1px solid rgba(34,211,238,.2);
+  background:linear-gradient(135deg,rgba(249,185,21,.08) 0%,rgba(34,211,238,.06) 100%);
+  border:1.5px solid rgba(249,185,21,.3);
   border-radius:var(--r);
-  padding:16px 18px;
+  padding:18px 20px;
 }
 .report-promise-title{
-  font-size:13px;font-weight:700;
-  color:var(--turquoise);margin-bottom:12px;
+  font-size:14px;font-weight:800;
+  color:#fff;margin-bottom:14px;
+  letter-spacing:.1px;
 }
-.report-promise-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+.report-promise-list{list-style:none;display:flex;flex-direction:column;gap:11px}
 .report-promise-list li{
-  font-size:12.5px;color:var(--text-on-navy-dim);
-  display:flex;align-items:flex-start;gap:8px;line-height:1.5;
+  font-size:13.5px;color:rgba(250,248,244,.85);
+  display:flex;align-items:flex-start;gap:10px;line-height:1.55;
 }
-.report-promise-list li::before{content:attr(data-icon);font-size:14px;flex-shrink:0;margin-top:1px}
+.report-promise-list li::before{content:attr(data-icon);font-size:15px;flex-shrink:0;margin-top:1px}
 
 .analysis-cta-wrap{padding:14px 16px 20px}
 .analysis-cta-btn{
@@ -393,21 +397,22 @@ body{
   flex-wrap:wrap;
 }
 .insight-card{
-  flex:1;min-width:140px;
-  background:rgba(250,248,244,.05);
-  border:1px solid rgba(250,248,244,.1);
+  flex:1;min-width:150px;
+  background:rgba(250,248,244,.06);
+  border:1px solid rgba(250,248,244,.12);
   border-radius:var(--r);
-  padding:16px 14px;text-align:center;
+  padding:18px 16px;text-align:center;
   animation:fadeUp .5s ease both;
 }
 .insight-pct{
-  font-size:22px;font-weight:800;
+  font-size:26px;font-weight:800;
   color:var(--orange);
-  margin-bottom:8px;
+  margin-bottom:10px;
+  line-height:1;
 }
 .insight-text{
-  font-size:11.5px;color:var(--text-on-navy-dim);
-  line-height:1.5;
+  font-size:12.5px;color:rgba(250,248,244,.75);
+  line-height:1.55;
 }
 
 /* כפתור שיתוף קטן בראש הדף */
@@ -1313,14 +1318,14 @@ body{
       <span>בודק נתוני עסק...</span>
     </div>
     <div class="analysis-result" id="analysisResult" style="display:none">
-      <div class="analysis-header">📊 אבחון ראשוני — <span id="analysisName"></span></div>
+      <div class="analysis-header">📊 אבחון ראשוני - <span id="analysisName"></span></div>
       <div class="analysis-items" id="analysisItems"></div>
       <div class="report-promise">
         <div class="report-promise-title">הכנו עבורך דוח מקיף בחינם הכולל:</div>
         <ul class="report-promise-list">
-          <li data-icon="🔍">ניתוח פערים — איפה המתחרים שלך עוקפים אותך ואיך לסגור את הפער</li>
-          <li data-icon="⭐">מפת דרכים לדירוג 5 כוכבים — שלבים פרקטיים להפיכת כל לקוח לממליץ</li>
-          <li data-icon="✅">צ׳ק-ליסט אופטימיזציה — מה חסר בפרופיל שלך כדי להופיע ב-Top 3 בגוגל</li>
+          <li data-icon="🔍">ניתוח פערים מול מתחרים - איפה הם עוקפים אותך ואיך לסגור את הפער</li>
+          <li data-icon="⭐">מפת דרכים לדירוג 5 כוכבים - שלבים פרקטיים להפיכת כל לקוח לממליץ</li>
+          <li data-icon="✅">צ׳ק-ליסט אופטימיזציה לדירוג גבוה - מה חסר בפרופיל שלך כדי להופיע ב-Top 3</li>
         </ul>
       </div>
       <div class="analysis-cta-wrap">
@@ -1332,15 +1337,15 @@ body{
   <div class="insight-row anim anim-d4">
     <div class="insight-card" style="animation-delay:.1s">
       <div class="insight-pct">70%</div>
-      <div class="insight-text">דירוג גבוה מעלה את סיכויי הסגירה מול מתחרים</div>
+      <div class="insight-text">דירוג גבוה מעלה ב-70% את סיכויי הסגירה מול מתחרים</div>
     </div>
     <div class="insight-card" style="animation-delay:.2s">
       <div class="insight-pct">🔝</div>
       <div class="insight-text">ביקורות טריות הן המפתח להופעה ב-Top 3 בחיפוש המקומי</div>
     </div>
     <div class="insight-card" style="animation-delay:.3s">
-      <div class="insight-pct">💬</div>
-      <div class="insight-text">מענה לביקורות בונה אמון מיידי אצל לקוחות חדשים</div>
+      <div class="insight-pct">🤖</div>
+      <div class="insight-text">המלצות מרובות מגדילות את הסבירות להופעה במודלי שפה כמו ChatGPT ו-Gemini</div>
     </div>
   </div>
 </section>
@@ -2227,47 +2232,48 @@ function openAnalysis() {
 
   // בדיקה שיש placeId אמיתי
   if (!biz.placeId) {
-    _showAnalysisError('לא נמצא מזהה עסק — אנא בחר עסק מהרשימה מחדש');
+    _showAnalysisError('לא נמצא מזהה עסק - אנא בחר עסק מהרשימה מחדש');
     return;
   }
 
-  // שליפת נתוני rating ו-reviews אמיתיים מגוגל
+  // שליפת נתונים אמיתיים מגוגל (rating, reviews, last review time)
   fetch('/api/place-details?placeId=' + encodeURIComponent(biz.placeId))
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.status !== 'OK' || data.rating === null) {
-        _showAnalysisError('לא ניתן לטעון נתונים מגוגל — אנא נסה שוב');
+        _showAnalysisError('לא ניתן לטעון נתונים מגוגל - אנא נסה שוב');
         return;
       }
 
       // שמור נתונים אמיתיים על אובייקט biz
-      biz.rating      = data.rating;
-      biz.count       = data.reviewCount || 0;
+      biz.rating     = data.rating;
+      biz.count      = data.reviewCount || 0;
+      biz.lastReview = data.lastReviewTime || null;
 
-      var rating      = biz.rating;
-      var reviews     = biz.count;
-      var gap         = Math.max(0, 4.8 - rating);
-      var potential   = Math.min(55, Math.round(gap * 22));
-      var missing     = Math.ceil(gap / 0.05);  // ביקורות נחוצות לשיפור 0.05 בדירוג
+      var rating     = biz.rating;
+      var reviews    = biz.count;
+      var lastReview = biz.lastReview
+        ? 'לפני ' + biz.lastReview
+        : 'דירוג יציב לאורך זמן';
 
       document.getElementById('analysisName').textContent = biz.name;
 
       var ratingCls = rating >= 4.5 ? 'good' : rating >= 4.0 ? 'warn' : 'bad';
 
       document.getElementById('analysisItems').innerHTML = [
-        { icon:'⭐', label:'דירוג נוכחי בגוגל',   val: rating.toFixed(1)+' / 5.0', cls: ratingCls },
-        { icon:'💬', label:'ביקורות קיימות',       val: reviews.toLocaleString(),   cls: '' },
-        { icon:'📈', label:'פוטנציאל צמיחה',       val: '+'+potential+'%',           cls: 'good' }
+        { icon:'⭐', label:'דירוג נוכחי בגוגל',    val: rating.toFixed(1)+' / 5.0', cls: ratingCls },
+        { icon:'💬', label:'ביקורות קיימות',        val: reviews.toLocaleString(),   cls: '' },
+        { icon:'🕐', label:'ביקורת אחרונה נכתבה',  val: lastReview,                 cls: '' }
       ].map(function(item, i) {
         return '<div class="analysis-item" style="animation-delay:'+(i*0.12)+'s">'
           +'<span class="analysis-item-icon">'+item.icon+'</span>'
-          +'<span class="analysis-item-val'+(item.cls?' '+item.cls:'')+'">'+ escHtml(item.val)+'</span>'
+          +'<span class="analysis-item-val'+(item.cls?' '+item.cls:'')+'" style="font-size:'+(item.val.length>8?'16px':'24px')+'">'+ escHtml(item.val)+'</span>'
           +'<span class="analysis-item-label">'+item.label+'</span>'
           +'</div>';
       }).join('');
 
       // עדכן analysisText לשיתוף
-      analysisText = 'האבחון של '+biz.name+':\n★ דירוג: '+rating.toFixed(1)+' | ביקורות: '+reviews+'\n📈 פוטנציאל צמיחה: +'+potential+'%\n'+window.location.href;
+      analysisText = 'האבחון של '+biz.name+':\n★ דירוג: '+rating.toFixed(1)+' | ביקורות: '+reviews+'\n🕐 ביקורת אחרונה: '+lastReview+'\n'+window.location.href;
 
       loading.style.display = 'none';
       resultEl.style.display = 'block';
