@@ -292,13 +292,13 @@ body{
 .biz-card-name{font-weight:800;font-size:22px;color:var(--text);line-height:1.2;word-break:break-word}
 .biz-card-addr{font-size:13px;color:var(--text-s);margin-top:4px;font-weight:400;line-height:1.4}
 .biz-card-clear{
-  width:32px;height:32px;border-radius:50%;
-  background:var(--navy);border:none;
-  font-size:15px;color:#fff;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,0.18);border:1.5px solid rgba(255,255,255,0.35);
+  font-size:16px;color:#fff;
   cursor:pointer;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;transition:all .15s;font-weight:700;
+  flex-shrink:0;transition:all .15s;font-weight:800;
 }
-.biz-card-clear:hover{background:#dc2626}
+.biz-card-clear:hover{background:#dc2626;border-color:#dc2626}
 
 /* ── Analysis preview ── */
 .analysis-wrap{
@@ -350,9 +350,9 @@ body{
   width:52px;height:52px;border-radius:50%;
   margin-left:auto;margin-right:auto;margin-bottom:10px;
 }
-.analysis-item-icon.ic-rating  { background:rgba(249,185,21,.2);  border:1.5px solid rgba(249,185,21,.4); }
-.analysis-item-icon.ic-reviews { background:rgba(34,211,238,.2);  border:1.5px solid rgba(34,211,238,.4); }
-.analysis-item-icon.ic-time    { background:rgba(167,139,250,.2); border:1.5px solid rgba(167,139,250,.4); }
+.analysis-item-icon.ic-rating  { background:rgba(249,185,21,.2);  border:1.5px solid rgba(249,185,21,.4);  color:#f9b915; }
+.analysis-item-icon.ic-reviews { background:rgba(34,211,238,.2);  border:1.5px solid rgba(34,211,238,.4);  color:#22d3ee; }
+.analysis-item-icon.ic-time    { background:rgba(167,139,250,.2); border:1.5px solid rgba(167,139,250,.4); color:#a78bfa; }
 .analysis-item-label{
   font-size:13px;color:#fff;font-weight:700;
   line-height:1.3;display:block;margin-bottom:8px;
@@ -366,7 +366,8 @@ body{
 .analysis-item-val.warn{color:var(--orange)}
 .analysis-item-val.bad{color:#f87171}
 .analysis-item-val.sm{font-size:16px}
-.analysis-item-icon.ic-stability{ background:rgba(74,222,128,.2); border:1.5px solid rgba(74,222,128,.4); }
+.analysis-item-icon.ic-stability{ background:rgba(74,222,128,.2); border:1.5px solid rgba(74,222,128,.4); color:#4ade80; }
+.analysis-item-sub{font-size:11px;color:rgba(250,248,244,.55);font-weight:500;margin-top:4px;display:block;line-height:1.3}
 
 /* קו מפריד */
 .section-divider{
@@ -409,16 +410,16 @@ body{
   padding:18px 20px;
 }
 .report-promise-title{
-  font-size:17px;font-weight:800;
-  color:#fff;margin-bottom:16px;
-  letter-spacing:.1px;
+  font-size:19px;font-weight:800;
+  color:#fff;margin-bottom:18px;
+  letter-spacing:.1px;line-height:1.4;
 }
-.report-promise-list{list-style:none;display:flex;flex-direction:column;gap:14px}
+.report-promise-list{list-style:none;display:flex;flex-direction:column;gap:15px}
 .report-promise-list li{
-  font-size:15px;color:rgba(250,248,244,.9);
-  display:flex;align-items:flex-start;gap:12px;line-height:1.6;
+  font-size:16px;color:rgba(250,248,244,.95);
+  display:flex;align-items:flex-start;gap:12px;line-height:1.65;
 }
-.report-promise-list li::before{content:attr(data-icon);font-size:18px;flex-shrink:0;margin-top:1px}
+.report-promise-list li::before{content:attr(data-icon);font-size:20px;flex-shrink:0;margin-top:1px}
 
 .analysis-cta-wrap{padding:14px 16px 20px}
 .analysis-cta-btn{
@@ -2328,27 +2329,25 @@ function openAnalysis() {
         lastReviewDisplay = biz.lastReview;
       }
 
-      // ציון יציבות
-      var stabilityVal = rating >= 4.5 ? 'מצוין' : rating >= 4.0 ? 'טוב' : 'זקוק לשיפור';
-      var stabilityCls = rating >= 4.5 ? 'good' : rating >= 4.0 ? 'warn' : 'bad';
-
       document.getElementById('analysisName').textContent = biz.name;
 
       var ratingCls = rating >= 4.5 ? 'good' : rating >= 4.0 ? 'warn' : 'bad';
 
       // 4 כרטיסים - label מעל, ערך מתחת
+      // אייקונים: תווים Unicode שמגיבים ל-CSS color (לא emoji) לתצוגה לבנה ואחידה
       var cards = [
-        { icon:'⭐', iconCls:'ic-rating',    label:'דירוג נוכחי בגוגל', val: rating.toFixed(1)+' / 5.0', cls: ratingCls },
-        { icon:'💬', iconCls:'ic-reviews',   label:'ביקורות קיימות',    val: reviews.toLocaleString(),   cls: '' },
-        { icon:'🕐', iconCls:'ic-time',      label:'ביקורת אחרונה',     val: lastReviewDisplay,          cls: '' },
-        { icon:'🏆', iconCls:'ic-stability', label:'ציון יציבות',       val: stabilityVal,               cls: stabilityCls }
+        { icon:'★', iconCls:'ic-rating',    label:'דירוג נוכחי בגוגל', val: rating.toFixed(1)+' / 5.0',    cls: ratingCls },
+        { icon:'◉', iconCls:'ic-reviews',   label:'ביקורות קיימות',    val: reviews.toLocaleString(),       cls: '' },
+        { icon:'◑', iconCls:'ic-time',      label:'ביקורת אחרונה',     val: lastReviewDisplay,              cls: '' },
+        { icon:'◆', iconCls:'ic-stability', label:'ציון יציבות',       val: 'ממתין לאבחון עומק',           sub: 'יופיע בדוח המלא', cls: 'sm' }
       ];
       document.getElementById('analysisItems').innerHTML = cards.map(function(item, i) {
-        var valClass = 'analysis-item-val'+(item.cls?' '+item.cls:'')+(item.val.length>10?' sm':'');
+        var valClass = 'analysis-item-val'+(item.cls?' '+item.cls:'')+((!item.cls && item.val.length>10)?' sm':'');
         return '<div class="analysis-item" style="animation-delay:'+(i*0.12)+'s">'
           +'<span class="analysis-item-icon '+item.iconCls+'">'+item.icon+'</span>'
           +'<span class="analysis-item-label">'+item.label+'</span>'
           +'<span class="'+valClass+'">'+ escHtml(item.val)+'</span>'
+          +(item.sub ? '<span class="analysis-item-sub">'+escHtml(item.sub)+'</span>' : '')
           +'</div>';
       }).join('');
 

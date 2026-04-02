@@ -44,8 +44,10 @@ module.exports = async function handler(req, res) {
 
     const result = data.result || {};
 
-    // זמן הביקורת האחרונה — reviews ממוינות מהחדשה לישנה
-    const reviews = Array.isArray(result.reviews) ? result.reviews : [];
+    // זמן הביקורת האחרונה — מיין לפי timestamp יורד כדי לקבל את הכי עדכנית
+    const reviews = Array.isArray(result.reviews)
+      ? result.reviews.slice().sort((a, b) => (b.time || 0) - (a.time || 0))
+      : [];
     const lastReview = reviews[0] || null;
     const lastReviewTime = lastReview
       ? (lastReview.relative_time_description || null)
