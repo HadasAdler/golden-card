@@ -56,7 +56,8 @@ module.exports = async function handler(req, res) {
       rating:          typeof result.rating === 'number'             ? result.rating             : null,
       reviewCount:     typeof result.user_ratings_total === 'number' ? result.user_ratings_total : null,
       name:            result.name || null,
-      lastReviewTime:  lastReviewTime   // e.g. "לפני שבועיים" / "a week ago"
+      lastReviewTime:      lastReviewTime,
+      lastReviewTimestamp: lastReview ? (lastReview.time || null) : null
     });
 
   } catch (err) {

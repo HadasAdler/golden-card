@@ -366,6 +366,39 @@ body{
 .analysis-item-val.warn{color:var(--orange)}
 .analysis-item-val.bad{color:#f87171}
 .analysis-item-val.sm{font-size:16px}
+.analysis-item-icon.ic-stability{ background:rgba(74,222,128,.2); border:1.5px solid rgba(74,222,128,.4); }
+
+/* קו מפריד */
+.section-divider{
+  width:100%;max-width:560px;
+  margin:36px 0 28px;
+  position:relative;
+  display:flex;align-items:center;gap:12px;
+}
+.section-divider::before,.section-divider::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,211,238,.4),transparent);
+}
+.section-divider-text{
+  font-size:11px;color:var(--turquoise);font-weight:700;
+  letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;
+}
+
+/* כרטיס Top 3 */
+.local-rank-card{
+  width:100%;max-width:560px;
+  background:rgba(249,185,21,.08);
+  border:1.5px solid rgba(249,185,21,.4);
+  border-radius:var(--r-lg);
+  padding:16px 20px;
+  display:flex;align-items:center;gap:14px;
+  animation:fadeUp .3s ease both;
+  margin-top:12px;
+}
+.local-rank-icon{font-size:28px;flex-shrink:0}
+.local-rank-body{flex:1}
+.local-rank-title{font-size:14px;font-weight:800;color:var(--orange);margin-bottom:4px}
+.local-rank-sub{font-size:12.5px;color:rgba(250,248,244,.75);line-height:1.5}
 
 /* תיבת הבטחות */
 .report-promise{
@@ -1329,12 +1362,20 @@ body{
       <div class="analysis-header">📊 אבחון ראשוני - <span id="analysisName"></span></div>
       <div class="analysis-items" id="analysisItems"></div>
       <div class="report-promise">
-        <div class="report-promise-title">הכנו עבורך דוח מקיף בחינם הכולל:</div>
+        <div class="report-promise-title">הכנו עבורך דוח מקיף <span style="color:var(--orange);font-weight:900">בחינם</span> הכולל:</div>
         <ul class="report-promise-list">
           <li data-icon="🔍">ניתוח פערים מול מתחרים - איפה הם עוקפים אותך ואיך לסגור את הפער</li>
           <li data-icon="⭐">מפת דרכים לדירוג 5 כוכבים - שלבים פרקטיים להפיכת כל לקוח לממליץ</li>
           <li data-icon="✅">צ׳ק-ליסט אופטימיזציה לדירוג גבוה - מה חסר בפרופיל שלך כדי להופיע ב-Top 3</li>
+          <li data-icon="🎁">...ועוד הפתעות נוספות שמחכות לך בדוח!</li>
         </ul>
+      </div>
+      <div class="local-rank-card" id="localRankCard" style="display:none">
+        <div class="local-rank-icon">⚠️</div>
+        <div class="local-rank-body">
+          <div class="local-rank-title">דירוג מקומי - העסק שלך לא מופיע ב-Top 3</div>
+          <div class="local-rank-sub">עסקים עם דירוג גבוה יותר סוגרים לפניך. הדוח מסביר איך לשנות את זה.</div>
+        </div>
       </div>
       <div class="analysis-cta-wrap">
         <button class="analysis-cta-btn" onclick="openModal()">שלח לי את הדו״ח המלא למייל ←</button>
@@ -1342,6 +1383,9 @@ body{
     </div>
   </div>
 
+  <div class="section-divider anim anim-d4">
+    <span class="section-divider-text">תובנות שוק</span>
+  </div>
   <div class="insight-row anim anim-d4">
     <div class="insight-card" style="animation-delay:.1s">
       <div class="insight-pct">70%</div>
@@ -2258,25 +2302,46 @@ function openAnalysis() {
       }
 
       // שמור נתונים אמיתיים על אובייקט biz
-      biz.rating     = data.rating;
-      biz.count      = data.reviewCount || 0;
-      biz.lastReview = data.lastReviewTime || null;
+      biz.rating          = data.rating;
+      biz.count           = data.reviewCount || 0;
+      biz.lastReview      = data.lastReviewTime || null;
+      biz.lastReviewTs    = data.lastReviewTimestamp || null;
 
-      var rating     = biz.rating;
-      var reviews    = biz.count;
-      var lastReview = biz.lastReview
-        ? 'לפני ' + biz.lastReview
-        : 'דירוג יציב לאורך זמן';
+      var rating   = biz.rating;
+      var reviews  = biz.count;
+
+      // חישוב תאריך אמיתי מ-Unix timestamp
+      var lastReviewDisplay = 'לא זמין';
+      if (biz.lastReviewTs) {
+        var d = new Date(biz.lastReviewTs * 1000);
+        var dd = String(d.getDate()).padStart(2,'0');
+        var mm = String(d.getMonth()+1).padStart(2,'0');
+        var yyyy = d.getFullYear();
+        var dateStr = dd+'.'+mm+'.'+yyyy;
+        var diffDays = Math.floor((Date.now() - d.getTime()) / 86400000);
+        var relStr = diffDays < 7  ? 'לפני '+diffDays+' ימים'
+                   : diffDays < 30 ? 'לפני '+Math.floor(diffDays/7)+' שבועות'
+                   : diffDays < 365? 'לפני '+Math.floor(diffDays/30)+' חודשים'
+                   : 'לפני '+Math.floor(diffDays/365)+' שנים';
+        lastReviewDisplay = dateStr + ' - ' + relStr;
+      } else if (biz.lastReview) {
+        lastReviewDisplay = biz.lastReview;
+      }
+
+      // ציון יציבות
+      var stabilityVal = rating >= 4.5 ? 'מצוין' : rating >= 4.0 ? 'טוב' : 'זקוק לשיפור';
+      var stabilityCls = rating >= 4.5 ? 'good' : rating >= 4.0 ? 'warn' : 'bad';
 
       document.getElementById('analysisName').textContent = biz.name;
 
       var ratingCls = rating >= 4.5 ? 'good' : rating >= 4.0 ? 'warn' : 'bad';
 
-      // סדר: label (לבן, מעל) → value (מספר גדול, מתחת)
+      // 4 כרטיסים - label מעל, ערך מתחת
       var cards = [
-        { icon:'⭐', iconCls:'ic-rating',  label:'דירוג נוכחי בגוגל',   val: rating.toFixed(1)+' / 5.0', cls: ratingCls },
-        { icon:'💬', iconCls:'ic-reviews', label:'ביקורות קיימות',       val: reviews.toLocaleString(),   cls: '' },
-        { icon:'🕐', iconCls:'ic-time',    label:'ביקורת אחרונה',        val: lastReview,                 cls: '' }
+        { icon:'⭐', iconCls:'ic-rating',    label:'דירוג נוכחי בגוגל', val: rating.toFixed(1)+' / 5.0', cls: ratingCls },
+        { icon:'💬', iconCls:'ic-reviews',   label:'ביקורות קיימות',    val: reviews.toLocaleString(),   cls: '' },
+        { icon:'🕐', iconCls:'ic-time',      label:'ביקורת אחרונה',     val: lastReviewDisplay,          cls: '' },
+        { icon:'🏆', iconCls:'ic-stability', label:'ציון יציבות',       val: stabilityVal,               cls: stabilityCls }
       ];
       document.getElementById('analysisItems').innerHTML = cards.map(function(item, i) {
         var valClass = 'analysis-item-val'+(item.cls?' '+item.cls:'')+(item.val.length>10?' sm':'');
@@ -2287,8 +2352,14 @@ function openAnalysis() {
           +'</div>';
       }).join('');
 
+      // כרטיס Top 3 - אם דירוג או ביקורות נמוכים מסף
+      var rankCard = document.getElementById('localRankCard');
+      if (rankCard) {
+        rankCard.style.display = (rating < 4.3 || reviews < 30) ? 'flex' : 'none';
+      }
+
       // עדכן analysisText לשיתוף
-      analysisText = 'האבחון של '+biz.name+':\n★ דירוג: '+rating.toFixed(1)+' | ביקורות: '+reviews+'\n🕐 ביקורת אחרונה: '+lastReview+'\n'+window.location.href;
+      analysisText = 'האבחון של '+biz.name+':\n★ דירוג: '+rating.toFixed(1)+' | ביקורות: '+reviews+'\n🕐 ביקורת אחרונה: '+lastReviewDisplay+'\n'+window.location.href;
 
       loading.style.display = 'none';
       resultEl.style.display = 'block';
@@ -2296,7 +2367,7 @@ function openAnalysis() {
     })
     .catch(function(e) {
       console.error('[place-details fetch error]', e);
-      _showAnalysisError('שגיאה בטעינת נתונים — בדוק חיבור ונסה שוב');
+      _showAnalysisError('שגיאה בטעינת נתונים - בדוק חיבור ונסה שוב');
     });
 }
 
