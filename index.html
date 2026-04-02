@@ -353,6 +353,7 @@ body{
 }
 .analysis-item-val.good{color:#4ade80}
 .analysis-item-val.warn{color:var(--orange)}
+.analysis-item-val.bad{color:#f87171}
 .analysis-item-label{font-size:11.5px;color:var(--text-on-navy-dim);line-height:1.4;display:block}
 
 /* תיבת הבטחות */
@@ -2212,46 +2213,75 @@ function clearBizSelection() {
   searchInput.focus();
 }
 
-// פתח תצוגת אבחון ראשוני לפני הפופאפ
+// פתח תצוגת אבחון — נתונים אמיתיים מ-Google Places Details API
 function openAnalysis() {
   if (!biz) return;
   var wrap = document.getElementById('analysisWrap');
   var loading = document.getElementById('analysisLoading');
-  var result = document.getElementById('analysisResult');
+  var resultEl = document.getElementById('analysisResult');
 
   wrap.style.display = 'block';
   loading.style.display = 'flex';
-  result.style.display = 'none';
+  resultEl.style.display = 'none';
   wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-  // סימולציה של טעינת נתונים
-  setTimeout(function() {
-    // צור נתוני דמה "מותאמים" לפי שם העסק
-    var seed = biz.name.length % 5;
-    var rating = (3.8 + seed * 0.2).toFixed(1);
-    var reviews = 20 + seed * 15 + Math.floor(biz.name.charCodeAt(0) % 40);
-    var potential = Math.min(55, Math.max(18, 50 - seed * 4));
-    var missing = Math.ceil((4.8 - parseFloat(rating)) / 0.1);
+  // בדיקה שיש placeId אמיתי
+  if (!biz.placeId) {
+    _showAnalysisError('לא נמצא מזהה עסק — אנא בחר עסק מהרשימה מחדש');
+    return;
+  }
 
-    document.getElementById('analysisName').textContent = biz.name;
+  // שליפת נתוני rating ו-reviews אמיתיים מגוגל
+  fetch('/api/place-details?placeId=' + encodeURIComponent(biz.placeId))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.status !== 'OK' || data.rating === null) {
+        _showAnalysisError('לא ניתן לטעון נתונים מגוגל — אנא נסה שוב');
+        return;
+      }
 
-    var items = document.getElementById('analysisItems');
-    items.innerHTML = [
-      { icon:'⭐', label:'דירוג נוכחי בגוגל', val: rating+' / 5.0', cls:'warn' },
-      { icon:'💬', label:'ביקורות קיימות', val: reviews+'', cls:'' },
-      { icon:'📈', label:'פוטנציאל צמיחה', val:'+'+potential+'%', cls:'good' }
-    ].map(function(item, i) {
-      return '<div class="analysis-item" style="animation-delay:'+(i*0.12)+'s">'
-        +'<span class="analysis-item-icon">'+item.icon+'</span>'
-        +'<span class="analysis-item-val'+(item.cls?' '+item.cls:'')+'">'+ item.val+'</span>'
-        +'<span class="analysis-item-label">'+item.label+'</span>'
-        +'</div>';
-    }).join('');
+      // שמור נתונים אמיתיים על אובייקט biz
+      biz.rating      = data.rating;
+      biz.count       = data.reviewCount || 0;
 
-    loading.style.display = 'none';
-    result.style.display = 'block';
-    result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, 1800);
+      var rating      = biz.rating;
+      var reviews     = biz.count;
+      var gap         = Math.max(0, 4.8 - rating);
+      var potential   = Math.min(55, Math.round(gap * 22));
+      var missing     = Math.ceil(gap / 0.05);  // ביקורות נחוצות לשיפור 0.05 בדירוג
+
+      document.getElementById('analysisName').textContent = biz.name;
+
+      var ratingCls = rating >= 4.5 ? 'good' : rating >= 4.0 ? 'warn' : 'bad';
+
+      document.getElementById('analysisItems').innerHTML = [
+        { icon:'⭐', label:'דירוג נוכחי בגוגל',   val: rating.toFixed(1)+' / 5.0', cls: ratingCls },
+        { icon:'💬', label:'ביקורות קיימות',       val: reviews.toLocaleString(),   cls: '' },
+        { icon:'📈', label:'פוטנציאל צמיחה',       val: '+'+potential+'%',           cls: 'good' }
+      ].map(function(item, i) {
+        return '<div class="analysis-item" style="animation-delay:'+(i*0.12)+'s">'
+          +'<span class="analysis-item-icon">'+item.icon+'</span>'
+          +'<span class="analysis-item-val'+(item.cls?' '+item.cls:'')+'">'+ escHtml(item.val)+'</span>'
+          +'<span class="analysis-item-label">'+item.label+'</span>'
+          +'</div>';
+      }).join('');
+
+      // עדכן analysisText לשיתוף
+      analysisText = 'האבחון של '+biz.name+':\n★ דירוג: '+rating.toFixed(1)+' | ביקורות: '+reviews+'\n📈 פוטנציאל צמיחה: +'+potential+'%\n'+window.location.href;
+
+      loading.style.display = 'none';
+      resultEl.style.display = 'block';
+      resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    })
+    .catch(function(e) {
+      console.error('[place-details fetch error]', e);
+      _showAnalysisError('שגיאה בטעינת נתונים — בדוק חיבור ונסה שוב');
+    });
+}
+
+function _showAnalysisError(msg) {
+  var loading = document.getElementById('analysisLoading');
+  loading.innerHTML = '<span style="color:#f87171;font-size:13.5px">⚠️ '+escHtml(msg)+'</span>';
 }
 
 // שיתוף הקישור לאתר עצמו
