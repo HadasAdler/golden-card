@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>כרטיס המלצות לגוגל</title>
+
+<!-- ══════════════════════════════════════════════
+     SUPABASE CONFIG — הדביקי כאן את הפרטים שלך
+     ══════════════════════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+  var SUPABASE_URL = 'https://kjykdleskbqewntkfzky.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable__14W1IrEqGnHdyiIUuo39A_1j0gpnls';
+  var _sb      = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  var _sbReady = true;
+  console.log('%c✅ Supabase מחובר', 'color:#22c55e;font-weight:bold');
+
+  /* ── קישורי תשלום ── */
+  var CARDCOM_MAIN   = 'https://secure.cardcom.solutions/EA/EA5/izkLsqHzXE2BUeMo5vOAOg/PaymentSP';
+  var CARDCOM_UPSELL = 'https://secure.cardcom.solutions/EA/EA5/erYbppWafk2D0fHH4xp9oA/PaymentSP';
+
+  /* ── Google Places (New API) ──
+     נדרש ב-Google Cloud Console (APIs & Services → Library):
+     ✅ Maps JavaScript API — הפעל
+     ✅ Places API (New)   — הפעל
+     ⚠️ לפני Production: הגבל מפתח ל-HTTP referrers של הדומיין שלך  */
+  // חיפוש עסקים דרך /api/places בלבד (Vercel serverless — מפתח ב-NEXT_PUBLIC_GOOGLE_PLACES_KEY)
+  window._gAutoSuggest = null; // לא בשימוש — נשמר לתאימות אחורה
+</script>
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0a192f;
+  --navy-mid:#0f2447;
+  --navy-light:#1a3a6e;
+  --cream:#faf8f4;
+  --cream-dark:#f0ebe0;
+  --cream-mid:#e8e0d0;
+  --orange:#f9b915;
+  --orange-d:#d4950e;
+  --orange-l:#fefce8;
+  --orange-b:#fef08a;
+  --turquoise:#22d3ee;
+  --turquoise-d:#06b6d4;
+  --gold:#c8a84b;
+  --gold-l:#faf4e0;
+  --green:#15803d;
+  --green-l:#dcfce7;
+  --red:#dc2626;
+  --red-l:#fee2e2;
+  --text-on-navy:#faf8f4;
+  --text-on-navy-dim:rgba(250,248,244,.65);
+  --text:#1a1a2e;
+  --text-s:#4a5568;
+  --text-l:#8ea4bc;
+  --border:#dde5f0;
+  --surface:#f7f4f0;
+  --white:#fff;
+  --r:14px;
+  --r-lg:22px;
+  --sh:0 2px 16px rgba(10,25,47,.08);
+  --sh-md:0 8px 32px rgba(10,25,47,.14);
+  --sh-lg:0 20px 60px rgba(10,25,47,.22);
+  --sh-o:0 6px 24px rgba(249,185,21,.25);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--navy);
+  color:var(--text-on-navy);
+  min-height:100vh;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* ─── SECTION VISIBILITY ─── */
+.sec{display:none!important}
+.sec.on{display:block!important}
+.hero-sec.on{display:flex!important}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(249,185,21,.4)}70%{box-shadow:0 0 0 18px rgba(249,185,21,0)}100%{box-shadow:0 0 0 0 rgba(249,185,21,0)}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+
+.anim{animation:fadeUp .5s ease both}
+.anim-d1{animation-delay:.1s}
+.anim-d2{animation-delay:.2s}
+.anim-d3{animation-delay:.3s}
+.anim-d4{animation-delay:.4s}
+
+/* ─── STEPPER ─── */
+.stepper{
+  position:sticky;top:0;z-index:100;
+  background:var(--navy-mid);
+  border-bottom:1px solid rgba(250,248,244,.08);
+  display:none;
+  padding:12px 20px;
+}
+.stepper.vis{display:block}
+.step-track{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;max-width:480px;margin:0 auto;
+}
+.step-item{
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;flex:1;
+}
+.step-item:not(:last-child)::after{
+  content:'';position:absolute;top:13px;left:calc(-50% + 14px);right:calc(50% + 14px);
+  height:2px;background:rgba(250,248,244,.15);z-index:-1;
+}
+.step-item.done:not(:last-child)::after{background:var(--turquoise);opacity:.6}
+.step-dot{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(250,248,244,.12);
+  border:2px solid rgba(250,248,244,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:var(--text-on-navy-dim);
+  transition:all .3s;
+}
+.step-item.active .step-dot{
+  background:var(--turquoise);border-color:var(--turquoise);
+  color:#0a192f;box-shadow:0 4px 16px rgba(34,211,238,.3);
+}
+.step-item.done .step-dot{
+  background:var(--green);border-color:var(--green);color:#fff;
+}
+.step-label{font-size:10px;color:var(--text-on-navy-dim);margin-top:4px;text-align:center}
+.step-item.active .step-label,.step-item.done .step-label{color:var(--text-on-navy);opacity:.9}
+
+/* ─── HERO / STEP 1 ─── */
+.hero-sec{
+  flex-direction:column;align-items:center;
+  min-height:100vh;
+  padding:48px 20px 80px;
+  background:linear-gradient(160deg,var(--navy) 0%,var(--navy-mid) 60%,#0d2547 100%);
+  position:relative;overflow:hidden;
+}
+.hero-sec::before{
+  content:'';position:absolute;top:-120px;right:-120px;
+  width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,rgba(34,211,238,.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);
+  color:var(--turquoise);border-radius:100px;
+  padding:6px 16px;font-size:12.5px;font-weight:600;
+  margin-bottom:28px;
+}
+.hero-badge::before{content:'★';font-size:13px}
+.hero-h1{
+  font-size:clamp(26px,5vw,42px);font-weight:800;
+  text-align:center;line-height:1.28;
+  color:var(--text-on-navy);
+  max-width:640px;margin-bottom:18px;
+}
+.hero-h1 em{
+  font-style:normal;
+  background:none;
+  -webkit-text-fill-color:var(--orange);
+  color:var(--orange);
+}
+.hero-sub{
+  font-size:17px;color:var(--text-on-navy-dim);
+  text-align:center;max-width:520px;margin-bottom:40px;
+  line-height:1.8;
+}
+.hero-sub strong{color:var(--turquoise);font-weight:700}
+
+/* Search */
+.search-wrap{width:100%;max-width:560px;position:relative;margin-bottom:16px}
+.search-input-row{
+  display:flex;align-items:stretch;
+  background:rgba(250,248,244,.06);
+  border:1.5px solid rgba(250,248,244,.15);
+  border-radius:var(--r-lg);
+  overflow:hidden;transition:border-color .25s, box-shadow .25s;
+  margin-bottom:0;
+}
+.search-input-row:focus-within{
+  border-color:rgba(34,211,238,.5);
+  box-shadow:0 0 0 3px rgba(34,211,238,.1);
+}
+.search-input{
+  flex:1;padding:18px 16px 18px 0;
+  background:transparent;
+  border:none;
+  color:var(--text-on-navy);font-size:16px;
+  outline:none;
+  font-family:inherit;
+}
+.search-input::placeholder{color:var(--text-on-navy-dim)}
+.search-icon{
+  display:flex;align-items:center;padding:0 16px;
+  font-size:18px;color:var(--text-on-navy-dim);flex-shrink:0;
+}
+.search-go-btn{
+  background:var(--orange);color:#0a192f;
+  border:none;padding:0 22px;
+  font-size:14.5px;font-weight:700;
+  cursor:pointer;font-family:inherit;
+  white-space:nowrap;transition:background .18s;
+  flex-shrink:0;
+}
+.search-go-btn:hover{background:var(--orange-d)}
+/* CTA — disabled עד שנבחר עסק */
+.search-btn{
+  width:100%;max-width:560px;
+  padding:17px 32px;margin-top:12px;
+  background:rgba(250,248,244,.1);
+  border:1.5px solid rgba(250,248,244,.15);
+  border-radius:var(--r-lg);
+  color:rgba(250,248,244,.35);font-size:16.5px;font-weight:700;
+  cursor:not-allowed;transition:all .3s;
+  font-family:inherit;
+}
+.search-btn:disabled{
+  background:rgba(250,248,244,.07);
+  color:rgba(250,248,244,.3);
+  border-color:rgba(250,248,244,.1);
+  box-shadow:none;cursor:not-allowed;
+}
+.search-btn.cta-ready{
+  background:var(--orange);
+  color:#0a192f;border-color:transparent;
+  box-shadow:var(--sh-o);cursor:pointer;
+  animation:pulse 1.8s ease infinite;
+}
+.search-btn.cta-ready:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 30px rgba(249,185,21,.42);
+  animation:none;
+}
+.search-btn.cta-ready:active{transform:translateY(0)}
+
+/* Dropdown */
+.sdrop{
+  position:absolute;top:calc(100% + 6px);right:0;left:0;
+  background:#fff;border-radius:var(--r);
+  box-shadow:var(--sh-lg);border:1px solid var(--border);
+  overflow:hidden;z-index:50;display:none;
+}
+.sdrop.open{display:block;animation:slideDown .18s ease}
+.di{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 18px;cursor:pointer;
+  transition:background .15s;color:var(--text);
+}
+.di:hover{background:var(--cream)}
+.di-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--cream-dark);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;flex-shrink:0;
+}
+.di-main{font-weight:600;font-size:14px;line-height:1.3}
+.di-sub{font-size:12px;color:var(--text-s)}
+.di-empty{cursor:default;opacity:.7}
+.di-empty:hover{background:none}
+
+/* Share button */
+.share-row{
+  display:none;align-items:center;gap:10px;
+  margin-top:14px;animation:fadeIn .4s ease;
+}
+.share-row.show{display:flex}
+.share-btn{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(250,248,244,.07);
+  border:1px solid rgba(250,248,244,.18);
+  color:var(--text-on-navy);
+  padding:9px 18px;border-radius:100px;
+  font-size:13px;font-weight:600;cursor:pointer;
+  transition:all .2s;font-family:inherit;
+}
+.share-btn:hover{background:rgba(250,248,244,.13);border-color:rgba(250,248,244,.3)}
+.share-hint{font-size:12px;color:var(--text-on-navy-dim)}
+
+/* Trust row */
+.trust-row{
+  display:flex;align-items:center;gap:20px;
+  margin-top:44px;flex-wrap:wrap;justify-content:center;
+}
+.trust-item{
+  display:flex;align-items:center;gap:6px;
+  font-size:12.5px;color:var(--text-on-navy-dim);
+}
+.trust-item::before{font-size:14px}
+.ti-lock::before{content:'🔒'}
+.ti-star::before{content:'⭐'}
+.ti-fast::before{content:'⚡'}
+
+/* ─── MODAL (Step 2) ─── */
+.modal-ov{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(11,29,58,.75);backdrop-filter:blur(4px);
+  display:none;align-items:flex-end;justify-content:center;
+}
+.modal-ov.open{display:flex;animation:fadeIn .2s ease}
+.modal-box{
+  background:var(--cream);color:var(--text);
+  border-radius:var(--r-lg) var(--r-lg) 0 0;
+  padding:32px 28px 40px;
+  width:100%;max-width:520px;
+  animation:fadeUp .3s ease;
+  max-height:92vh;overflow-y:auto;
+}
+.modal-handle{
+  width:40px;height:4px;border-radius:4px;
+  background:var(--cream-mid);margin:0 auto 24px;
+}
+.modal-title{font-size:20px;font-weight:800;color:var(--navy);margin-bottom:6px;text-align:center}
+.modal-sub{font-size:13.5px;color:var(--text-s);text-align:center;margin-bottom:24px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--text-s);margin-bottom:6px}
+.field input{
+  width:100%;padding:13px 16px;
+  border:1.5px solid var(--cream-mid);
+  border-radius:var(--r);
+  background:var(--white);color:var(--text);
+  font-size:15px;font-family:inherit;outline:none;
+  transition:border-color .2s;
+}
+.field input:focus{border-color:var(--navy-light);box-shadow:0 0 0 3px rgba(22,46,88,.08)}
+.modal-btn{
+  width:100%;padding:16px;margin-top:8px;
+  background:var(--orange);
+  border:none;border-radius:var(--r-lg);
+  color:#0a192f;font-size:16px;font-weight:700;
+  cursor:pointer;transition:all .22s;font-family:inherit;
+  box-shadow:var(--sh-o);
+}
+.modal-btn:hover{transform:translateY(-1px)}
+.modal-privacy{font-size:11px;color:var(--text-l);text-align:center;margin-top:12px}
+
+/* ─── STEP 3: BRANDING ─── */
+.brand-sec{padding:48px 20px 80px;max-width:680px;margin:0 auto}
+.sec-title{font-size:clamp(22px,4vw,30px);font-weight:800;color:var(--text-on-navy);margin-bottom:8px}
+.sec-sub{font-size:14.5px;color:var(--text-on-navy-dim);margin-bottom:32px}
+.brand-card{
+  background:rgba(250,248,244,.06);
+  border:1px solid rgba(250,248,244,.12);
+  border-radius:var(--r-lg);
+  padding:28px 24px;margin-bottom:20px;
+}
+.brand-card-title{
+  font-size:14px;font-weight:700;color:var(--turquoise);
+  text-transform:uppercase;letter-spacing:.5px;
+  margin-bottom:20px;display:flex;align-items:center;gap:8px;
+}
+.logo-upload-area{
+  border:2px dashed rgba(250,248,244,.2);
+  border-radius:var(--r);padding:28px;
+  text-align:center;cursor:pointer;
+  transition:all .2s;position:relative;overflow:hidden;
+}
+.logo-upload-area:hover{border-color:var(--turquoise);background:rgba(34,211,238,.04)}
+.logo-upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.logo-upload-icon{font-size:32px;margin-bottom:8px}
+.logo-upload-text{font-size:14px;color:var(--text-on-navy-dim)}
+.logo-preview{max-height:80px;max-width:200px;border-radius:8px;display:none;margin:0 auto}
+.color-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.color-swatch{
+  width:36px;height:36px;border-radius:50%;cursor:pointer;
+  border:3px solid transparent;transition:all .2s;flex-shrink:0;
+}
+.color-swatch.sel{border-color:var(--text-on-navy);transform:scale(1.15)}
+.custom-color-wrap{display:flex;align-items:center;gap:8px}
+.custom-color-wrap input[type=color]{
+  width:36px;height:36px;border-radius:50%;
+  border:3px solid rgba(250,248,244,.2);
+  cursor:pointer;padding:0;background:none;overflow:hidden;
+}
+.custom-color-label{font-size:12.5px;color:var(--text-on-navy-dim)}
+.url-field{margin-top:16px}
+.url-field label{display:block;font-size:13px;font-weight:600;color:var(--text-on-navy-dim);margin-bottom:6px}
+.url-field input{
+  width:100%;padding:12px 16px;
+  background:rgba(250,248,244,.07);
+  border:1.5px solid rgba(250,248,244,.15);
+  border-radius:var(--r);color:var(--text-on-navy);
+  font-size:14px;font-family:inherit;outline:none;
+  transition:border-color .2s;
+}
+.url-field input:focus{border-color:rgba(34,211,238,.5);box-shadow:0 0 0 3px rgba(34,211,238,.08)}
+.url-field input::placeholder{color:var(--text-on-navy-dim)}
+.qr-note{
+  display:flex;align-items:flex-start;gap:10px;
+  background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.2);
+  border-radius:var(--r);padding:14px 16px;margin-top:16px;
+}
+.qr-note-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.qr-note-text{font-size:13px;color:var(--gold-l);line-height:1.55}
+.qr-note-text strong{color:var(--gold)}
+
+/* Phone frame */
+.phone-frame-wrap{display:flex;justify-content:center;margin:28px 0}
+.phone-frame{
+  width:220px;border-radius:34px;background:#0a0a1a;
+  padding:12px 8px;
+  box-shadow:0 24px 64px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06);
+  position:relative;
+}
+.phone-frame::before{
+  content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  width:60px;height:5px;border-radius:5px;background:#1a1a2a;
+}
+.phone-screen{
+  border-radius:24px;overflow:hidden;
+  background:var(--cream-dark);min-height:140px;
+  display:flex;align-items:center;justify-content:center;padding:16px;
+}
+.phone-bar{height:4px;width:36px;border-radius:4px;background:rgba(255,255,255,.15);margin:8px auto 0}
+.gc-preview{
+  width:100%;border-radius:14px;
+  padding:16px;text-align:center;transition:background .3s;font-size:12px;
+}
+.gc-logo{
+  width:44px;height:44px;border-radius:10px;
+  background:rgba(255,255,255,.2);
+  margin:0 auto 8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;overflow:hidden;
+}
+.gc-logo img{width:100%;height:100%;object-fit:contain;display:none}
+.gc-name{font-weight:800;font-size:13px;margin-bottom:3px}
+.gc-tag{font-size:11px;opacity:.75;margin-bottom:10px}
+.gc-stars{font-size:14px;margin-bottom:10px;letter-spacing:2px}
+.gc-cta{
+  display:inline-block;background:rgba(255,255,255,.2);
+  border-radius:100px;padding:6px 14px;font-size:11px;font-weight:700;
+}
+.brand-next-btn{
+  width:100%;padding:16px;
+  background:var(--orange);
+  border:none;border-radius:var(--r-lg);
+  color:#0a192f;font-size:16px;font-weight:700;
+  cursor:pointer;transition:all .22s;font-family:inherit;box-shadow:var(--sh-o);
+}
+.brand-next-btn:hover{transform:translateY(-1px)}
+
+/* ─── STEP 4: REPORT ─── */
+.report-sec{
+  padding:40px 20px 100px;
+  background:linear-gradient(180deg,var(--navy) 0%,#0d1e3a 100%);
+  min-height:100vh;
+}
+.report-inner{max-width:720px;margin:0 auto}
+.report-header{text-align:center;padding:28px 0 36px}
+.report-biz-name{
+  font-size:clamp(22px,4vw,32px);font-weight:800;
+  color:var(--text-on-navy);margin-bottom:6px;
+}
+.report-biz-name span{color:var(--turquoise)}
+.report-badge-row{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  flex-wrap:wrap;margin-top:14px;
+}
+.rbadge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:100px;font-size:12px;font-weight:600;
+}
+.rbadge-good{background:var(--green-l);color:var(--green)}
+.rbadge-warn{background:#fef9c3;color:#854d0e}
+.rbadge-info{background:rgba(250,248,244,.1);color:var(--text-on-navy-dim)}
+.score-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:14px;margin-bottom:28px;
+}
+.score-card{
+  background:rgba(250,248,244,.06);
+  border:1px solid rgba(250,248,244,.1);
+  border-radius:var(--r);padding:20px 16px;text-align:center;
+}
+.score-val{font-size:28px;font-weight:800;color:var(--turquoise);line-height:1.1}
+.score-lbl{font-size:12px;color:var(--text-on-navy-dim);margin-top:4px}
+.r-card{
+  background:rgba(250,248,244,.05);
+  border:1px solid rgba(250,248,244,.09);
+  border-radius:var(--r-lg);padding:24px;margin-bottom:20px;
+}
+.r-card-title{
+  font-size:15px;font-weight:700;color:var(--text-on-navy);
+  margin-bottom:18px;display:flex;align-items:center;gap:8px;
+}
+.r-card-title .icon{font-size:18px}
+.bar-row{margin-bottom:14px}
+.bar-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.bar-label{font-size:13px;color:var(--text-on-navy-dim)}
+.bar-val{font-size:14px;font-weight:700;color:var(--text-on-navy)}
+.bar-track{height:10px;border-radius:10px;background:rgba(250,248,244,.1);overflow:hidden}
+.bar-fill{height:100%;border-radius:10px;width:0;transition:width .8s cubic-bezier(.22,1,.36,1)}
+.bar-fill-you{background:linear-gradient(90deg,var(--turquoise),#67e8f9)}
+.bar-fill-top{background:linear-gradient(90deg,#3b82f6,#6366f1)}
+.comp-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.comp-table th{
+  text-align:right;padding:8px 12px;
+  color:var(--text-on-navy-dim);font-weight:600;font-size:12px;
+  text-transform:uppercase;letter-spacing:.5px;
+  border-bottom:1px solid rgba(250,248,244,.08);
+}
+.comp-table td{padding:10px 12px;border-bottom:1px solid rgba(250,248,244,.06);color:var(--text-on-navy)}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-you{background:rgba(34,211,238,.07)}
+.comp-you td{font-weight:600}
+.stars-cell{color:#fbbf24;letter-spacing:1px}
+.growth-box{
+  background:linear-gradient(135deg,rgba(34,211,238,.07),rgba(6,182,212,.05));
+  border:1px solid rgba(34,211,238,.18);
+  border-radius:var(--r-lg);padding:24px;margin-bottom:20px;
+}
+.growth-title{font-size:17px;font-weight:800;color:var(--text-on-navy);margin-bottom:8px}
+.growth-num{font-size:38px;font-weight:900;color:var(--turquoise);line-height:1}
+.growth-label{font-size:14px;color:var(--text-on-navy-dim);margin-top:4px;margin-bottom:16px}
+.growth-why{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:13.5px;color:var(--text-on-navy-dim);line-height:1.6;
+}
+.growth-why::before{content:'💡';flex-shrink:0;margin-top:1px}
+.card-explainer{
+  background:rgba(250,248,244,.04);
+  border:1px solid rgba(250,248,244,.08);
+  border-radius:var(--r-lg);padding:24px;margin-bottom:20px;
+}
+.card-explainer-title{font-size:17px;font-weight:800;color:var(--text-on-navy);margin-bottom:16px}
+.explain-row{
+  display:flex;align-items:flex-start;gap:12px;
+  margin-bottom:14px;font-size:14px;line-height:1.6;
+  color:var(--text-on-navy-dim);
+}
+.explain-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.explain-text strong{color:var(--text-on-navy)}
+.showcase-wrap{display:flex;justify-content:center;margin:24px 0}
+.showcase-frame{
+  width:240px;border-radius:36px;background:#0a0a1a;
+  padding:12px 10px;
+  box-shadow:0 28px 72px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.05);
+}
+.showcase-frame::before{
+  content:'';display:block;width:60px;height:5px;border-radius:5px;
+  background:#1a1a2a;margin:0 auto 10px;
+}
+.showcase-screen{border-radius:26px;overflow:hidden;background:var(--cream-dark);padding:20px 16px}
+.showcase-bar{height:4px;width:36px;border-radius:4px;background:rgba(255,255,255,.12);margin:8px auto 0}
+/* ── AI ERA BOX ── */
+.ai-era-box{
+  display:flex;align-items:flex-start;gap:14px;
+  background:linear-gradient(135deg,rgba(200,168,75,.12),rgba(249,115,22,.08));
+  border:1px solid rgba(200,168,75,.35);
+  border-radius:var(--r-lg);padding:20px 22px;margin-bottom:20px;
+}
+.ai-era-icon{font-size:28px;flex-shrink:0;margin-top:2px}
+.ai-era-title{
+  font-size:16px;font-weight:800;color:var(--gold);
+  margin-bottom:7px;letter-spacing:.3px;
+}
+.ai-era-text{font-size:14px;color:var(--text-on-navy-dim);line-height:1.65}
+
+/* ── UPSELL AI NOTE ── */
+.upsell-ai-note{
+  font-size:13px;color:var(--gold);
+  background:rgba(200,168,75,.1);
+  border:1px solid rgba(200,168,75,.25);
+  border-radius:var(--r);padding:10px 14px;
+  margin-bottom:16px;line-height:1.55;
+}
+
+.price-section{
+  background:linear-gradient(135deg,rgba(11,29,58,.9),rgba(22,46,88,.8));
+  border:1px solid rgba(250,248,244,.1);
+  border-radius:var(--r-lg);padding:28px 24px;text-align:center;margin-bottom:24px;
+}
+.price-label{font-size:13px;color:var(--text-on-navy-dim);margin-bottom:8px}
+.price-amount{
+  font-size:clamp(36px,6vw,52px);font-weight:900;
+  color:var(--text-on-navy);line-height:1;margin-bottom:4px;
+}
+.price-amount span{font-size:18px;font-weight:600;color:var(--text-on-navy-dim)}
+.price-note{font-size:13px;color:var(--text-on-navy-dim);margin-bottom:20px}
+.price-includes{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;text-align:right}
+.pi-row{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--text-on-navy-dim)}
+.pi-row::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0}
+.pay-btn{
+  width:100%;padding:20px 32px;
+  background:var(--orange);
+  border:none;border-radius:var(--r-lg);
+  color:#0a192f;font-size:17px;font-weight:700;
+  cursor:pointer;transition:all .22s;font-family:inherit;
+  box-shadow:var(--sh-o);
+  position:relative;overflow:hidden;
+}
+.pay-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+  background-size:200% 100%;animation:shimmer 2.5s linear infinite;
+}
+.pay-btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(249,185,21,.42)}
+.pay-btn-main{font-size:17px;font-weight:800}
+.pay-btn-price{font-size:14px;opacity:.9;margin-top:3px}
+.pay-guarantee{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:12px;color:var(--text-on-navy-dim);margin-top:12px;
+}
+
+/* ─── STEP 5: THANK YOU ─── */
+.thanks-sec{
+  padding:48px 20px 100px;
+  background:linear-gradient(160deg,var(--navy) 0%,#0d2040 100%);
+  min-height:100vh;
+}
+.thanks-inner{max-width:640px;margin:0 auto}
+.thanks-hero{text-align:center;padding:0 0 40px}
+.thanks-check{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--green),#16a34a);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;margin:0 auto 20px;
+  box-shadow:0 8px 28px rgba(21,128,61,.35);
+}
+.thanks-title{font-size:clamp(24px,4vw,34px);font-weight:800;color:var(--text-on-navy);margin-bottom:8px}
+.thanks-sub{font-size:15px;color:var(--text-on-navy-dim);line-height:1.7}
+
+/* Upsell */
+.upsell-card{
+  background:linear-gradient(135deg,rgba(22,46,88,.9),rgba(11,29,58,.95));
+  border:1.5px solid rgba(249,115,22,.25);
+  border-radius:var(--r-lg);padding:28px 24px;
+  margin-bottom:24px;position:relative;overflow:hidden;
+}
+.upsell-card::before{
+  content:'';position:absolute;top:-60px;left:-60px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(249,115,22,.1),transparent 70%);
+  pointer-events:none;
+}
+.upsell-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.28);
+  color:var(--turquoise);border-radius:100px;
+  padding:4px 12px;font-size:11.5px;font-weight:700;margin-bottom:14px;
+}
+.upsell-title{
+  font-size:clamp(18px,3vw,24px);font-weight:800;
+  color:var(--text-on-navy);margin-bottom:8px;line-height:1.35;
+}
+.upsell-desc{font-size:14px;color:var(--text-on-navy-dim);margin-bottom:18px;line-height:1.65}
+.upsell-features{list-style:none;margin-bottom:20px}
+.upsell-features li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:13.5px;color:var(--text-on-navy-dim);
+  margin-bottom:10px;line-height:1.5;
+}
+.upsell-features li::before{content:'📊';flex-shrink:0;margin-top:1px}
+.upsell-features li:nth-child(2)::before{content:'🏆'}
+.upsell-features li:nth-child(3)::before{content:'💡'}
+.upsell-price-row{display:flex;align-items:baseline;gap:6px;margin-bottom:18px}
+.upsell-price{font-size:32px;font-weight:900;color:var(--turquoise)}
+.upsell-period{font-size:14px;color:var(--text-on-navy-dim)}
+.upsell-vat{font-size:12px;color:var(--text-on-navy-dim)}
+.upsell-btns{display:flex;flex-direction:column;gap:10px}
+.upsell-yes{
+  width:100%;padding:15px;
+  background:var(--orange);
+  border:none;border-radius:var(--r);
+  color:#0a192f;font-size:15px;font-weight:700;
+  cursor:pointer;transition:all .22s;font-family:inherit;box-shadow:var(--sh-o);
+}
+.upsell-yes:hover{transform:translateY(-1px)}
+.upsell-no{
+  width:100%;padding:12px;background:transparent;
+  border:1px solid rgba(250,248,244,.15);
+  border-radius:var(--r);
+  color:var(--text-on-navy-dim);font-size:13.5px;font-weight:600;
+  cursor:pointer;transition:all .2s;font-family:inherit;
+}
+.upsell-no:hover{border-color:rgba(250,248,244,.3);color:var(--text-on-navy)}
+.upsell-done{
+  background:rgba(250,248,244,.05);
+  border:1px solid rgba(250,248,244,.1);
+  border-radius:var(--r-lg);padding:20px 24px;
+  margin-bottom:24px;text-align:center;
+  font-size:14px;color:var(--text-on-navy-dim);display:none;
+}
+.upsell-done.show{display:block;animation:fadeIn .3s ease}
+
+/* PDF Mockup */
+.pdf-section{margin-bottom:20px}
+.pdf-section-title{
+  font-size:13px;font-weight:700;color:var(--text-on-navy-dim);
+  text-transform:uppercase;letter-spacing:.5px;
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.pdf-section-title::before{content:'📎';font-size:14px}
+.pdf-mock{
+  background:var(--cream);color:var(--navy);
+  border-radius:var(--r);box-shadow:var(--sh-lg);overflow:hidden;
+}
+.pdf-header{
+  background:var(--navy);color:var(--text-on-navy);
+  padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.pdf-logo-area{font-size:15px;font-weight:700;letter-spacing:.5px}
+.pdf-logo-sub{font-size:11px;opacity:.6;margin-top:2px}
+.pdf-header-right{text-align:left;font-size:11px;opacity:.6}
+.pdf-body{padding:28px 24px}
+.pdf-card-wrap{display:flex;justify-content:center;margin-bottom:24px}
+.pdf-card{
+  width:200px;height:120px;border-radius:14px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:16px;text-align:center;
+  box-shadow:0 8px 28px rgba(0,0,0,.18);
+}
+.pdf-card .qr-box{
+  width:52px;height:52px;border-radius:8px;
+  background:var(--cream-dark);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;margin-bottom:8px;
+}
+.pdf-card .card-biz{font-size:11px;font-weight:700;opacity:.85}
+.pdf-title{font-size:17px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center}
+.pdf-subtitle{font-size:12.5px;color:var(--text-s);text-align:center;margin-bottom:20px;line-height:1.5}
+.pdf-steps{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.pdf-step{display:flex;align-items:flex-start;gap:12px}
+.pdf-step-num{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--navy);color:var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;flex-shrink:0;
+}
+.pdf-step-text{font-size:12.5px;color:var(--text-s);line-height:1.5}
+.pdf-footer{
+  border-top:1px solid var(--cream-mid);
+  padding:12px 24px;font-size:10.5px;color:var(--text-l);
+  display:flex;justify-content:space-between;align-items:center;
+}
+
+/* Guide Mockup */
+.guide-mock{background:var(--cream);color:var(--navy);border-radius:var(--r);box-shadow:var(--sh-lg);overflow:hidden}
+.guide-header{background:linear-gradient(135deg,var(--orange),var(--orange-d));padding:20px 24px;color:#0a192f}
+.guide-header h3{font-size:17px;font-weight:800;margin-bottom:4px}
+.guide-header p{font-size:12px;opacity:.85}
+.guide-body{padding:22px 24px}
+.guide-tip{
+  display:flex;align-items:flex-start;gap:12px;
+  margin-bottom:14px;padding:12px;
+  background:var(--cream-dark);border-radius:var(--r);
+}
+.guide-tip-num{
+  width:26px;height:26px;border-radius:50%;
+  background:var(--orange);color:#0a192f;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;flex-shrink:0;
+}
+.guide-tip-content{font-size:13px;color:var(--text);line-height:1.5}
+.guide-tip-content strong{color:var(--navy);display:block;margin-bottom:2px}
+.guide-footer{background:var(--navy);color:rgba(250,248,244,.6);padding:10px 24px;font-size:11px;text-align:center}
+
+/* ─── FOOTER ─── */
+.site-footer{
+  display:none;
+  background:rgba(11,29,58,.6);
+  border-top:1px solid rgba(250,248,244,.06);
+  padding:18px 20px;text-align:center;
+}
+.site-footer.show{display:block}
+.footer-links{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:12px;color:rgba(250,248,244,.3);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:rgba(250,248,244,.6)}
+.footer-sep{color:rgba(250,248,244,.15);font-size:10px}
+
+/* Utilities */
+.spin{display:inline-block;animation:spin .7s linear infinite}
+
+/* ─── ENHANCED STEP 5 ─── */
+.confirm-banner{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,rgba(21,128,61,.15),rgba(21,128,61,.08));
+  border:1px solid rgba(21,128,61,.25);
+  border-radius:var(--r-lg);padding:20px 22px;margin-bottom:32px;
+}
+.confirm-banner-icon{font-size:28px;flex-shrink:0}
+.confirm-banner-text strong{display:block;font-size:15px;font-weight:700;color:var(--text-on-navy);margin-bottom:3px}
+.confirm-banner-text span{font-size:13.5px;color:var(--text-on-navy-dim);line-height:1.55}
+
+/* Premium upsell */
+.upsell-premium{
+  background:linear-gradient(145deg,#0f2347 0%,#162e58 60%,#1a3a6e 100%);
+  border:1.5px solid rgba(200,168,75,.3);
+  border-radius:var(--r-lg);padding:28px 24px;
+  margin-bottom:28px;position:relative;overflow:hidden;
+}
+.upsell-premium::before{
+  content:'';position:absolute;top:0;right:0;
+  width:180px;height:180px;
+  background:radial-gradient(circle at top right,rgba(200,168,75,.12),transparent 70%);
+  pointer-events:none;
+}
+.upsell-premium::after{
+  content:'';position:absolute;bottom:0;left:0;
+  width:120px;height:120px;
+  background:radial-gradient(circle at bottom left,rgba(249,115,22,.08),transparent 70%);
+  pointer-events:none;
+}
+.upsell-crown{font-size:28px;margin-bottom:10px;display:block}
+.upsell-premium-title{
+  font-size:clamp(17px,3.5vw,22px);font-weight:800;
+  color:var(--text-on-navy);margin-bottom:10px;line-height:1.35;
+}
+.upsell-premium-sub{font-size:14px;color:var(--text-on-navy-dim);margin-bottom:22px;line-height:1.65}
+.upsell-feature-list{list-style:none;margin-bottom:24px}
+.ufl-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 0;
+  border-bottom:1px solid rgba(250,248,244,.07);
+  font-size:13.5px;
+}
+.ufl-item:last-child{border-bottom:none}
+.ufl-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;
+}
+.ufl-text strong{display:block;color:var(--text-on-navy);font-weight:700;font-size:13.5px;margin-bottom:2px}
+.ufl-text span{color:var(--text-on-navy-dim);font-size:12.5px;line-height:1.4}
+.upsell-divider{
+  border:none;border-top:1px solid rgba(200,168,75,.2);
+  margin:20px 0;
+}
+.upsell-price-block{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;margin-bottom:20px;
+}
+.upsell-price-left{}
+.upsell-price-big{font-size:36px;font-weight:900;color:var(--gold);line-height:1}
+.upsell-price-period{font-size:14px;color:var(--text-on-navy-dim);margin-top:2px}
+.upsell-price-cancel{font-size:11.5px;color:var(--text-on-navy-dim);opacity:.7;margin-top:3px}
+.upsell-price-right{text-align:left}
+.upsell-savings{
+  background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.25);
+  border-radius:8px;padding:8px 12px;font-size:12px;color:var(--turquoise);
+  font-weight:600;text-align:center;
+}
+.upsell-cta-btn{
+  width:100%;padding:17px 24px;
+  background:var(--orange);
+  border:none;border-radius:var(--r-lg);
+  color:#0a192f;font-size:15.5px;font-weight:800;
+  cursor:pointer;transition:all .22s;font-family:inherit;
+  box-shadow:var(--sh-o);margin-bottom:10px;
+}
+.upsell-cta-btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(249,185,21,.42)}
+.upsell-skip-btn{
+  display:block;width:100%;padding:12px;
+  background:transparent;border:none;
+  color:var(--text-on-navy-dim);font-size:13px;
+  cursor:pointer;font-family:inherit;
+  transition:color .2s;text-align:center;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.upsell-skip-btn:hover{color:var(--text-on-navy)}
+
+/* Order summary */
+.order-summary{
+  display:none;
+  background:var(--cream);color:var(--text);
+  border-radius:var(--r-lg);overflow:hidden;
+  box-shadow:var(--sh-lg);margin-bottom:28px;
+}
+.order-summary.show{display:block;animation:fadeUp .4s ease}
+.os-header{
+  background:var(--navy-mid);color:var(--text-on-navy);
+  padding:18px 24px;
+  display:flex;align-items:center;gap:12px;
+}
+.os-header-icon{font-size:22px}
+.os-header-title{font-size:16px;font-weight:700}
+.os-header-sub{font-size:12px;color:var(--text-on-navy-dim);margin-top:2px}
+.os-body{padding:22px 24px}
+.os-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid var(--cream-mid);
+  font-size:14px;
+}
+.os-row:last-child{border-bottom:none}
+.os-row-label{color:var(--text-s)}
+.os-row-val{font-weight:600;color:var(--text)}
+.os-row-val.highlight{color:var(--green);font-weight:700}
+.os-card-link{
+  display:flex;align-items:center;gap:10px;
+  background:var(--cream-dark);border-radius:var(--r);
+  padding:14px 16px;margin:16px 0;
+  border:1px solid var(--cream-mid);cursor:pointer;
+  transition:all .2s;text-decoration:none;
+}
+.os-card-link:hover{background:var(--cream-mid)}
+.os-card-link-icon{font-size:24px;flex-shrink:0}
+.os-card-link-text strong{display:block;font-size:14px;font-weight:700;color:var(--navy)}
+.os-card-link-text span{font-size:12px;color:var(--text-s)}
+.os-card-link-arrow{margin-right:auto;font-size:16px;color:var(--text-l)}
+.os-pdf-btn{
+  width:100%;padding:13px;
+  background:var(--navy);color:var(--text-on-navy);
+  border:none;border-radius:var(--r);
+  font-size:14px;font-weight:600;
+  cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .2s;
+}
+.os-pdf-btn:hover{background:var(--navy-mid)}
+.os-upsell-badge{
+  background:linear-gradient(135deg,rgba(200,168,75,.15),rgba(200,168,75,.08));
+  border:1px solid rgba(200,168,75,.25);
+  border-radius:var(--r);padding:12px 16px;
+  margin-top:12px;font-size:13px;color:var(--gold-l);
+  display:flex;align-items:center;gap:8px;
+}
+
+/* ─── LEGAL MODALS ─── */
+.legal-ov{
+  position:fixed;inset:0;z-index:300;
+  background:rgba(11,29,58,.8);backdrop-filter:blur(6px);
+  display:none;align-items:flex-end;justify-content:center;
+}
+.legal-ov.open{display:flex;animation:fadeIn .2s ease}
+.legal-box{
+  background:var(--cream);color:var(--text);
+  border-radius:var(--r-lg) var(--r-lg) 0 0;
+  width:100%;max-width:640px;
+  max-height:88vh;display:flex;flex-direction:column;
+  animation:fadeUp .3s ease;
+}
+.legal-head{
+  padding:20px 24px 16px;
+  border-bottom:1px solid var(--cream-mid);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.legal-head-title{font-size:18px;font-weight:800;color:var(--navy)}
+.legal-close{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--cream-dark);border:none;
+  font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.legal-close:hover{background:var(--cream-mid)}
+.legal-body{
+  padding:24px;overflow-y:auto;flex:1;
+  font-size:14px;color:var(--text-s);line-height:1.75;
+}
+.legal-body h3{font-size:15px;font-weight:700;color:var(--navy);margin:18px 0 6px}
+.legal-body h3:first-child{margin-top:0}
+.legal-body p{margin-bottom:10px}
+.legal-body ul{margin-right:18px;margin-bottom:10px}
+.legal-body ul li{margin-bottom:5px}
+/* Pricing table */
+.price-tbl{width:100%;border-collapse:collapse;margin:14px 0}
+.price-tbl th{
+  background:var(--navy);color:var(--text-on-navy);
+  padding:10px 14px;font-size:13px;text-align:right;
+}
+.price-tbl td{
+  padding:10px 14px;font-size:13.5px;
+  border-bottom:1px solid var(--cream-mid);
+  color:var(--text);
+}
+.price-tbl tr:last-child td{border-bottom:none}
+.price-tbl tr:nth-child(even) td{background:var(--cream-dark)}
+.price-highlight{font-weight:700;color:var(--orange)}
+
+@media(min-width:600px){
+  .legal-ov{align-items:center}
+  .legal-box{border-radius:var(--r-lg);max-height:80vh}
+}
+
+/* ─── CONFIRM BANNER SPINNER ─── */
+.confirm-banner{flex-direction:column;gap:18px}
+@media(min-width:480px){.confirm-banner{flex-direction:row;align-items:flex-start}}
+.confirm-spinner-wrap{
+  position:relative;width:44px;height:44px;flex-shrink:0;
+}
+.confirm-spinner{width:44px;height:44px}
+.confirm-spinner-check{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:16px;font-weight:700;color:var(--gold);
+}
+.confirm-spam{
+  display:block;font-size:12px;
+  color:var(--text-on-navy-dim);opacity:.7;
+  margin-top:5px;
+}
+.confirm-wa-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  margin-top:10px;
+  background:rgba(37,211,102,.12);
+  border:1px solid rgba(37,211,102,.25);
+  color:#4ade80;
+  border-radius:100px;padding:7px 16px;
+  font-size:13px;font-weight:600;
+  text-decoration:none;cursor:pointer;
+  transition:all .2s;
+}
+.confirm-wa-btn:hover{background:rgba(37,211,102,.2);border-color:rgba(37,211,102,.4)}
+
+/* ─── KEYWORDS CHIP ─── */
+.ufl-keywords{
+  display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;
+}
+.kw-chip{
+  display:inline-block;
+  background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.2);
+  color:var(--orange);border-radius:100px;
+  padding:2px 10px;font-size:11.5px;font-weight:600;
+}
+
+/* ─── ADMIN DASHBOARD ─── */
+.admin-sec{
+  min-height:100vh;padding:40px 20px 80px;
+  background:linear-gradient(160deg,var(--navy) 0%,#0d1e38 100%);
+}
+.admin-gate{
+  display:flex;align-items:center;justify-content:center;
+  min-height:80vh;
+}
+.admin-gate-box{
+  background:var(--cream);color:var(--text);
+  border-radius:var(--r-lg);padding:36px 28px;
+  width:100%;max-width:360px;text-align:center;
+  box-shadow:var(--sh-lg);
+}
+.admin-gate-icon{font-size:36px;margin-bottom:12px}
+.admin-gate-title{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px}
+.admin-gate-sub{font-size:14px;color:var(--text-s);margin-bottom:24px}
+.admin-dash{max-width:960px;margin:0 auto}
+.admin-toolbar{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  flex-wrap:wrap;gap:14px;margin-bottom:24px;
+}
+.admin-dash-title{font-size:22px;font-weight:800;color:var(--text-on-navy)}
+.admin-dash-sub{font-size:13.5px;color:var(--text-on-navy-dim);margin-top:4px}
+.admin-export-btn{
+  padding:9px 18px;
+  background:rgba(250,248,244,.08);
+  border:1px solid rgba(250,248,244,.18);
+  color:var(--text-on-navy);border-radius:var(--r);
+  font-size:13px;font-weight:600;cursor:pointer;
+  font-family:inherit;transition:all .2s;
+}
+.admin-export-btn:hover{background:rgba(250,248,244,.15)}
+.admin-logout-btn{
+  padding:9px 14px;
+  background:transparent;
+  border:1px solid rgba(220,38,38,.3);
+  color:#f87171;border-radius:var(--r);
+  font-size:13px;font-weight:600;cursor:pointer;
+  font-family:inherit;transition:all .2s;
+}
+.admin-logout-btn:hover{background:rgba(220,38,38,.1)}
+.admin-table-wrap{
+  background:rgba(250,248,244,.04);
+  border:1px solid rgba(250,248,244,.08);
+  border-radius:var(--r-lg);overflow:hidden;overflow-x:auto;
+}
+.admin-table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px}
+.admin-table th{
+  background:rgba(250,248,244,.08);
+  color:var(--text-on-navy-dim);font-weight:700;
+  padding:12px 14px;text-align:right;
+  font-size:12px;text-transform:uppercase;letter-spacing:.4px;
+  border-bottom:1px solid rgba(250,248,244,.08);white-space:nowrap;
+}
+.admin-table td{
+  padding:12px 14px;color:var(--text-on-navy);
+  border-bottom:1px solid rgba(250,248,244,.05);
+  vertical-align:middle;
+}
+.admin-table tr:last-child td{border-bottom:none}
+.admin-table tr:hover td{background:rgba(250,248,244,.03)}
+.admin-badge-yes{
+  display:inline-block;background:rgba(21,128,61,.18);
+  border:1px solid rgba(21,128,61,.3);color:#86efac;
+  border-radius:100px;padding:2px 10px;font-size:12px;font-weight:600;
+}
+.admin-badge-no{
+  display:inline-block;background:rgba(250,248,244,.07);
+  border:1px solid rgba(250,248,244,.12);
+  color:var(--text-on-navy-dim);
+  border-radius:100px;padding:2px 10px;font-size:12px;
+}
+.admin-url{
+  font-size:11.5px;color:var(--orange);
+  text-decoration:none;word-break:break-all;
+}
+.admin-url:hover{text-decoration:underline}
+
+@media(min-width:600px){
+  .upsell-btns{flex-direction:row}
+  .upsell-yes,.upsell-no{width:auto;flex:1}
+  .modal-ov{align-items:center}
+  .modal-box{border-radius:var(--r-lg)}
+}
+</style>
+</head>
+<body>
+
+<!-- STEPPER -->
+<div class="stepper" id="stepper">
+  <div class="step-track">
+    <div class="step-item" id="st1"><div class="step-dot">1</div><div class="step-label">חיפוש</div></div>
+    <div class="step-item" id="st2"><div class="step-dot">2</div><div class="step-label">פרטים</div></div>
+    <div class="step-item" id="st3"><div class="step-dot">3</div><div class="step-label">עיצוב</div></div>
+    <div class="step-item" id="st4"><div class="step-dot">4</div><div class="step-label">הזמנה</div></div>
+  </div>
+</div>
+
+<!-- ══ STEP 1 — HERO ══ -->
+<section class="sec hero-sec on" id="s1">
+  <div class="anim"><div class="hero-badge">כרטיס המלצות לגוגל</div></div>
+  <h1 class="hero-h1 anim anim-d1">
+    חפשו את העסק שלכם<br>
+    וקבלו <em>אבחון שיווקי בחינם</em><br>
+    תוך 30 שניות
+  </h1>
+  <p class="hero-sub anim anim-d2">
+    גלו איפה אתם עומדים ביחס למתחרים שלכם<br>
+    ב<strong>״פרופיל העסק בגוגל״</strong><br>
+    <span style="font-size:12.5px;opacity:.6">— כך העסק שלכם מופיע במפות ובחיפוש של גוגל —</span>
+  </p>
+
+  <div class="search-wrap anim anim-d3">
+    <div class="search-input-row">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" type="text" placeholder="הקלידו את שם העסק שלכם..." autocomplete="off">
+      <button class="search-go-btn" id="searchGoBtn" onclick="doSearch()">חפש עסק</button>
+    </div>
+    <div class="sdrop" id="sdrop"></div>
+  </div>
+  <button class="search-btn anim anim-d4" id="searchCta" onclick="openModal()" disabled>קבל אבחון שיווקי בחינם ←</button>
+
+  <div class="share-row" id="shareRow">
+    <button class="share-btn" onclick="doShare()"><span>📤</span> שתף את האבחון שלי</button>
+    <span class="share-hint">שתף תוצאות עם שותף/ה</span>
+  </div>
+
+  <div class="trust-row anim anim-d4">
+    <div class="trust-item ti-lock">נתונים מאובטחים</div>
+    <div class="trust-item ti-star">4.9 ★ מ-312 עסקים</div>
+    <div class="trust-item ti-fast">תוצאות מיידיות</div>
+  </div>
+</section>
+
+<!-- ══ STEP 2 — MODAL ══ -->
+<div class="modal-ov" id="modal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-title">הכינו את האבחון שלכם 🎯</div>
+    <p class="modal-sub">מלאו פרטים ותוצאות האבחון יישלחו אליכם מיד</p>
+    <div class="field"><label for="mName">שם מלא</label><input type="text" id="mName" placeholder="ישראל ישראלי"></div>
+    <div class="field"><label for="mBiz">שם העסק</label><input type="text" id="mBiz" placeholder="עסק ישראלי"></div>
+    <div class="field"><label for="mPhone">טלפון</label><input type="tel" id="mPhone" placeholder="050-0000000"></div>
+    <div class="field"><label for="mEmail">אימייל</label><input type="email" id="mEmail" placeholder="you@example.com"></div>
+    <button class="modal-btn" id="modalBtn" onclick="submitLead()">הצג לי את האבחון ←</button>
+    <p class="modal-privacy">לא שולחים ספאם. פרטיך מאובטחים לחלוטין 🔒</p>
+  </div>
+</div>
+
+<!-- ══ STEP 3 — BRANDING ══ -->
+<section class="sec" id="s3">
+  <div class="brand-sec">
+    <h2 class="sec-title anim">עצבו את הכרטיס שלכם 🎨</h2>
+    <p class="sec-sub anim anim-d1">כרטיס המלצות לגוגל שנראה בדיוק כמו המותג שלכם</p>
+
+    <div class="phone-frame-wrap">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="gc-preview" id="gcPreview" style="background:#0b1d3a;color:#faf8f4">
+            <div class="gc-logo" id="gcLogoWrap"><span id="gcLogoEmoji">⭐</span><img id="gcLogoImg" src="" alt=""></div>
+            <div class="gc-name" id="gcName">שם העסק שלכם</div>
+            <div class="gc-tag">השאירו לנו ביקורת</div>
+            <div class="gc-stars">★★★★★</div>
+            <div class="gc-cta">לחצו כאן →</div>
+          </div>
+        </div>
+        <div class="phone-bar"></div>
+      </div>
+    </div>
+
+    <div class="brand-card anim">
+      <div class="brand-card-title">📸 לוגו</div>
+      <div class="logo-upload-area" id="logoArea">
+        <input type="file" id="logoFile" accept="image/*" onchange="handleLogo(this)">
+        <div class="logo-upload-icon">🖼️</div>
+        <div class="logo-upload-text">לחצו להעלאת הלוגו שלכם<br><small style="opacity:.6">PNG / JPG / SVG עד 5MB</small></div>
+        <img class="logo-preview" id="logoPreview" src="" alt="">
+      </div>
+    </div>
+
+    <div class="brand-card anim anim-d1">
+      <div class="brand-card-title">🎨 צבע הכרטיס</div>
+      <div class="color-row">
+        <div class="color-swatch sel" style="background:#0b1d3a" data-c="#0b1d3a" onclick="pickColor(this)"></div>
+        <div class="color-swatch" style="background:#1e3a5f" data-c="#1e3a5f" onclick="pickColor(this)"></div>
+        <div class="color-swatch" style="background:#7c3aed" data-c="#7c3aed" onclick="pickColor(this)"></div>
+        <div class="color-swatch" style="background:#be123c" data-c="#be123c" onclick="pickColor(this)"></div>
+        <div class="color-swatch" style="background:#1e7e34" data-c="#1e7e34" onclick="pickColor(this)"></div>
+        <div class="color-swatch" style="background:#c8a84b" data-c="#c8a84b" onclick="pickColor(this)"></div>
+        <div class="color-swatch" style="background:#111111" data-c="#111111" onclick="pickColor(this)"></div>
+        <div class="custom-color-wrap">
+          <input type="color" id="customColor" value="#0b1d3a" oninput="pickCustomColor(this)">
+          <span class="custom-color-label">אחר</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="brand-card anim anim-d2">
+      <div class="brand-card-title">🔗 קישור לדף הביקורות</div>
+      <div class="url-field">
+        <label for="reviewUrl">קישור ל-Google Review שלכם</label>
+        <input type="url" id="reviewUrl" placeholder="https://g.page/r/..." oninput="brand.url=this.value">
+      </div>
+      <div class="qr-note">
+        <span class="qr-note-icon">📄</span>
+        <span class="qr-note-text">
+          <strong>הקוד QR ייוצר אוטומטית</strong> — בסיום ההזמנה תשלח אליכם קובץ PDF מעוצב להדפסה, עם קוד QR שמוביל ישירות לדף הביקורות שלכם.
+        </span>
+      </div>
+    </div>
+
+    <button class="brand-next-btn anim anim-d3" onclick="goToReport()">צפה בדו״ח המלא שלי ←</button>
+  </div>
+</section>
+
+<!-- ══ STEP 4 — REPORT + SALE ══ -->
+<section class="sec report-sec" id="s4">
+  <div class="report-inner">
+
+    <div class="report-header anim">
+      <div class="report-biz-name" id="r4title">הדו״ח של <span>העסק שלכם</span></div>
+      <div class="report-badge-row" id="r4badges"></div>
+    </div>
+
+    <div class="score-grid anim anim-d1">
+      <div class="score-card"><div class="score-val" id="scRating">—</div><div class="score-lbl">דירוג נוכחי</div></div>
+      <div class="score-card"><div class="score-val" id="scCount">—</div><div class="score-lbl">ביקורות כיום</div></div>
+      <div class="score-card"><div class="score-val" id="scGrowth">—</div><div class="score-lbl">פוטנציאל צמיחה</div></div>
+      <div class="score-card"><div class="score-val" id="scPos">—</div><div class="score-lbl">מיקום ביחס לתחרות</div></div>
+    </div>
+
+    <div class="growth-box anim anim-d2">
+      <div class="growth-title">📈 פוטנציאל הצמיחה שלכם</div>
+      <div class="growth-num" id="growthNum">0%</div>
+      <div class="growth-label" id="growthLabel">גידול אפשרי בלקוחות שמשאירים ביקורת</div>
+      <div class="growth-why" id="growthWhy"></div>
+    </div>
+
+    <div class="r-card anim anim-d2">
+      <div class="r-card-title"><span class="icon">📊</span> דירוג שלכם מול מתחרים מובילים</div>
+      <div class="bar-row">
+        <div class="bar-meta"><span class="bar-label">העסק שלכם</span><span class="bar-val" id="gpYourRat">—</span></div>
+        <div class="bar-track"><div class="bar-fill bar-fill-you" id="gpBarYou"></div></div>
+      </div>
+      <div class="bar-row" style="margin-top:16px">
+        <div class="bar-meta"><span class="bar-label">המתחרים המובילים</span><span class="bar-val" id="gpTopRat">4.8★</span></div>
+        <div class="bar-track"><div class="bar-fill bar-fill-top" id="gpBarTop"></div></div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:16px;flex-wrap:wrap">
+        <div style="font-size:13px;color:var(--text-on-navy-dim)">ביקורות שלכם: <strong id="gpYourCnt" style="color:var(--text-on-navy)">—</strong></div>
+        <div style="font-size:13px;color:var(--text-on-navy-dim)">ממוצע מתחרים: <strong id="gpTopCnt" style="color:var(--text-on-navy)">—</strong></div>
+      </div>
+    </div>
+
+    <div class="r-card anim anim-d3">
+      <div class="r-card-title"><span class="icon">🏆</span> טבלת מתחרים באזורך</div>
+      <table class="comp-table">
+        <thead><tr><th>עסק</th><th style="text-align:center">דירוג</th><th style="text-align:center">ביקורות</th><th style="text-align:center">מגמה</th></tr></thead>
+        <tbody id="comprows4"></tbody>
+      </table>
+    </div>
+
+    <div class="card-explainer anim anim-d3">
+      <div class="card-explainer-title">למה לקוחות לא משאירים ביקורות — ואיך הכרטיס פותר את זה</div>
+      <div class="explain-row"><span class="explain-icon">🧠</span><span class="explain-text"><strong>הלקוח שכח.</strong> 73% מהלקוחות המרוצים פשוט שוכחים להשאיר ביקורת. רצו — אבל הזדמן החיים.</span></div>
+      <div class="explain-row"><span class="explain-icon">📱</span><span class="explain-text"><strong>כרטיס המלצות לגוגל</strong> הוא כרטיס ביקור דיגיטלי שמגיע ישירות לסמארטפון — לחיצה אחת, ומגיעים לדף הביקורות שלכם.</span></div>
+      <div class="explain-row"><span class="explain-icon">⚡</span><span class="explain-text"><strong>ללא הורדת אפליקציה,</strong> ללא חיפוש, ללא עיכוב. זה קורה בזמן שהחוויה עוד טרייה — לפני שהם שוכחים.</span></div>
+      <div class="explain-row"><span class="explain-icon">🖨️</span><span class="explain-text"><strong>גרסת PDF מוכנה להדפסה</strong> עם קוד QR תישלח אליכם בדוא״ל — ניתן להדפיס ולהניח בכל מקום בעסק.</span></div>
+    </div>
+
+    <div class="showcase-wrap">
+      <div class="showcase-frame">
+        <div class="showcase-screen">
+          <div class="gc-preview" id="showcaseCard" style="background:#0b1d3a;color:#faf8f4">
+            <div class="gc-logo" id="scLogoWrap"><span id="scLogoEmoji">⭐</span><img id="scLogoImg" src="" alt=""></div>
+            <div class="gc-name" id="scName">שם העסק שלכם</div>
+            <div class="gc-tag">השאירו לנו ביקורת</div>
+            <div class="gc-stars">★★★★★</div>
+            <div class="gc-cta">לחצו כאן →</div>
+          </div>
+        </div>
+        <div class="showcase-bar"></div>
+      </div>
+    </div>
+
+    <!-- AI BOX -->
+    <div class="ai-era-box anim anim-d3">
+      <div class="ai-era-icon">🤖</div>
+      <div class="ai-era-content">
+        <div class="ai-era-title">העסק שלכם בעידן ה-AI</div>
+        <p class="ai-era-text">ניהול נכון של פרופיל העסק וצבירת ביקורות איכותיות מגדילים משמעותית את הסיכוי שלכם להופיע כהמלצה בתשובות של ChatGPT, Gemini ומנועי בינה מלאכותית אחרים. אל תשארו מאחור.</p>
+      </div>
+    </div>
+
+    <div class="price-section anim">
+      <div class="price-label">השקעה חד-פעמית</div>
+      <div class="price-amount">397 <span>₪</span></div>
+      <div class="price-note">מחיר חד-פעמי | ניתן לחלק לתשלומים במידת הצורך</div>
+      <div class="price-includes">
+        <div class="pi-row">כרטיס המלצות דיגיטלי מותאם אישית</div>
+        <div class="pi-row">קובץ PDF מעוצב עם קוד QR להדפסה</div>
+        <div class="pi-row">מדריך הפצה מקצועי</div>
+        <div class="pi-row">עדכונים ושינויי עיצוב ללא עלות נוספת</div>
+        <div class="pi-row">תמיכה בוואטסאפ עד 30 יום</div>
+      </div>
+      <button class="pay-btn" id="paybtn">
+        <div class="pay-btn-main">אני רוצה את הכרטיס שלי</div>
+        <div class="pay-btn-price">397 ש״ח | מחיר חד פעמי | ניתן לחלק לתשלומים</div>
+      </button>
+      <div class="pay-guarantee">🔒 תשלום מאובטח | ללא התחייבות חודשית</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ STEP 5 — THANK YOU + UPSELL ══ -->
+<section class="sec" id="s5">
+  <div class="thanks-sec">
+    <div class="thanks-inner">
+
+      <!-- Confirmation banner -->
+      <div class="thanks-hero anim">
+        <div class="thanks-check">✓</div>
+        <h2 class="thanks-title">ההזמנה התקבלה! 🎉</h2>
+      </div>
+
+      <div class="confirm-banner anim anim-d1">
+        <div class="confirm-spinner-wrap">
+          <svg class="confirm-spinner" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(200,168,75,.2)" stroke-width="3"/>
+            <circle cx="22" cy="22" r="18" fill="none" stroke="var(--gold)" stroke-width="3"
+              stroke-linecap="round" stroke-dasharray="28 85" stroke-dashoffset="0">
+              <animateTransform attributeName="transform" type="rotate" from="0 22 22" to="360 22 22" dur="1.1s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+          <span class="confirm-spinner-check">✓</span>
+        </div>
+        <div class="confirm-banner-text">
+          <strong>איזה כיף! התשלום עבר בהצלחה. המערכת מוכנה!</strong>
+          <span>הקישור האישי וקוד ה-QR יחכו לכם במייל בדקות הקרובות.</span>
+          <span class="confirm-spam">לא קיבלתם מייל? יש לבדוק בתיבת הספאם.</span>
+          <a class="confirm-wa-btn" href="https://wa.me/972524444468?text=%D7%94%D7%99%D7%99+%D7%94%D7%93%D7%A1%2C+%D7%A8%D7%9B%D7%A9%D7%AA%D7%99+%D7%9B%D7%A8%D7%98%D7%99%D7%A1+%D7%94%D7%9E%D7%9C%D7%A6%D7%95%D7%AA+%D7%95%D7%9C%D7%90+%D7%A7%D7%99%D7%91%D7%9C%D7%AA%D7%99+%D7%9E%D7%99%D7%99%D7%9C" target="_blank" rel="noopener">
+            <span>💬</span> לא קיבלתם? לחצו כאן לוואטסאפ
+          </a>
+        </div>
+      </div>
+
+      <!-- ── PREMIUM UPSELL ── -->
+      <div class="upsell-premium anim anim-d2" id="upsellCard">
+        <span class="upsell-crown">👑</span>
+        <div class="upsell-premium-title">השתדרגו לתוכנית חודשית לחיזוק המוניטין</div>
+        <p class="upsell-premium-sub">קבלו כל חודש תמונת מצב מלאה — ודעו בדיוק מה לעשות כדי לעקוף את המתחרים ולמשוך לקוחות חדשים.</p>
+        <p class="upsell-ai-note">🤖 מעקב חודשי ושיפור הדירוג מבטיחים שהעסק שלכם יישאר רלוונטי ומעודכן עבור מודלי השפה המובילים.</p>
+
+        <ul class="upsell-feature-list">
+          <li class="ufl-item">
+            <div class="ufl-icon">📊</div>
+            <div class="ufl-text">
+              <strong>דוח חודשי</strong>
+              <span>כמה המלצות חדשות השגתם ואיפה אתם ממוקמים ביחס למתחרים — לעומת החודש האחרון</span>
+            </div>
+          </li>
+          <li class="ufl-item">
+            <div class="ufl-icon">🔍</div>
+            <div class="ufl-text">
+              <strong>ניתוח הלקוחות</strong>
+              <span>מה הלקוחות הכי אוהבים בעסק שלכם — על סמך ניתוח מילות המפתח מהביקורות שכתבו</span>
+              <div class="ufl-keywords" id="uflKeywords"></div>
+            </div>
+          </li>
+          <li class="ufl-item">
+            <div class="ufl-icon">💡</div>
+            <div class="ufl-text">
+              <strong>הדרכה חודשית</strong>
+              <span>איך לקבל עוד המלצות ולעקוף את המתחרים — טיפים פרקטיים מותאמים לעסק שלכם</span>
+            </div>
+          </li>
+        </ul>
+
+        <hr class="upsell-divider">
+
+        <div class="upsell-price-block">
+          <div class="upsell-price-left">
+            <div class="upsell-price-big">49 <span style="font-size:18px;font-weight:600">₪</span></div>
+            <div class="upsell-price-period">לחודש | מחיר סופי</div>
+            <div class="upsell-price-cancel">ביטול בכל עת, ללא התחייבות</div>
+          </div>
+          <div class="upsell-price-right">
+            <div class="upsell-savings">⬇ חסכו מאות ₪<br>לעומת ייעוץ שיווקי</div>
+          </div>
+        </div>
+
+        <button class="upsell-cta-btn" id="upsellYes">כן, אנחנו רוצים לשדרג ב-49 ש״ח בלבד ←</button>
+        <button class="upsell-skip-btn" id="upsellNo">לא תודה, נסתפק בכרטיס המלצות</button>
+      </div>
+
+      <!-- State messages -->
+      <div class="upsell-done" id="upsellDone">✓ בחירה נכונה! הכרטיס שלכם מוכן. תוכלו לשדרג לדוח החודשי בכל עת.</div>
+      <div class="upsell-done" id="upsellAccepted">🎉 ברוכים הבאים! הצטרפתם לדוח המוניטין החודשי. הדוח הראשון יישלח בתחילת החודש הבא.</div>
+
+      <!-- ── ORDER SUMMARY ── -->
+      <div class="order-summary" id="orderSummary">
+        <div class="os-header">
+          <span class="os-header-icon">📋</span>
+          <div>
+            <div class="os-header-title">סיכום הזמנה</div>
+            <div class="os-header-sub">כרטיס המלצות לגוגל מותאם אישית</div>
+          </div>
+        </div>
+        <div class="os-body">
+          <div class="os-row">
+            <span class="os-row-label">שם בעל העסק</span>
+            <span class="os-row-val" id="osSummaryName">—</span>
+          </div>
+          <div class="os-row">
+            <span class="os-row-label">שם העסק</span>
+            <span class="os-row-val" id="osSummaryBiz">—</span>
+          </div>
+          <div class="os-row">
+            <span class="os-row-label">מחיר ששולם</span>
+            <span class="os-row-val">397 ₪ כולל הכל</span>
+          </div>
+          <div class="os-row">
+            <span class="os-row-label">סטטוס</span>
+            <span class="os-row-val highlight">✓ פעיל</span>
+          </div>
+          <div class="os-row" id="osUpsellRow" style="display:none">
+            <span class="os-row-label">דוח חודשי</span>
+            <span class="os-row-val highlight">✓ פעיל — 49 ₪/חודש כולל הכל</span>
+          </div>
+
+          <a class="os-card-link" href="#" onclick="return false">
+            <span class="os-card-link-icon">📱</span>
+            <div class="os-card-link-text">
+              <strong>הכרטיס הדיגיטלי שלכם</strong>
+              <span>reviewme.co.il/card/<span id="osCardSlug">…</span></span>
+            </div>
+            <span class="os-card-link-arrow">←</span>
+          </a>
+
+          <button class="os-pdf-btn" onclick="simulatePdfDownload(this)">
+            <span>📄</span> הורד דוגמת PDF עם קוד QR
+          </button>
+
+          <div class="os-upsell-badge" id="osUpBadge" style="display:none">
+            <span>👑</span>
+            <span>הדוח החודשי הראשון שלכם יישלח בתחילת <strong id="osNextMonth">החודש הבא</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PDF MOCKUP -->
+      <div class="pdf-section anim anim-d3">
+        <div class="pdf-section-title">קובץ PDF שישלח אליכם בדוא״ל</div>
+        <div class="pdf-mock">
+          <div class="pdf-header">
+            <div>
+              <div class="pdf-logo-area">כרטיס המלצות לגוגל</div>
+              <div class="pdf-logo-sub">מותאם אישית לעסק שלכם</div>
+            </div>
+            <div class="pdf-header-right">
+              <div id="pdfBizName">שם העסק</div>
+              <div style="margin-top:2px">גרסה 1.0</div>
+            </div>
+          </div>
+          <div class="pdf-body">
+            <div class="pdf-card-wrap">
+              <div class="pdf-card" id="pdfCard" style="background:#0b1d3a;color:#faf8f4">
+                <div class="qr-box">▣</div>
+                <div class="card-biz" id="pdfCardBiz">שם העסק</div>
+              </div>
+            </div>
+            <div class="pdf-title">הוראות שימוש בכרטיס</div>
+            <div class="pdf-subtitle">שלחו את הכרטיס ללקוחות לאחר כל ביקור — דרך וואטסאפ, SMS, או הניחו אותו בעסק.</div>
+            <div class="pdf-steps">
+              <div class="pdf-step"><div class="pdf-step-num">1</div><div class="pdf-step-text"><strong>שלחו ללקוח</strong> — דרך וואטסאפ, SMS, או אימייל, מיד לאחר הביקור.</div></div>
+              <div class="pdf-step"><div class="pdf-step-num">2</div><div class="pdf-step-text"><strong>הלקוח לוחץ</strong> — קישור אחד מוביל ישירות לדף הביקורות בגוגל.</div></div>
+              <div class="pdf-step"><div class="pdf-step-num">3</div><div class="pdf-step-text"><strong>ביקורת נוספת</strong> — תוך 60 שניות, ללא הורדת אפליקציה.</div></div>
+            </div>
+          </div>
+          <div class="pdf-footer"><span>כרטיס המלצות לגוגל — כרטיס ביקור דיגיטלי</span><span>reviewme.co.il</span></div>
+        </div>
+      </div>
+
+      <!-- GUIDE MOCKUP -->
+      <div class="pdf-section">
+        <div class="pdf-section-title">מדריך הפצה — הנחיות לעבודה יומיומית</div>
+        <div class="guide-mock">
+          <div class="guide-header">
+            <h3>מדריך הפצת כרטיס המלצות לגוגל</h3>
+            <p>5 טכניקות שמכפילות ביקורות תוך 30 יום</p>
+          </div>
+          <div class="guide-body">
+            <div class="guide-tip"><div class="guide-tip-num">1</div><div class="guide-tip-content"><strong>שלחו מיד לאחר הביקור</strong>חלון ההזדמנות הוא 10 דקות — ברגע שהלקוח עזב, שלחו בוואטסאפ: "תודה על הביקור! לחץ כאן להשאיר ביקורת 👇"</div></div>
+            <div class="guide-tip"><div class="guide-tip-num">2</div><div class="guide-tip-content"><strong>QR על השולחן / קופה</strong>הדפיסו את ה-PDF והניחו בנקודות מגע — קופה, שולחן המתנה, חדר שירות.</div></div>
+            <div class="guide-tip"><div class="guide-tip-num">3</div><div class="guide-tip-content"><strong>בקשה פרסונלית עובדת יותר</strong>"אם היית מרוצה — יעזור לי מאוד אם תשאיר ביקורת." — שיעור ההמרה עולה פי 3.</div></div>
+            <div class="guide-tip"><div class="guide-tip-num">4</div><div class="guide-tip-content"><strong>שגרה יומית</strong>הגדירו תזכורת: בסוף כל יום — שלחו את הכרטיס ל-3 לקוחות שביקרו. 90 ביקורות בשנה.</div></div>
+            <div class="guide-tip"><div class="guide-tip-num">5</div><div class="guide-tip-content"><strong>הגיבו על כל ביקורת</strong>תגובה של בעל העסק מעלה את הנראות בגוגל — גם לחיוביות, גם לשליליות.</div></div>
+          </div>
+          <div class="guide-footer">כרטיס המלצות לגוגל | reviewme.co.il</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ ADMIN DASHBOARD ══ -->
+<section class="sec" id="sAdmin">
+  <div class="admin-sec">
+    <!-- Login gate -->
+    <div id="adminGate" class="admin-gate">
+      <div class="admin-gate-box">
+        <div class="admin-gate-icon">🔐</div>
+        <h2 class="admin-gate-title">ממשק ניהול</h2>
+        <p class="admin-gate-sub">גישה מורשית בלבד</p>
+        <div class="field" style="margin-bottom:16px">
+          <label for="adminPass" style="color:var(--text-s)">סיסמה</label>
+          <input type="password" id="adminPass" placeholder="הכנסו סיסמה" onkeydown="if(event.key==='Enter')checkAdmin()">
+        </div>
+        <button class="modal-btn" onclick="checkAdmin()" style="margin-top:0">כניסה</button>
+        <p id="adminErr" style="color:var(--red);font-size:13px;margin-top:10px;text-align:center;display:none">סיסמה שגויה</p>
+      </div>
+    </div>
+    <!-- Dashboard (shown after auth) -->
+    <div id="adminDash" class="admin-dash" style="display:none">
+      <div class="admin-toolbar">
+        <div>
+          <h2 class="admin-dash-title">ממשק ניהול — כרטיס המלצות לגוגל</h2>
+          <p class="admin-dash-sub">סה״כ לקוחות: <strong id="adminCount">0</strong></p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="admin-export-btn" id="sbLoadBtn" onclick="loadLeadsFromSupabase()" style="background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.25);color:#86efac">🔄 טען מ-Supabase</button>
+          <button class="admin-export-btn" onclick="exportCSV()">📥 ייצוא CSV</button>
+          <button class="admin-logout-btn" onclick="adminLogout()">יציאה</button>
+        </div>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="adminTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>שם מלא</th>
+              <th>שם העסק</th>
+              <th>טלפון</th>
+              <th>מייל</th>
+              <th>URL כרטיס</th>
+              <th>צבע מיתוג</th>
+              <th>לוגו</th>
+              <th>הוראת קבע</th>
+              <th>תאריך הצטרפות</th>
+            </tr>
+          </thead>
+          <tbody id="adminTbody"></tbody>
+        </table>
+        <p id="adminEmpty" style="text-align:center;padding:40px;color:var(--text-s);font-size:14px">אין לקוחות רשומים עדיין.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer" id="siteFooter">
+  <div class="footer-links">
+    <a href="#" onclick="openLegal('legalTerms');return false">תנאי שימוש</a><span class="footer-sep">|</span>
+    <a href="#" onclick="openLegal('legalPrivacy');return false">מדיניות פרטיות</a><span class="footer-sep">|</span>
+    <a href="#" onclick="openLegal('legalAccess');return false">נגישות</a><span class="footer-sep">|</span>
+    <a href="#" onclick="openLegal('legalPricing');return false">מחירון</a>
+  </div>
+  <div style="margin-top:10px">
+    <span id="adminTrigger" onclick="adminTriggerClick()" style="font-size:10px;color:rgba(250,248,244,.08);cursor:default;user-select:none">©</span>
+  </div>
+</footer>
+
+<!-- ══ LEGAL MODAL — תנאי שימוש ══ -->
+<div class="legal-ov" id="legalTerms">
+  <div class="legal-box">
+    <div class="legal-head">
+      <span class="legal-head-title">תנאי שימוש</span>
+      <button class="legal-close" onclick="closeLegal('legalTerms')">✕</button>
+    </div>
+    <div class="legal-body">
+      <h3>1. כללי</h3>
+      <p>ברוכים הבאים לשירות "כרטיס המלצות לגוגל" (להלן: "השירות"), המופעל על ידי החברה. השימוש בשירות מהווה הסכמה מלאה לתנאים המפורטים להלן.</p>
+      <h3>2. תיאור השירות</h3>
+      <p>השירות מאפשר ליצור כרטיס ביקור דיגיטלי המוביל ישירות לדף הביקורות של העסק בגוגל. הכרטיס כולל קישור ייחודי וקוד QR מותאם אישית.</p>
+      <h3>3. תנאי רכישה</h3>
+      <ul>
+        <li>מחיר הכרטיס הדיגיטלי: 397 ₪ כולל הכל, תשלום חד-פעמי.</li>
+        <li>אפשרות הדוח החודשי: 49 ₪/חודש כולל הכל, ניתן לביטול בכל עת.</li>
+        <li>הרכישה כוללת את הכרטיס הדיגיטלי, קובץ PDF להדפסה, ומדריך הפצה.</li>
+      </ul>
+      <h3>4. מדיניות ביטול</h3>
+      <p>הכרטיס הדיגיטלי (397 ₪) הוא מוצר דיגיטלי חד-פעמי שאינו ניתן להחזרה לאחר מסירה. הדוח החודשי ניתן לביטול בכל עת ללא קנס.</p>
+      <h3>5. אחריות</h3>
+      <p>החברה אינה אחראית לשינויים בממשק גוגל שעשויים להשפיע על פעילות הקישור. במקרה של תקלה טכנית, החברה תפעל לתיקון תוך 48 שעות עסקיות.</p>
+      <h3>6. קניין רוחני</h3>
+      <p>כל תכני השירות, עיצוב הכרטיס, והתוכנה הם רכוש החברה. אין לשכפל, להפיץ או לסחור בהם ללא אישור בכתב.</p>
+      <h3>7. שינוי תנאים</h3>
+      <p>החברה שומרת על הזכות לשנות תנאים אלו בכל עת. שינויים מהותיים יפורסמו בהודעה מוקדמת של 14 יום.</p>
+      <p style="margin-top:20px;font-size:12px;color:var(--text-l)">עדכון אחרון: אפריל 2026 | reviewme.co.il</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LEGAL MODAL — מדיניות פרטיות ══ -->
+<div class="legal-ov" id="legalPrivacy">
+  <div class="legal-box">
+    <div class="legal-head">
+      <span class="legal-head-title">מדיניות פרטיות</span>
+      <button class="legal-close" onclick="closeLegal('legalPrivacy')">✕</button>
+    </div>
+    <div class="legal-body">
+      <h3>1. איזה מידע אנו אוספים</h3>
+      <ul>
+        <li>שם מלא ושם העסק</li>
+        <li>כתובת דוא״ל ומספר טלפון</li>
+        <li>קישור לדף הביקורות בגוגל</li>
+        <li>נתוני שימוש אנונימיים (Google Analytics)</li>
+      </ul>
+      <h3>2. כיצד אנו משתמשים במידע</h3>
+      <ul>
+        <li>מסירת השירות הנרכש ושליחת הכרטיס הדיגיטלי</li>
+        <li>שליחת עדכונים ודוחות חודשיים (אם הוזמנו)</li>
+        <li>תמיכה טכנית ושירות לקוחות</li>
+        <li>שיפור השירות — על בסיס נתונים מצטברים ואנונימיים בלבד</li>
+      </ul>
+      <h3>3. שיתוף מידע</h3>
+      <p>אנו לא מוכרים, מעבירים או מגלים פרטים אישיים לצדדים שלישיים, למעט ספקי שירות חיוניים (כגון: עיבוד תשלומים, שליחת מיילים) המחויבים בסודיות.</p>
+      <h3>4. אבטחת מידע</h3>
+      <p>כל הנתונים מאוחסנים בשרתים מאובטחים עם הצפנת SSL. אנו מיישמים נהלי אבטחה תקניים לצמצום סיכון פרצת מידע.</p>
+      <h3>5. זכויות המשתמש</h3>
+      <p>בהתאם לחוק הגנת הפרטיות, יש לכם הזכות לעיין, לתקן או למחוק את המידע שנמסר. לבקשות: privacy@reviewme.co.il</p>
+      <h3>6. עוגיות (Cookies)</h3>
+      <p>האתר משתמש בעוגיות לצורך שיפור חוויית השימוש וניתוח תנועה. ניתן לבטל עוגיות בהגדרות הדפדפן.</p>
+      <p style="margin-top:20px;font-size:12px;color:var(--text-l)">עדכון אחרון: אפריל 2026 | privacy@reviewme.co.il</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LEGAL MODAL — נגישות ══ -->
+<div class="legal-ov" id="legalAccess">
+  <div class="legal-box">
+    <div class="legal-head">
+      <span class="legal-head-title">הצהרת נגישות</span>
+      <button class="legal-close" onclick="closeLegal('legalAccess')">✕</button>
+    </div>
+    <div class="legal-body">
+      <h3>מחויבות לנגישות</h3>
+      <p>אנו ב-"כרטיס המלצות לגוגל" מחויבים לאפשר שוויון זכויות לאנשים עם מוגבלויות ולהנגיש את השירות לכלל המשתמשים, בהתאם לתקן הישראלי ת"י 5568 ו-WCAG 2.1 ברמה AA.</p>
+      <h3>מה הנגשנו</h3>
+      <ul>
+        <li>ניגודיות צבעים גבוהה לנוחות קריאה</li>
+        <li>תמיכה בניווט באמצעות מקלדת</li>
+        <li>תאימות לקוראי מסך (NVDA, VoiceOver)</li>
+        <li>גודל גופן מינימלי 14px לכל הטקסט</li>
+        <li>כפתורים עם תיאורי ARIA מלאים</li>
+        <li>טפסים עם תוויות ברורות לכל שדה</li>
+      </ul>
+      <h3>מגבלות ידועות</h3>
+      <p>ייתכן שחלק מהמרכיבים הגרפיים (תצוגת הכרטיס) אינם נגישים במלואם לקוראי מסך. אנו עובדים על שיפור זה.</p>
+      <h3>פנייה בנושא נגישות</h3>
+      <p>נתקלת בבעיית נגישות? נשמח לשמוע ולתקן:</p>
+      <ul>
+        <li>דוא״ל: access@reviewme.co.il</li>
+        <li>טלפון: 03-000-0000</li>
+        <li>זמן תגובה: עד 5 ימי עסקים</li>
+      </ul>
+      <p style="margin-top:20px;font-size:12px;color:var(--text-l)">הצהרה זו עודכנה: אפריל 2026</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LEGAL MODAL — מחירון ══ -->
+<div class="legal-ov" id="legalPricing">
+  <div class="legal-box">
+    <div class="legal-head">
+      <span class="legal-head-title">מחירון</span>
+      <button class="legal-close" onclick="closeLegal('legalPricing')">✕</button>
+    </div>
+    <div class="legal-body">
+      <h3>מוצרים ומחירים</h3>
+      <p>כל המחירים סופיים וכוללים הכל. חשבונית קבלה תישלח אוטומטית לכתובת המייל שנמסרה.</p>
+
+      <table class="price-tbl">
+        <thead>
+          <tr>
+            <th>מוצר / שירות</th>
+            <th style="text-align:center">מחיר</th>
+            <th style="text-align:center">סוג</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>כרטיס המלצות לגוגל</strong><br>
+              <span style="font-size:12px;color:var(--text-s)">כרטיס דיגיטלי + PDF + מדריך הפצה</span>
+            </td>
+            <td style="text-align:center" class="price-highlight">397 ₪</td>
+            <td style="text-align:center;font-size:12.5px">חד-פעמי</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>דוח מוניטין חודשי + הדרכה</strong><br>
+              <span style="font-size:12px;color:var(--text-s)">דוח ביצועים, ניתוח AI, מיקום יחסי, טיפים</span>
+            </td>
+            <td style="text-align:center" class="price-highlight">49 ₪/חודש</td>
+            <td style="text-align:center;font-size:12.5px">חודשי, ניתן לביטול</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>מה כלול בכרטיס המלצות (397 ₪)</h3>
+      <ul>
+        <li>כרטיס ביקור דיגיטלי מותאם אישית עם לוגו וצבעי המותג</li>
+        <li>קישור ייחודי לדף הביקורות בגוגל</li>
+        <li>קובץ PDF מעוצב עם קוד QR להדפסה</li>
+        <li>מדריך הפצה מקצועי — 5 שיטות מוכחות</li>
+        <li>תמיכה בוואטסאפ עד 30 יום מיום הרכישה</li>
+        <li>עדכוני עיצוב — ללא עלות נוספת עד שנה</li>
+      </ul>
+
+      <h3>מה כלול בדוח החודשי (49 ₪/חודש)</h3>
+      <ul>
+        <li>דוח ביצועים חודשי: כמות ביקורות חדשות ודירוג</li>
+        <li>ניתוח רגשות AI על ביקורות הלקוחות</li>
+        <li>מיקום יחסי ביחס למתחרים המובילים באזור</li>
+        <li>המלצות חודשיות מותאמות לסוג העסק</li>
+      </ul>
+
+      <h3>תנאי תשלום</h3>
+      <ul>
+        <li>תשלום מאובטח בכרטיס אשראי או PayPal</li>
+        <li>חשבונית מס/קבלה נשלחת אוטומטית</li>
+        <li>הדוח החודשי מחויב בתחילת כל חודש</li>
+        <li>ביטול הדוח — בכל עת, ללא קנס, דרך מייל או וואטסאפ</li>
+      </ul>
+
+      <p style="margin-top:20px;font-size:12px;color:var(--text-l)">המחירים כוללים שירות מלא ותמיכה. לשאלות: sales@reviewme.co.il</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──
+var biz   = null;
+var lead  = {};
+var brand = { color: '#0b1d3a', logo: null, url: '' };
+var analysisText = '';
+var allLeads     = [];
+var adminAuthed  = false;
+var adminClickCount = 0;
+
+// ── חזרה מקארדקום — שחזור מצב ──
+(function handleCardcomReturn() {
+  var params = new URLSearchParams(window.location.search);
+  var payOk    = params.get('payment') === 'ok';
+  var upsellOk = params.get('upsell')  === 'ok';
+
+  /* נקה URL ללא ריענון */
+  if (payOk || upsellOk) {
+    history.replaceState({}, '', window.location.pathname);
+  }
+
+  /* שחזר מצב ששמרנו לפני המעבר */
+  try {
+    var savedLead  = localStorage.getItem('rl_lead');
+    var savedBiz   = localStorage.getItem('rl_biz');
+    var savedBrand = localStorage.getItem('rl_brand');
+    if (savedLead)  lead  = JSON.parse(savedLead);
+    if (savedBiz)   biz   = JSON.parse(savedBiz);
+    if (savedBrand) brand = JSON.parse(savedBrand);
+  } catch(e) {}
+
+  if (payOk) {
+    /* תשלום ראשי עבר — הצג עמוד תודה */
+    window.addEventListener('DOMContentLoaded', function() {
+      registerLeadPurchase(false);
+      buildKeywordChips();
+      showOrderSummary(false);
+      goTo('s5', 5);
+      localStorage.removeItem('rl_lead');
+      localStorage.removeItem('rl_biz');
+      localStorage.removeItem('rl_brand');
+    });
+  }
+
+  if (upsellOk) {
+    /* אפסייל עבר — הצג עמוד תודה עם אפסייל מאושר */
+    window.addEventListener('DOMContentLoaded', function() {
+      registerLeadPurchase(true);
+      buildKeywordChips();
+      document.getElementById('upsellCard').style.display = 'none';
+      document.getElementById('upsellAccepted').classList.add('show');
+      showOrderSummary(true);
+      goTo('s5', 5);
+      localStorage.removeItem('rl_lead');
+      localStorage.removeItem('rl_biz');
+      localStorage.removeItem('rl_brand');
+      localStorage.removeItem('rl_upsell_pending');
+    });
+  }
+})();
+
+var MOCK = [
+  { id:'b1', name:'מסעדת הים הגדול', type:'restaurant', rating:4.2, count:87, city:'תל אביב', emoji:'🍽️' },
+  { id:'b2', name:'מספרת הסטייל', type:'salon', rating:4.5, count:134, city:'רמת גן', emoji:'✂️' },
+  { id:'b3', name:'אבי מכון כושר', type:'gym', rating:3.9, count:56, city:'חיפה', emoji:'💪' },
+  { id:'b4', name:'קפה בוקר טוב', type:'cafe', rating:4.7, count:211, city:'ירושלים', emoji:'☕' },
+  { id:'b5', name:'מכבסת השכונה', type:'service', rating:4.1, count:43, city:'פתח תקווה', emoji:'👕' },
+  { id:'b6', name:'גן ילדים צבעוני', type:'education', rating:4.8, count:98, city:'הרצליה', emoji:'🌈' },
+  { id:'b7', name:'חנות הספרים המקומית', type:'retail', rating:4.3, count:67, city:'באר שבע', emoji:'📚' },
+  { id:'b8', name:'שיפוץ ובנייה יוסי', type:'construction', rating:4.0, count:29, city:'נתניה', emoji:'🔨' }
+];
+
+var COMP_NAMES = ['יצחק ובנים','הטוב ביותר','פרימיום פלוס','המקורי','הכי טוב בעיר'];
+
+// ── Core navigation ──
+function goTo(id, step) {
+  document.querySelectorAll('.sec').forEach(function(s){ s.classList.remove('on'); });
+  var el = document.getElementById(id);
+  if (el) el.classList.add('on');
+  setStep(step);
+  window.scrollTo({ top:0, behavior:'smooth' });
+  if (step >= 4) document.getElementById('siteFooter').classList.add('show');
+}
+
+function setStep(n) {
+  var el = document.getElementById('stepper');
+  if (n === 1) { el.classList.remove('vis'); return; }
+  el.classList.add('vis');
+  [1,2,3,4].forEach(function(i){
+    var item = document.getElementById('st' + i);
+    item.classList.remove('done','active');
+    if (n > 4) { item.classList.add('done'); return; }
+    if (i < n) item.classList.add('done');
+    else if (i === n) item.classList.add('active');
+  });
+}
+
+function getLuminance(hex) {
+  var c = hex.replace('#','');
+  var r = parseInt(c.substr(0,2),16)/255;
+  var g = parseInt(c.substr(2,2),16)/255;
+  var b = parseInt(c.substr(4,2),16)/255;
+  function toL(x){ return x<=.03928 ? x/12.92 : Math.pow((x+.055)/1.055,2.4); }
+  return .2126*toL(r)+.7152*toL(g)+.0722*toL(b);
+}
+function textForBg(hex){ return getLuminance(hex)>.4 ? '#1a1a2e' : '#faf8f4'; }
+
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── Search ──
+var searchInput = document.getElementById('searchInput');
+var sdrop = document.getElementById('sdrop');
+
+// הקלדה חיה — נקה תוצאות ישנות בלבד
+searchInput.addEventListener('input', function(){
+  if (!this.value.trim()) { sdrop.classList.remove('open'); sdrop.innerHTML=''; }
+});
+
+searchInput.addEventListener('keydown', function(e){ if(e.key==='Enter') doSearch(); });
+
+document.addEventListener('click', function(e){
+  if (!e.target.closest('.search-wrap')) sdrop.classList.remove('open');
+});
+
+// לחיצה על "חפש עסק"
+// עדיפות: 1) Google Places JS API  2) /api/places serverless  3) Mock
+function doSearch() {
+  var q = searchInput.value.trim();
+  if (!q) { searchInput.focus(); return; }
+
+  var btn = document.getElementById('searchGoBtn');
+  btn.textContent = '⏳';
+  btn.disabled = true;
+  var _done = function(){ btn.textContent = 'חפש עסק'; btn.disabled = false; };
+
+  // חיפוש דרך /api/places (Vercel serverless — מפתח ב-NEXT_PUBLIC_GOOGLE_PLACES_KEY)
+  fetch('/api/places?q=' + encodeURIComponent(q))
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      _done();
+      if (data.predictions && data.predictions.length) {
+        _showPlacesDropdown(data.predictions);
+      } else {
+        _showNoResults();
+      }
+    })
+    .catch(function(e){
+      console.warn('Places API error:', e);
+      _done();
+      _showNoResults();
+    });
+}
+
+// הצגת תוצאות מ-Google Places (דרך /api/places)
+function _showPlacesDropdown(predictions) {
+  sdrop.innerHTML = predictions.slice(0,5).map(function(p) {
+    var main = escHtml(p.structured_formatting.main_text);
+    var sec  = escHtml(p.structured_formatting.secondary_text || '');
+    return '<div class="di" onclick="_selectPlaceResult(\''+escHtml(p.place_id)+'\',\''+main+'\',\''+sec+'\')">'
+      +'<div class="di-icon">📍</div>'
+      +'<div><div class="di-main">'+main+'</div><div class="di-sub">'+sec+'</div></div>'
+      +'</div>';
+  }).join('');
+  sdrop.classList.add('open');
+}
+
+// הודעת "לא נמצאו תוצאות"
+function _showNoResults() {
+  sdrop.innerHTML = '<div class="di di-empty"><div class="di-icon">🔍</div><div><div class="di-main">לא נמצאו עסקים, נסה שם אחר</div></div></div>';
+  sdrop.classList.add('open');
+}
+
+// הצגת תוצאות מה-Mock (לא בשימוש — נשמר לגיבוי)
+function _showMockDropdown(q) {
+  var ql = q.toLowerCase();
+  var matches = MOCK.filter(function(b){ return b.name.includes(ql)||b.city.includes(ql)||b.type.includes(ql); });
+  if (!matches.length) matches = MOCK;
+  sdrop.innerHTML = matches.slice(0,5).map(function(b){
+    return '<div class="di" onclick="selectBiz(\''+b.id+'\')">'
+      +'<div class="di-icon">'+b.emoji+'</div>'
+      +'<div><div class="di-main">'+b.name+'</div><div class="di-sub">'+b.city+' · ★'+b.rating+' ('+b.count+' ביקורות)</div></div>'
+      +'</div>';
+  }).join('');
+  sdrop.classList.add('open');
+}
+
+// נבחר עסק מ-Google Places — Place ID נשמר ב-biz.placeId
+function _selectPlaceResult(placeId, name, address) {
+  sdrop.classList.remove('open');
+  searchInput.value = name;
+  document.getElementById('mBiz').value = name;
+  biz = {
+    id: placeId,          // Place ID לשימוש עתידי
+    placeId: placeId,     // שמור מפורש
+    name: name,
+    rating: 4.0,          // יעודכן אם נוסיף /api/place-details
+    count: 0,
+    city: address,
+    emoji: '📍',
+    type: 'business',
+    source: 'google'
+  };
+  _onBizChosen();
+}
+
+// נבחר עסק מה-Mock
+function selectBiz(id) {
+  var found = MOCK.find(function(b){ return b.id===id; });
+  if (!found) return;
+  biz = Object.assign({}, found, { placeId: null, source: 'mock' });
+  sdrop.classList.remove('open');
+  searchInput.value = biz.name;
+  document.getElementById('mBiz').value = biz.name;
+  _onBizChosen();
+}
+
+// לוגיקה משותפת — לאחר בחירת עסק (מכל מקור)
+function _onBizChosen() {
+  var gap = Math.max(0, 4.8 - biz.rating);
+  var growthPct = Math.min(60, Math.round(gap * 22));
+  analysisText = 'האבחון של '+biz.name+':\n★ דירוג: '+biz.rating+' | ביקורות: '+biz.count+'\n📈 פוטנציאל צמיחה: +'+growthPct+'%\n'+window.location.href;
+  document.getElementById('shareRow').classList.add('show');
+
+  var cta = document.getElementById('searchCta');
+  cta.disabled = false;
+  cta.classList.add('cta-ready');
+  cta.textContent = '✓ '+biz.name+' — קבל אבחון שיווקי בחינם ←';
+
+  console.log('%c📍 עסק נבחר', 'color:#22d3ee;font-weight:bold',
+    { name: biz.name, placeId: biz.placeId, source: biz.source });
+
+  setTimeout(function(){ cta.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 150);
+}
+
+function doShare() {
+  if (navigator.share) {
+    navigator.share({ title: 'האבחון של '+(biz?biz.name:'העסק שלי'), text: analysisText, url: window.location.href }).catch(function(){});
+  } else {
+    navigator.clipboard.writeText(analysisText).then(function(){
+      alert('הטקסט הועתק — הדבק אותו בוואטסאפ');
+    }).catch(function(){
+      prompt('העתק:', analysisText);
+    });
+  }
+}
+
+// ── Modal ──
+function openModal() {
+  var m = document.getElementById('modal');
+  m.style.display = 'flex';
+  requestAnimationFrame(function(){ m.classList.add('open'); });
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  var m = document.getElementById('modal');
+  m.classList.remove('open');
+  setTimeout(function(){ m.style.display='none'; }, 200);
+  document.body.style.overflow = '';
+}
+document.getElementById('modal').addEventListener('click', function(e){
+  if (e.target === this) closeModal();
+});
+
+function submitLead() {
+  var name = document.getElementById('mName').value.trim();
+  var bizName = document.getElementById('mBiz').value.trim();
+  var phone = document.getElementById('mPhone').value.trim();
+  var email = document.getElementById('mEmail').value.trim();
+  document.getElementById('mName').style.borderColor = name?'':'#dc2626';
+  document.getElementById('mPhone').style.borderColor = phone?'':'#dc2626';
+  if (!name||!phone) return;
+  lead = { name:name, bizName:bizName, phone:phone, email:email, upsell: false };
+  var btn = document.getElementById('modalBtn');
+  btn.innerHTML = '<span class="spin">⏳</span> שולח...';
+  btn.disabled = true;
+  setTimeout(function(){
+    closeModal();
+    goTo('s3', 3);
+    btn.innerHTML = 'הצג לי את האבחון ←';
+    btn.disabled = false;
+    var n = bizName || (biz?biz.name:'שם העסק');
+    document.getElementById('gcName').textContent = n;
+    document.getElementById('scName').textContent = n;
+    updatePdfMock();
+  }, 900);
+}
+
+// ── Branding ──
+function handleLogo(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    brand.logo = e.target.result;
+    var prev = document.getElementById('logoPreview');
+    prev.src = brand.logo; prev.style.display = 'block';
+    document.querySelector('.logo-upload-icon').style.display = 'none';
+    document.querySelector('.logo-upload-text').style.display = 'none';
+    applyLogo('gcLogoEmoji','gcLogoImg');
+    applyLogo('scLogoEmoji','scLogoImg');
+  };
+  reader.readAsDataURL(file);
+}
+function applyLogo(eid, iid) {
+  document.getElementById(eid).style.display = 'none';
+  var img = document.getElementById(iid);
+  img.src = brand.logo; img.style.display = 'block';
+}
+function pickColor(el) {
+  document.querySelectorAll('.color-swatch').forEach(function(s){ s.classList.remove('sel'); });
+  el.classList.add('sel');
+  brand.color = el.dataset.c;
+  applyBrandColor(brand.color);
+}
+function pickCustomColor(input) {
+  document.querySelectorAll('.color-swatch').forEach(function(s){ s.classList.remove('sel'); });
+  brand.color = input.value;
+  applyBrandColor(brand.color);
+}
+function applyBrandColor(color) {
+  var fg = textForBg(color);
+  ['gcPreview','showcaseCard'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) { el.style.background=color; el.style.color=fg; }
+  });
+  var pc = document.getElementById('pdfCard');
+  if (pc) { pc.style.background=color; pc.style.color=fg; }
+}
+function updatePdfMock() {
+  var name = lead.bizName||(biz?biz.name:'שם העסק');
+  document.getElementById('pdfBizName').textContent = name;
+  document.getElementById('pdfCardBiz').textContent = name;
+}
+
+function goToReport() {
+  goTo('s4', 4);
+  setTimeout(initReport, 50);
+}
+
+// ── Report ──
+function buildComp(b, tbodyId, withYou) {
+  var comps = COMP_NAMES.slice(0,4).map(function(name, i){
+    return {
+      name: name,
+      rating: Math.min(5, 4.5+Math.random()*.5).toFixed(1),
+      count: Math.round(b.count*(1.1+Math.random()*.8)),
+      trend: Math.random()>.4?'↑':'→',
+      isYou: false
+    };
+  });
+  if (withYou) {
+    comps.splice(2,0,{
+      name: b.name+' (אתם)',
+      rating: b.rating.toFixed(1),
+      count: b.count,
+      trend: b.rating>=4.5?'↑':'→',
+      isYou: true
+    });
+  }
+  var tbody = document.getElementById(tbodyId);
+  if (!tbody) return;
+  tbody.innerHTML = comps.map(function(c){
+    return '<tr class="'+(c.isYou?'comp-you':'')+'"><td>'+c.name+'</td><td class="stars-cell" style="text-align:center">'+c.rating+'★</td><td style="text-align:center">'+c.count+'</td><td style="text-align:center">'+c.trend+'</td></tr>';
+  }).join('');
+}
+
+function initReport() {
+  if (!biz) return;
+  var b = biz;
+  var displayName = lead.bizName||b.name;
+  document.getElementById('r4title').innerHTML = 'הדו״ח של <span>'+displayName+'</span>';
+
+  var badges = [];
+  if (b.rating>=4.5) badges.push('<span class="rbadge rbadge-good">★ דירוג מצוין</span>');
+  else if (b.rating>=4.0) badges.push('<span class="rbadge rbadge-warn">⚠ יש מקום לשיפור</span>');
+  else badges.push('<span class="rbadge" style="background:var(--red-l);color:var(--red)">⬇ דירוג נמוך</span>');
+  if (b.count<100) badges.push('<span class="rbadge rbadge-warn">💬 מעט ביקורות</span>');
+  badges.push('<span class="rbadge rbadge-info">📍 '+b.city+'</span>');
+  document.getElementById('r4badges').innerHTML = badges.join('');
+
+  var gap = Math.max(0, 4.8-b.rating);
+  var growthPct = Math.min(60, Math.round(gap*22));
+  document.getElementById('scRating').textContent = b.rating.toFixed(1)+'★';
+  document.getElementById('scCount').textContent = b.count;
+  document.getElementById('scGrowth').textContent = '+'+growthPct+'%';
+  document.getElementById('scPos').textContent = growthPct>25?'#3 מ-6':'#2 מ-6';
+
+  document.getElementById('growthNum').textContent = '+'+growthPct+'%';
+  document.getElementById('growthLabel').textContent = 'גידול אפשרי בביקורות חדשות בחודש';
+  document.getElementById('growthWhy').textContent = 'עסקים שדירוגם עולה מ-'+b.rating+' ל-4.8 מקבלים בממוצע '+growthPct+'% יותר לקוחות שמשאירים ביקורת — פשוט כי הם נמצאים גבוה יותר בחיפוש של גוגל.';
+
+  var barYou = Math.round((b.rating/5)*100);
+  var barTop = Math.round((4.8/5)*100);
+  setTimeout(function(){
+    document.getElementById('gpBarYou').style.width = barYou+'%';
+    document.getElementById('gpBarTop').style.width = barTop+'%';
+  }, 350);
+  document.getElementById('gpYourRat').textContent = b.rating.toFixed(1)+'★';
+  document.getElementById('gpTopRat').textContent = '4.8★';
+  document.getElementById('gpYourCnt').textContent = b.count;
+  document.getElementById('gpTopCnt').textContent = Math.round(b.count*1.42+14)+' (ממוצע)';
+
+  buildComp(b,'comprows4',true);
+
+  var n = lead.bizName||b.name;
+  document.getElementById('scName').textContent = n;
+  document.getElementById('gcName').textContent = n;
+  applyBrandColor(brand.color);
+  if (brand.logo) { applyLogo('scLogoEmoji','scLogoImg'); }
+  updatePdfMock();
+}
+
+// ── Payment — שמירת מצב + העברה לקארדקום ──
+document.getElementById('paybtn').addEventListener('click', function(){
+  var btn = this;
+  btn.innerHTML = '<div class="pay-btn-main">⏳ מעביר לתשלום מאובטח...</div>';
+  btn.style.opacity = '.8';
+  btn.disabled = true;
+
+  /* שמירת מצב ב-localStorage לשחזור אחרי חזרה מקארדקום */
+  try {
+    localStorage.setItem('rl_lead',  JSON.stringify(lead));
+    localStorage.setItem('rl_biz',   JSON.stringify(biz));
+    localStorage.setItem('rl_brand', JSON.stringify(brand));
+  } catch(e) {}
+
+  /* שמירה ב-Supabase לפני מעבר (lead בלי upsell עדיין) */
+  registerLeadPurchase(false);
+
+  setTimeout(function(){
+    window.location.href = CARDCOM_MAIN;
+  }, 600);
+});
+
+// ── Order Summary ──
+function showOrderSummary(withUpsell) {
+  var name = lead.name || '—';
+  var bizName = lead.bizName || (biz ? biz.name : '—');
+  document.getElementById('osSummaryName').textContent = name;
+  document.getElementById('osSummaryBiz').textContent = bizName;
+  var slug = bizName.replace(/\s+/g,'-').toLowerCase().replace(/[^a-z0-9\-]/g,'');
+  if (!slug) slug = 'my-business';
+  document.getElementById('osCardSlug').textContent = slug;
+  var months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  var d = new Date(); d.setMonth(d.getMonth()+1);
+  document.getElementById('osNextMonth').textContent = months[d.getMonth()]+' '+d.getFullYear();
+  if (withUpsell) {
+    document.getElementById('osUpsellRow').style.display='flex';
+    document.getElementById('osUpBadge').style.display='flex';
+  }
+  document.getElementById('orderSummary').classList.add('show');
+}
+
+function simulatePdfDownload(btn) {
+  btn.innerHTML = '<span class="spin">⏳</span> מכין PDF...';
+  btn.disabled = true;
+  setTimeout(function(){
+    btn.innerHTML = '✓ PDF מוכן להדפסה — ישלח למייל שלכם';
+    btn.style.background = 'var(--green)';
+    btn.disabled = false;
+  }, 1400);
+}
+
+// ── Upsell ──
+document.getElementById('upsellYes').addEventListener('click', function(){
+  var btn = this;
+  btn.textContent = '⏳ מעביר לתשלום...';
+  btn.disabled = true;
+
+  /* שמירת דגל upsell ב-localStorage */
+  try { localStorage.setItem('rl_upsell_pending', '1'); } catch(e) {}
+
+  setTimeout(function(){
+    window.location.href = CARDCOM_UPSELL;
+  }, 600);
+});
+document.getElementById('upsellNo').addEventListener('click', function(){
+  document.getElementById('upsellCard').style.display='none';
+  document.getElementById('upsellDone').classList.add('show');
+  showOrderSummary(false);
+});
+
+// ── Keyword extraction (mock AI analysis) ──
+var KEYWORDS_BY_TYPE = {
+  restaurant: ['אוכל מצוין','שירות מהיר','אווירה נעימה','מחירים סבירים','מומלץ'],
+  salon: ['תספורת מדהימה','קשב לפרטים','תוצאות מושלמות','מקצועיות','נגישות'],
+  gym: ['מאמנים מעולים','ציוד חדשני','נקיון','תמיכה אישית','אווירה מוטיבציה'],
+  cafe: ['קפה מעולה','עוגות טריות','אווירה חמימה','שירות נחמד','מיקום נוח'],
+  service: ['אמינות','מהירות','מחיר הוגן','תוצאות','המלצה חוזרת'],
+  education: ['סבלנות','הסברה ברורה','תוצאות מוחשיות','מקצועיות','זמינות'],
+  retail: ['מגוון רחב','מחירים טובים','שירות אדיב','איכות גבוהה','חוויה נעימה'],
+  construction: ['עבודה מדויקת','אחריות','ניקיון','עמידה בזמנים','מקצועיות']
+};
+function buildKeywordChips() {
+  var type = biz ? biz.type : 'service';
+  var words = KEYWORDS_BY_TYPE[type] || KEYWORDS_BY_TYPE['service'];
+  var el = document.getElementById('uflKeywords');
+  if (!el) return;
+  el.innerHTML = words.map(function(w){ return '<span class="kw-chip">'+w+'</span>'; }).join('');
+}
+
+// ── Admin ──
+function adminTriggerClick() {
+  adminClickCount++;
+  if (adminClickCount >= 5) {
+    adminClickCount = 0;
+    goTo('sAdmin', 0);
+    document.getElementById('stepper').classList.remove('vis');
+    document.getElementById('siteFooter').classList.remove('show');
+  }
+}
+function checkAdmin() {
+  var pw = document.getElementById('adminPass').value;
+  var err = document.getElementById('adminErr');
+  if (pw === 'Hadas2026AI') {
+    adminAuthed = true;
+    err.style.display = 'none';
+    document.getElementById('adminGate').style.display = 'none';
+    document.getElementById('adminDash').style.display = 'block';
+    renderAdminTable();
+  } else {
+    err.style.display = 'block';
+    document.getElementById('adminPass').value = '';
+  }
+}
+function adminLogout() {
+  adminAuthed = false;
+  document.getElementById('adminGate').style.display = 'flex';
+  document.getElementById('adminDash').style.display = 'none';
+  document.getElementById('adminPass').value = '';
+  goTo('s1', 1);
+}
+/* ── Date formatter: ISO → DD/MM/YYYY (mirrors Supabase created_at display) ── */
+function formatDate(isoStr) {
+  if (!isoStr) return '—';
+  var d = new Date(isoStr);
+  if (isNaN(d)) return isoStr;
+  var dd = String(d.getDate()).padStart(2,'0');
+  var mm = String(d.getMonth()+1).padStart(2,'0');
+  var yyyy = d.getFullYear();
+  return dd+'/'+mm+'/'+yyyy;
+}
+
+function registerLeadPurchase(withUpsell) {
+  if (!lead.name) return;
+  var slug = (lead.bizName||'').replace(/\s+/g,'-').toLowerCase().replace(/[^a-z0-9\-]/g,'') || 'card';
+  var entry = {
+    name:        lead.name,
+    bizName:     lead.bizName || (biz ? biz.name : ''),
+    phone:       lead.phone,
+    email:       lead.email || '',
+    url:         'reviewme.co.il/card/' + slug,
+    upsell:      withUpsell,
+    brand_color: brand.color  || '#0b1d3a',
+    review_url:  brand.url    || '',
+    has_logo:    !!brand.logo,
+    created_at:  new Date().toISOString()
+  };
+
+  /* ── 1. שמירה מקומית (לממשק ניהול client-side) ── */
+  var existing = allLeads.findIndex(function(l){ return l.phone === entry.phone; });
+  if (existing >= 0) { allLeads[existing] = entry; }
+  else { allLeads.push(entry); }
+
+  /* ── 2. שמירה ל-Supabase (עובד מ-HTTP/HTTPS; לא מ-file://) ── */
+  if (_sb) {
+    try {
+      _sb.rpc('upsert_lead', {
+        p_name:        entry.name,
+        p_biz_name:    entry.bizName,
+        p_phone:       entry.phone,
+        p_email:       entry.email,
+        p_card_url:    entry.url,
+        p_upsell:      withUpsell,
+        p_brand_color: entry.brand_color,
+        p_review_url:  entry.review_url,
+        p_has_logo:    entry.has_logo
+      }).then(function(res) {
+        if (res && res.error) {
+          /* CORS מ-file:// — הכל עובד מקומית, Supabase דורש HTTP */
+          if (res.error.message && res.error.message.indexOf('Failed to fetch') !== -1) {
+            console.info('ℹ️ Supabase: פתחי דרך http:// לשמירה חיה. ממשק ה-UI עובד כרגיל.');
+          } else {
+            console.error('❌ Supabase:', res.error.message);
+          }
+        } else {
+          console.log('%c✅ ליד נשמר ב-Supabase', 'color:#22c55e');
+        }
+      }).catch(function(err) {
+        console.info('ℹ️ Supabase לא זמין (file://) — UI עובד, שמירה ל-DB דורשת HTTP.');
+      });
+    } catch(e) {
+      console.info('ℹ️ Supabase catch:', e.message);
+    }
+  }
+}
+function renderAdminTable() {
+  var tbody = document.getElementById('adminTbody');
+  var empty = document.getElementById('adminEmpty');
+  var count = document.getElementById('adminCount');
+  count.textContent = allLeads.length;
+  if (!allLeads.length) {
+    empty.style.display = 'block';
+    tbody.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+  tbody.innerHTML = allLeads.map(function(l, i){
+    var colorDot = l.brand_color
+      ? '<span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:'+l.brand_color+';border:2px solid rgba(255,255,255,.2);vertical-align:middle"></span> <span style="font-size:11px;opacity:.7">'+l.brand_color+'</span>'
+      : '—';
+    var logoCell = l.has_logo
+      ? '<span class="admin-badge-yes">✓ יש</span>'
+      : '<span class="admin-badge-no">אין</span>';
+    return '<tr>'
+      +'<td style="color:var(--text-on-navy-dim);font-size:12px">'+(i+1)+'</td>'
+      +'<td><strong>'+l.name+'</strong></td>'
+      +'<td>'+l.bizName+'</td>'
+      +'<td dir="ltr">'+l.phone+'</td>'
+      +'<td dir="ltr" style="font-size:12px">'+(l.email||'—')+'</td>'
+      +'<td><a class="admin-url" href="https://'+l.url+'" target="_blank">'+l.url+'</a></td>'
+      +'<td>'+colorDot+'</td>'
+      +'<td>'+logoCell+'</td>'
+      +'<td>'+(l.upsell?'<span class="admin-badge-yes">✓ כן</span>':'<span class="admin-badge-no">לא</span>')+'</td>'
+      +'<td style="font-size:12px;color:var(--text-on-navy-dim)">'+formatDate(l.created_at)+'</td>'
+      +'</tr>';
+  }).join('');
+}
+function exportCSV() {
+  var header = ['#','שם מלא','שם העסק','טלפון','מייל','URL כרטיס','צבע מיתוג','לוגו','הוראת קבע','תאריך הצטרפות'];
+  var rows = allLeads.map(function(l,i){
+    return [
+      i+1, l.name, l.bizName, l.phone, l.email||'', l.url,
+      l.brand_color||'', l.has_logo?'כן':'לא',
+      l.upsell?'כן':'לא', formatDate(l.created_at)
+    ].join(',');
+  });
+  var csv = '\uFEFF' + header.join(',') + '\n' + rows.join('\n');
+  var blob = new Blob([csv],{type:'text/csv;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'leads-reviewme.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── Supabase Admin Loader ──
+function loadLeadsFromSupabase() {
+  var btn = document.getElementById('sbLoadBtn');
+  if (!_sb) {
+    btn.textContent = '⚠️ Supabase לא מוגדר';
+    setTimeout(function(){ btn.textContent = '🔄 טען מ-Supabase'; }, 2500);
+    return;
+  }
+  btn.textContent = '⏳ טוען...';
+  btn.disabled = true;
+
+  _sb.rpc('get_all_leads', { p_password: 'Hadas2026AI' })
+    .then(function(res) {
+      btn.disabled = false;
+      if (res.error) {
+        console.error('Supabase load error:', res.error.message);
+        btn.textContent = '❌ שגיאה — בדקי Console';
+        setTimeout(function(){ btn.textContent = '🔄 טען מ-Supabase'; }, 3000);
+        return;
+      }
+      // המר נתוני Supabase לפורמט allLeads
+      if (res.data && res.data.length) {
+        allLeads = res.data.map(function(r) {
+          return {
+            name:        r.name,
+            bizName:     r.biz_name,
+            phone:       r.phone,
+            email:       r.email       || '',
+            url:         r.card_url    || '',
+            upsell:      r.upsell,
+            brand_color: r.brand_color || '',
+            review_url:  r.review_url  || '',
+            has_logo:    r.has_logo    || false,
+            created_at:  r.created_at
+          };
+        });
+        renderAdminTable();
+        btn.textContent = '✅ ' + allLeads.length + ' לקוחות נטענו';
+      } else {
+        btn.textContent = '📭 אין לקוחות עדיין';
+      }
+      setTimeout(function(){ btn.textContent = '🔄 טען מ-Supabase'; }, 3000);
+    });
+}
+
+// ── Legal Modals ──
+function openLegal(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.style.display='flex';
+  requestAnimationFrame(function(){ el.classList.add('open'); });
+  document.body.style.overflow='hidden';
+}
+function closeLegal(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('open');
+  setTimeout(function(){ el.style.display='none'; }, 200);
+  document.body.style.overflow='';
+}
+// Close legal modals on overlay click
+['legalTerms','legalPrivacy','legalAccess','legalPricing'].forEach(function(id){
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('click', function(e){
+    if (e.target === this) closeLegal(id);
+  });
+});
+</script>
+</body>
+</html>
