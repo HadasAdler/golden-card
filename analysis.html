@@ -353,10 +353,12 @@
     .color-swatch-label{font-size:15px;font-weight:800;color:rgba(250,248,244,.75)}
     .color-swatches{display:flex;gap:10px;flex-wrap:wrap}
     .swatch{
-      width:32px;height:32px;border-radius:50%;cursor:pointer;
-      border:3px solid transparent;transition:border-color .18s,transform .18s;
+      width:36px;height:36px;border-radius:9px;cursor:pointer;
+      border:3px solid rgba(250,248,244,.18);
+      box-shadow:inset 0 0 0 1px rgba(0,0,0,.3);
+      transition:border-color .15s;
     }
-    .swatch.active{border-color:#fff;transform:scale(1.18)}
+    .swatch.active{border-color:#fff;box-shadow:0 0 0 2px #fff,inset 0 0 0 1px rgba(0,0,0,.3)}
     .color-custom-wrap{display:flex;align-items:center;gap:8px}
     .color-custom-wrap input[type=color]{
       width:36px;height:36px;border:none;border-radius:50%;
@@ -457,7 +459,7 @@
 
 <!-- ════ LOADING SCREEN ════ -->
 <div id="loadingScreen">
-  <div class="load-logo">★ NextVoice AI</div>
+  <div class="load-logo">★ פרופיל עסק בגוגל</div>
   <div class="load-biz" id="loadBizName">מנתחים את העסק שלך</div>
   <div class="load-subtitle">הסוכן הדיגיטלי שלנו עובד בשבילך</div>
   <div class="progress-track">
@@ -493,8 +495,8 @@
 
   <!-- Missing fields -->
   <div id="missingSection" style="display:none" class="narrow">
-    <div class="sec-label">ממצאים קריטיים</div>
-    <div class="sec-title">🔎 חסרים שדות קריטיים בפרופיל</div>
+    <div class="sec-label" style="font-size:15px;color:#fff;font-weight:900;letter-spacing:.5px;margin-bottom:10px">נתונים קריטיים בפרופיל</div>
+    <div class="sec-title" style="font-size:28px">🔎 חסרים שדות קריטיים בפרופיל</div>
     <div class="sec-sub">גוגל מעניש עסקים עם פרופיל חלקי - הם יורדים בדירוג</div>
     <div class="warning-card fade d1">
       <div class="warning-header">
@@ -603,7 +605,7 @@
         <div class="build-form">
           <div class="form-group">
             <label class="form-label">שם מלא</label>
-            <input class="form-input" id="fieldName" type="text" placeholder="ישראל ישראלי" autocomplete="name">
+            <input class="form-input" id="fieldName" type="text" placeholder="ישראל ישראלי" autocomplete="name" oninput="updatePreviewName(this.value)">
           </div>
           <div class="form-group">
             <label class="form-label">טלפון</label>
@@ -639,6 +641,9 @@
         </div>
 
         <button class="submit-btn" onclick="handleSubmit()">שלחו - ואנחנו נבנה את הכרטיס!</button>
+        <div style="font-size:13px;color:rgba(250,248,244,.45);line-height:1.65;text-align:center;padding:4px 8px">
+          לאחר השליחה תועברו לדף תשלום מאובטח, ומיד לאחר מכן תקבלו למייל את החבילה המלאה (דוח אופטימיזציה, ערכת QR, כרטיס חכם ומדריכי הבונוס).
+        </div>
       </div><!-- /build-col-form -->
 
       <!-- RIGHT: Live preview (sticky on desktop) -->
@@ -878,7 +883,14 @@
     reader.readAsDataURL(file);
   };
 
-  /* ── Submit ── */
+  /* ── Live name preview ── */
+  window.updatePreviewName = function(val){
+    var el = document.getElementById('previewBizName');
+    if (el) el.textContent = val.trim() || bizNameP || 'שם העסק שלכם';
+  };
+
+  /* ── Submit → payment ── */
+  var PAYMENT_URL = 'https://secure.cardcom.solutions/EA/EA5/izkLsqHzXE2BUeMo5vOAOg/PaymentSP';
   window.handleSubmit = function(){
     var name  = document.getElementById('fieldName').value.trim();
     var phone = document.getElementById('fieldPhone').value.trim();
@@ -888,13 +900,12 @@
       return;
     }
     var btn = document.querySelector('.submit-btn');
-    btn.textContent = 'שולח... ✓';
+    btn.textContent = 'מעביר לדף תשלום מאובטח... 🔒';
     btn.disabled = true;
-    /* TODO: send to backend / Supabase */
+    /* redirect to payment after short delay so user sees feedback */
     setTimeout(function(){
-      btn.textContent = 'נשלח! ניצור קשר בשעה הקרובה 🎉';
-      btn.style.background = 'linear-gradient(135deg,#22d3ee,#0891b2)';
-    }, 1200);
+      window.location.href = PAYMENT_URL;
+    }, 900);
   };
 })();
 </script>

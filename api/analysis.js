@@ -1,8 +1,49 @@
 /**
  * Vercel Serverless Function — /api/analysis
- * מחזיר: נתוני עסק + שדות חסרים + 3 מתחרים מובילים באזור
+ * מחזיר: נתוני עסק + שדות חסרים + 3 מתחרים לפי קטגוריה + עיר
  * קריאה: GET /api/analysis?placeId=ChIJ...
  */
+
+// מיפוי סוג עסק לשם עברי לחיפוש Text Search
+const TYPE_HE = {
+  restaurant:         'מסעדה',
+  lawyer:             'עורך דין',
+  doctor:             'רופא',
+  dentist:            'רופא שיניים',
+  gym:                'חדר כושר',
+  beauty_salon:       'מכון יופי',
+  hair_care:          'מספרה',
+  spa:                'ספא',
+  real_estate_agency: 'תיווך נדלן',
+  accounting:         'רואה חשבון',
+  car_repair:         'מוסך',
+  plumber:            'אינסטלטור',
+  electrician:        'חשמלאי',
+  pharmacy:           'בית מרקחת',
+  bakery:             'מאפייה',
+  cafe:               'קפה',
+  bar:                'בר',
+  hotel:              'מלון',
+  lodging:            'מלון',
+  veterinary_care:    'וטרינר',
+  clothing_store:     'חנות בגדים',
+  shoe_store:         'חנות נעליים',
+  jewelry_store:      'תכשיטים',
+  supermarket:        'סופרמרקט',
+  school:             'בית ספר',
+  insurance_agency:   'ביטוח',
+  store:              'חנות',
+};
+
+const USEFUL_TYPES = Object.keys(TYPE_HE);
+
+// חילוץ שם עיר מ-vicinity (בד"כ: "רחוב, עיר" או "עיר")
+function extractCity(vicinity) {
+  if (!vicinity) return '';
+  const parts = vicinity.split(',');
+  return parts[parts.length - 1].trim();
+}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -17,11 +58,11 @@ module.exports = async function handler(req, res) {
   if (!key) return res.status(503).json({ status: 'NOT_CONFIGURED' });
 
   try {
-    // ── 1. Place Details + geometry ──
+    // ── 1. Place Details + geometry + vicinity ──
     const detailsUrl = new URL('https://maps.googleapis.com/maps/api/place/details/json');
     detailsUrl.searchParams.set('place_id', placeId.trim());
     detailsUrl.searchParams.set('fields',
-      'name,rating,user_ratings_total,formatted_phone_number,website,opening_hours,geometry,types');
+      'name,rating,user_ratings_total,formatted_phone_number,website,opening_hours,geometry,types,vicinity');
     detailsUrl.searchParams.set('language', 'he');
     detailsUrl.searchParams.set('key', key);
 
@@ -36,38 +77,45 @@ module.exports = async function handler(req, res) {
 
     // ── 2. Missing fields ──
     const missing = [];
-    if (!r.website)                    missing.push('אתר אינטרנט');
-    if (!r.formatted_phone_number)     missing.push('מספר טלפון');
-    if (!r.opening_hours)              missing.push('שעות פתיחה');
+    if (!r.website)                missing.push('אתר אינטרנט');
+    if (!r.formatted_phone_number) missing.push('מספר טלפון');
+    if (!r.opening_hours)          missing.push('שעות פתיחה');
 
-    // ── 3. Nearby competitors ──
+    // ── 3. Competitors — Text Search by category + city ──
     let competitors = [];
     const loc = r.geometry && r.geometry.location;
+
     if (loc) {
-      const USEFUL = [
-        'restaurant','lawyer','doctor','dentist','gym','beauty_salon','hair_care','spa',
-        'real_estate_agency','accounting','car_repair','plumber','electrician','pharmacy',
-        'bakery','cafe','bar','hotel','veterinary_care','clothing_store','shoe_store','store'
-      ];
-      const bizType = (r.types || []).find(t => USEFUL.includes(t)) || (r.types || ['establishment'])[0];
+      // קבע קטגוריה עברית
+      const bizType = (r.types || []).find(t => USEFUL_TYPES.includes(t));
+      const categoryHe = bizType ? TYPE_HE[bizType] : (r.name || '');
 
-      const nearbyUrl = new URL('https://maps.googleapis.com/maps/api/place/nearbysearch/json');
-      nearbyUrl.searchParams.set('location', `${loc.lat},${loc.lng}`);
-      nearbyUrl.searchParams.set('radius', '2000');
-      nearbyUrl.searchParams.set('type', bizType);
-      nearbyUrl.searchParams.set('language', 'he');
-      nearbyUrl.searchParams.set('key', key);
+      // חלץ עיר מ-vicinity
+      const city = extractCity(r.vicinity);
 
-      const nbResp = await fetch(nearbyUrl.toString());
-      const nbData = await nbResp.json();
+      // בנה שאילתת חיפוש: "מסעדה בתל אביב" / "תכשיטים בבאר שבע"
+      const searchQuery = city
+        ? `${categoryHe} ב${city}`
+        : categoryHe;
 
-      competitors = (nbData.results || [])
+      const textUrl = new URL('https://maps.googleapis.com/maps/api/place/textsearch/json');
+      textUrl.searchParams.set('query', searchQuery);
+      textUrl.searchParams.set('language', 'he');
+      // הגבל לאזור הקרוב על ידי location bias
+      textUrl.searchParams.set('location', `${loc.lat},${loc.lng}`);
+      textUrl.searchParams.set('radius', '5000');
+      textUrl.searchParams.set('key', key);
+
+      const txResp = await fetch(textUrl.toString());
+      const txData = await txResp.json();
+
+      competitors = (txData.results || [])
         .filter(p => p.place_id !== placeId.trim() && typeof p.rating === 'number')
         .sort((a, b) => (b.rating || 0) - (a.rating || 0))
         .slice(0, 3)
         .map(p => ({
           name:        p.name,
-          rating:      p.rating       || 0,
+          rating:      p.rating             || 0,
           reviewCount: p.user_ratings_total || 0
         }));
     }

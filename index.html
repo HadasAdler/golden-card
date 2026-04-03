@@ -2452,7 +2452,9 @@ function doSearch() {
 
 // הצגת תוצאות מ-Google Places (דרך /api/places)
 function _showPlacesDropdown(predictions) {
-  sdrop.innerHTML = predictions.slice(0,5).map(function(p) {
+  sdrop.innerHTML =
+    '<div style="padding:9px 16px 5px;font-size:13px;color:rgba(250,248,244,.55);font-weight:700;border-bottom:1px solid rgba(250,248,244,.08);margin-bottom:4px">✅ נמצא עסק מתאים! לחצו עליו להמשך האבחון</div>'
+    + predictions.slice(0,5).map(function(p) {
     var main = escHtml(p.structured_formatting.main_text);
     var sec  = escHtml(p.structured_formatting.secondary_text || '');
     return '<div class="di" onclick="_selectPlaceResult(\''+escHtml(p.place_id)+'\',\''+main+'\',\''+sec+'\')">'
@@ -2647,34 +2649,43 @@ function openAnalysis() {
       var rowPhone = document.getElementById('bsiPhone');
       var rowWeb   = document.getElementById('bsiWeb');
       if (scanBox) {
-        var hasInfo = false;
+        var MISSING = '<div class="bsi-val" style="color:rgba(250,248,244,.3);font-size:13px">מידע חסר</div>';
         // שעות — כרטיס מיני
-        if (rowHours && biz.openNow !== null && biz.openNow !== undefined) {
-          rowHours.innerHTML =
-            '<div class="bsi-icon">🕐</div>'
-            +'<div class="bsi-label">סטטוס</div>'
-            +'<div class="bsi-val '+(biz.openNow?'bsi-open':'bsi-closed')+'">'
-            +(biz.openNow ? 'פתוח כעת' : 'סגור כעת')+'</div>';
-          hasInfo = true;
+        if (rowHours) {
+          if (biz.openNow !== null && biz.openNow !== undefined) {
+            rowHours.innerHTML =
+              '<div class="bsi-icon">🕐</div>'
+              +'<div class="bsi-label">סטטוס</div>'
+              +'<div class="bsi-val '+(biz.openNow?'bsi-open':'bsi-closed')+'">'
+              +(biz.openNow ? 'פתוח כעת' : 'סגור כעת')+'</div>';
+          } else {
+            rowHours.innerHTML = '<div class="bsi-icon">🕐</div><div class="bsi-label">סטטוס</div>'+MISSING;
+          }
         }
         // טלפון — כרטיס מיני
-        if (rowPhone && biz.phone) {
-          rowPhone.innerHTML =
-            '<div class="bsi-icon">📞</div>'
-            +'<div class="bsi-label">טלפון</div>'
-            +'<div class="bsi-val">'+escHtml(biz.phone)+'</div>';
-          hasInfo = true;
+        if (rowPhone) {
+          if (biz.phone) {
+            rowPhone.innerHTML =
+              '<div class="bsi-icon">📞</div>'
+              +'<div class="bsi-label">טלפון</div>'
+              +'<div class="bsi-val">'+escHtml(biz.phone)+'</div>';
+          } else {
+            rowPhone.innerHTML = '<div class="bsi-icon">📞</div><div class="bsi-label">טלפון</div>'+MISSING;
+          }
         }
         // אתר — כרטיס מיני
-        if (rowWeb && biz.website) {
-          var shortUrl = biz.website.replace(/^https?:\/\/(www\.)?/,'').split('/')[0];
-          rowWeb.innerHTML =
-            '<div class="bsi-icon">🌐</div>'
-            +'<div class="bsi-label">אתר</div>'
-            +'<div class="bsi-val"><a class="bsi-link" href="'+escHtml(biz.website)+'" target="_blank" rel="noopener">'+escHtml(shortUrl)+'</a></div>';
-          hasInfo = true;
+        if (rowWeb) {
+          if (biz.website) {
+            var shortUrl = biz.website.replace(/^https?:\/\/(www\.)?/,'').split('/')[0];
+            rowWeb.innerHTML =
+              '<div class="bsi-icon">🌐</div>'
+              +'<div class="bsi-label">אתר</div>'
+              +'<div class="bsi-val"><a class="bsi-link" href="'+escHtml(biz.website)+'" target="_blank" rel="noopener">'+escHtml(shortUrl)+'</a></div>';
+          } else {
+            rowWeb.innerHTML = '<div class="bsi-icon">🌐</div><div class="bsi-label">אתר</div>'+MISSING;
+          }
         }
-        scanBox.style.display = hasInfo ? 'flex' : 'none';
+        scanBox.style.display = 'flex';
       }
 
       // עדכן analysisText לשיתוף
