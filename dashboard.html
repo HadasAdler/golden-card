@@ -991,11 +991,23 @@ html,body{
                       border-radius:16px;padding:28px 24px 24px;margin-bottom:20px;text-align:center;">
             <div style="font-size:40px;margin-bottom:14px;">🔗</div>
             <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:14px;">הקישור לכרטיס ההמלצות שלך מוכן!</div>
+
+            <!-- הקישור לכרטיס החכם (reviewme.co.il/card/slug) -->
+            <div style="font-size:11px;color:rgba(250,248,244,.5);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;text-align:right;">🌐 כרטיס ההמלצות החכם שלך</div>
+            <div style="font-size:13px;color:var(--gold);word-break:break-all;
+                        background:rgba(249,185,21,.08);border:1.5px solid rgba(249,185,21,.35);border-radius:8px;padding:10px 14px;
+                        margin-bottom:12px;line-height:1.55;text-align:center;font-weight:700;"
+                 id="smart-card-link-display"></div>
+
+            <!-- קישור הביקורת בגוגל -->
+            <div style="font-size:11px;color:rgba(250,248,244,.5);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;text-align:right;">⭐ קישור ישיר לביקורת בגוגל</div>
             <div style="font-size:12px;color:rgba(250,248,244,.5);word-break:break-all;
                         background:rgba(0,0,0,.25);border-radius:8px;padding:10px 14px;
                         margin-bottom:18px;line-height:1.55;text-align:center;"
                  id="card-link-display"></div>
-            <button class="btn-copy-link" id="copyCardLinkBtn" onclick="copyCardLink()">📋 העתק קישור</button>
+
+            <button class="btn-copy-link" id="copyCardLinkBtn" onclick="copyCardLink()">📋 העתק קישור גוגל</button>
+            <button class="btn-copy-link" id="copySmartLinkBtn" onclick="copySmartLink()" style="margin-right:10px;background:var(--gold);color:#0a192f;">🔗 העתק כרטיס חכם</button>
           </div>
         </div>
 
@@ -1532,24 +1544,46 @@ if (bizName) {
 //  TAB 1 — CARD LINK (dynamic)
 // ═══════════════════════════════════════
 function initLinkTab() {
-  var linkSec    = document.getElementById('card-link-section');
-  var pendingSec = document.getElementById('card-pending-section');
-  var linkEl     = document.getElementById('card-link-display');
+  var linkSec       = document.getElementById('card-link-section');
+  var pendingSec    = document.getElementById('card-pending-section');
+  var linkEl        = document.getElementById('card-link-display');
+  var smartLinkEl   = document.getElementById('smart-card-link-display');
+
+  /* חישוב slug מ-bizName */
+  var slug = (bizName || '').replace(/\s+/g,'-').toLowerCase().replace(/[^a-z0-9\-]/g,'') || 'card';
+  var smartCardUrl  = 'https://reviewme.co.il/card/' + slug;
 
   if (reviewLink) {
-    if (linkEl)     linkEl.textContent    = reviewLink;
-    if (linkSec)    linkSec.style.display  = 'block';
-    if (pendingSec) pendingSec.style.display = 'none';
+    if (linkEl)       linkEl.textContent       = reviewLink;
+    if (smartLinkEl)  smartLinkEl.textContent  = smartCardUrl;
+    if (linkSec)      linkSec.style.display    = 'block';
+    if (pendingSec)   pendingSec.style.display = 'none';
   } else {
-    if (linkSec)    linkSec.style.display  = 'none';
-    if (pendingSec) pendingSec.style.display = 'block';
+    if (linkSec)      linkSec.style.display    = 'none';
+    if (pendingSec)   pendingSec.style.display = 'block';
   }
+
+  /* שמירת URL הכרטיס החכם לשימוש ב-copySmartLink */
+  window._smartCardUrl = smartCardUrl;
 }
 
 function copyCardLink() {
   if (!reviewLink) return;
   var btn = document.getElementById('copyCardLinkBtn');
   copyText(reviewLink, function () {
+    if (btn) {
+      var orig = btn.textContent;
+      btn.textContent = '✅ הועתק!';
+      setTimeout(function () { btn.textContent = orig; }, 2000);
+    }
+  });
+}
+
+function copySmartLink() {
+  var url = window._smartCardUrl;
+  if (!url) return;
+  var btn = document.getElementById('copySmartLinkBtn');
+  copyText(url, function () {
     if (btn) {
       var orig = btn.textContent;
       btn.textContent = '✅ הועתק!';
