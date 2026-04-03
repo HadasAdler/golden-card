@@ -158,7 +158,15 @@ body{
   letter-spacing:.3px;
   box-shadow:0 0 32px rgba(34,211,238,.18),0 2px 12px rgba(0,0,0,.2);
 }
-.hero-badge::before{content:'★';font-size:18px}
+.hero-badge::before{content:'★';font-size:18px;flex-shrink:0}
+@media(max-width:640px){
+  .hero-badge{
+    flex-direction:column;gap:3px;padding:14px 22px;
+    border-radius:20px;font-size:16px;text-align:center;line-height:1.45;
+  }
+  .hero-badge::before{margin-bottom:4px}
+  .badge-sep{display:none}
+}
 .hero-h1{
   font-size:clamp(20px,4.2vw,42px);font-weight:900;
   text-align:center;line-height:1.25;
@@ -1516,7 +1524,7 @@ body{
 <!-- ══ STEP 1 — HERO ══ -->
 <section class="sec hero-sec on" id="s1">
   <button class="top-share-btn" onclick="doShareSite()" title="שתף את האתר"><span>🔗</span> שתף</button>
-  <div class="anim"><div class="hero-badge">אבחון עסקי חינמי - Google Business</div></div>
+  <div class="anim"><div class="hero-badge"><span class="badge-line1">אבחון עסקי חינמי</span><span class="badge-sep"> - </span><span class="badge-line2">Google Business Profile</span></div></div>
   <h1 class="hero-h1 anim anim-d1">
     פרופיל העסק שלכם לא מופיע<br>
     <em>בשלושת התוצאות הראשונות בגוגל?</em>
@@ -1550,7 +1558,7 @@ body{
     </div>
     <button class="biz-card-clear" onclick="clearBizSelection()" title="בטל בחירה">✕</button>
   </div>
-  <button class="search-btn anim anim-d4" id="searchCta" onclick="openAnalysis()" disabled>קבל אבחון שיווקי בחינם ←</button>
+  <button class="search-btn anim anim-d4" id="searchCta" onclick="openAnalysis()" disabled>לחצו כאן לקבלת אבחון שיווקי בחינם</button>
   <div class="analysis-wrap" id="analysisWrap" style="display:none">
     <div class="analysis-loading" id="analysisLoading">
       <div class="analysis-spinner"></div>
@@ -1588,7 +1596,7 @@ body{
         </div>
       </div>
       <div class="analysis-cta-wrap">
-        <button class="analysis-cta-btn" onclick="openModal()">לחצו כאן לקבלת אבחון שיווקי בחינם</button>
+        <button class="analysis-cta-btn" onclick="openModal()">לחצו כאן לקבלת אבחון שיווקי מפורט</button>
       </div>
     </div>
   </div>
@@ -2527,7 +2535,7 @@ function _onBizChosen() {
   cta.disabled = false;
   cta.classList.add('cta-ready');
   cta.innerHTML =
-    '<span style="display:block;font-size:19px;font-weight:800;line-height:1.2">📊 קבל אבחון שיווקי בחינם</span>'
+    '<span style="display:block;font-size:20px;font-weight:900;line-height:1.2">לחצו כאן לקבלת אבחון שיווקי בחינם</span>'
     +'<span style="display:block;font-size:14px;opacity:.8;margin-top:5px;font-weight:600">עבור: '+escHtml(biz.name)+'</span>';
 
   if (biz.name) document.getElementById('mBiz').value = biz.name;
@@ -2547,7 +2555,7 @@ function clearBizSelection() {
   var cta = document.getElementById('searchCta');
   cta.disabled = true;
   cta.classList.remove('cta-ready');
-  cta.textContent = 'קבל אבחון שיווקי בחינם ←';
+  cta.textContent = 'לחצו כאן לקבלת אבחון שיווקי בחינם';
   searchInput.focus();
 }
 
