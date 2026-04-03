@@ -1596,7 +1596,7 @@ body{
         </div>
       </div>
       <div class="analysis-cta-wrap">
-        <button class="analysis-cta-btn" onclick="openModal()">לחצו כאן לקבלת אבחון שיווקי מפורט</button>
+        <button class="analysis-cta-btn" onclick="goToAnalysis()">לחצו כאן לקבלת אבחון שיווקי מפורט</button>
       </div>
     </div>
   </div>
@@ -2717,6 +2717,17 @@ function doShareSite() {
       if (btn) { btn.textContent = '✓ הקישור הועתק'; setTimeout(function(){ btn.innerHTML = '<span>🔗</span> שתף'; }, 2000); }
     }).catch(function(){ prompt('העתק את הקישור:', url); });
   }
+}
+
+// ── ניווט לדף ניתוח מפורט ──
+function goToAnalysis() {
+  if (!biz || !biz.placeId) {
+    openModal(); // fallback למודל אם אין Place ID
+    return;
+  }
+  var url = '/analysis?id=' + encodeURIComponent(biz.placeId)
+    + '&name=' + encodeURIComponent(biz.name || '');
+  window.location.href = url;
 }
 
 // ── Modal ──

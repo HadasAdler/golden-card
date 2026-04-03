@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>ניתוח עסקי מפורט | NextVoice AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --navy:#0a192f;
+      --navy-mid:#0f2744;
+      --orange:#f9b915;
+      --orange-d:#e8a800;
+      --turquoise:#22d3ee;
+      --cream:#faf8f4;
+      --green:#4ade80;
+      --purple:#a78bfa;
+      --red:#f87171;
+      --r:14px;
+      --r-lg:22px;
+    }
+    html,body{
+      min-height:100%;font-family:'Heebo',sans-serif;
+      background:var(--navy);color:var(--cream);direction:rtl;
+    }
+
+    /* ════════════════════════════════
+       LOADING SCREEN
+    ════════════════════════════════ */
+    #loadingScreen{
+      min-height:100vh;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      padding:48px 24px;gap:22px;
+      background:radial-gradient(ellipse at 50% 0%,rgba(34,211,238,.08) 0%,transparent 65%);
+    }
+    .load-logo{
+      font-size:13px;font-weight:800;color:var(--turquoise);
+      letter-spacing:2px;text-transform:uppercase;opacity:.75;
+    }
+    .load-biz{
+      font-size:26px;font-weight:900;color:#fff;
+      text-align:center;max-width:340px;line-height:1.3;
+      min-height:36px;
+    }
+    .load-subtitle{
+      font-size:14.5px;color:rgba(250,248,244,.55);text-align:center;
+    }
+    .progress-track{
+      width:100%;max-width:360px;height:7px;
+      background:rgba(250,248,244,.1);border-radius:100px;overflow:hidden;
+    }
+    .progress-fill{
+      height:100%;width:0%;border-radius:100px;
+      background:linear-gradient(90deg,var(--turquoise),var(--orange));
+      transition:width .18s ease;
+    }
+    .load-msg{
+      font-size:14px;color:rgba(250,248,244,.65);text-align:center;
+      max-width:310px;line-height:1.55;min-height:46px;
+      transition:opacity .3s ease;
+    }
+    .load-steps{
+      display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
+      margin-top:4px;
+    }
+    .load-step{
+      display:flex;align-items:center;gap:7px;
+      font-size:13px;color:rgba(250,248,244,.35);font-weight:600;
+      transition:color .4s ease;
+    }
+    .load-step.active{color:var(--turquoise)}
+    .load-step.done  {color:var(--green)}
+    .load-step-dot{
+      width:9px;height:9px;border-radius:50%;
+      background:rgba(250,248,244,.18);flex-shrink:0;
+      transition:background .4s ease;
+    }
+    .load-step.active .load-step-dot{background:var(--turquoise)}
+    .load-step.done  .load-step-dot{background:var(--green)}
+
+    /* ════════════════════════════════
+       MAIN PAGE
+    ════════════════════════════════ */
+    #mainPage{
+      min-height:100vh;max-width:620px;margin:0 auto;
+      padding:28px 16px 72px;
+      display:none;flex-direction:column;gap:18px;
+    }
+
+    /* Back link */
+    .back-link{
+      display:inline-flex;align-items:center;gap:6px;
+      font-size:13px;color:rgba(250,248,244,.45);font-weight:600;
+      text-decoration:none;cursor:pointer;transition:color .2s;
+      width:fit-content;
+    }
+    .back-link:hover{color:var(--turquoise)}
+
+    /* Business header */
+    .biz-header{
+      background:linear-gradient(135deg,rgba(34,211,238,.09),rgba(249,185,21,.06));
+      border:1.5px solid rgba(34,211,238,.28);
+      border-radius:var(--r-lg);padding:26px 22px 22px;
+    }
+    .biz-tag{
+      font-size:11px;font-weight:800;color:var(--turquoise);
+      letter-spacing:.9px;text-transform:uppercase;margin-bottom:10px;
+      display:flex;align-items:center;gap:6px;
+    }
+    .biz-name{font-size:26px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:14px}
+    .biz-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .biz-rating-big{font-size:42px;font-weight:900;color:var(--orange);line-height:1}
+    .biz-meta-right{display:flex;flex-direction:column;gap:3px}
+    .biz-stars{font-size:20px;color:var(--orange);letter-spacing:1px}
+    .biz-reviews{font-size:14px;color:rgba(250,248,244,.6);font-weight:600}
+
+    /* Section label */
+    .sec-label{
+      font-size:11px;font-weight:800;color:rgba(250,248,244,.45);
+      letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;
+    }
+    .sec-title{font-size:19px;font-weight:900;color:#fff;line-height:1.3;margin-bottom:4px}
+    .sec-sub{font-size:13.5px;color:rgba(250,248,244,.55);font-weight:500;margin-bottom:12px}
+
+    /* Missing fields */
+    .warning-card{
+      background:rgba(248,113,113,.08);
+      border:1.5px solid rgba(248,113,113,.3);
+      border-radius:var(--r-lg);padding:22px 20px;
+    }
+    .warning-header{
+      display:flex;align-items:center;gap:10px;
+      margin-bottom:16px;
+    }
+    .warning-icon{
+      width:40px;height:40px;border-radius:50%;
+      background:rgba(248,113,113,.15);border:1.5px solid rgba(248,113,113,.35);
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;flex-shrink:0;
+    }
+    .warning-title{font-size:15.5px;font-weight:800;color:#fca5a5;line-height:1.3}
+    .warning-list{display:flex;flex-direction:column;gap:10px}
+    .warning-item{
+      display:flex;align-items:center;gap:10px;
+      font-size:14.5px;color:rgba(250,248,244,.88);font-weight:600;
+      padding:10px 14px;background:rgba(248,113,113,.06);
+      border-radius:10px;border-right:3px solid rgba(248,113,113,.5);
+    }
+    .warning-dot{width:8px;height:8px;border-radius:50%;background:#f87171;flex-shrink:0}
+
+    /* All good */
+    .good-card{
+      background:rgba(74,222,128,.08);
+      border:1.5px solid rgba(74,222,128,.28);
+      border-radius:var(--r-lg);padding:18px 20px;
+      display:flex;align-items:center;gap:12px;
+      font-size:15px;font-weight:700;color:#86efac;
+      line-height:1.4;
+    }
+
+    /* Competitors table */
+    .comp-card{
+      background:rgba(250,248,244,.04);
+      border:1.5px solid rgba(250,248,244,.1);
+      border-radius:var(--r-lg);overflow:hidden;
+    }
+    .comp-table{width:100%;border-collapse:collapse}
+    .comp-table thead tr{background:rgba(250,248,244,.04)}
+    .comp-table th{
+      font-size:11.5px;color:rgba(250,248,244,.45);font-weight:800;
+      letter-spacing:.5px;text-transform:uppercase;
+      padding:13px 16px;text-align:right;border-bottom:1px solid rgba(250,248,244,.08);
+    }
+    .comp-table td{
+      padding:14px 16px;font-size:14px;color:rgba(250,248,244,.82);
+      border-top:1px solid rgba(250,248,244,.05);vertical-align:middle;
+    }
+    .comp-table tr.you-row td{
+      background:rgba(249,185,21,.06);color:#fff;font-weight:700;
+    }
+    .comp-name{font-weight:700;line-height:1.3}
+    .you-tag{
+      display:inline-block;background:var(--orange);color:#0a192f;
+      font-size:10px;font-weight:900;border-radius:100px;
+      padding:1px 8px;margin-left:6px;vertical-align:middle;
+    }
+    .r-badge{
+      display:inline-flex;align-items:center;gap:4px;
+      padding:4px 11px;border-radius:100px;
+      font-size:13px;font-weight:800;white-space:nowrap;
+    }
+    .r-badge.high{background:rgba(74,222,128,.15);color:#4ade80}
+    .r-badge.mid {background:rgba(249,185,21,.15);color:var(--orange)}
+    .r-badge.low {background:rgba(248,113,113,.15);color:#f87171}
+
+    /* AI insight */
+    .ai-card{
+      background:linear-gradient(135deg,rgba(139,92,246,.13),rgba(34,211,238,.06));
+      border:1.5px solid rgba(139,92,246,.3);
+      border-radius:var(--r-lg);padding:26px 22px;
+      display:flex;flex-direction:column;gap:12px;
+    }
+    .ai-badge{
+      display:inline-flex;align-items:center;gap:7px;
+      background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.38);
+      color:#c4b5fd;border-radius:100px;
+      padding:5px 16px;font-size:12px;font-weight:800;
+      width:fit-content;letter-spacing:.3px;
+    }
+    .ai-main{font-size:18px;font-weight:900;color:#fff;line-height:1.4}
+    .ai-sub{font-size:13.5px;color:rgba(250,248,244,.58);line-height:1.6;font-weight:500}
+
+    /* Divider */
+    .styled-divider{
+      display:flex;align-items:center;gap:12px;margin:4px 0;
+    }
+    .styled-divider::before,.styled-divider::after{
+      content:'';flex:1;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(34,211,238,.3),transparent);
+    }
+    .divider-text{
+      font-size:11px;color:var(--turquoise);font-weight:800;
+      letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;
+    }
+
+    /* Package card */
+    .package-card{
+      background:linear-gradient(160deg,rgba(249,185,21,.1) 0%,rgba(249,185,21,.04) 50%,rgba(34,211,238,.05) 100%);
+      border:2px solid rgba(249,185,21,.38);
+      border-radius:var(--r-lg);padding:28px 22px 24px;
+      display:flex;flex-direction:column;gap:22px;
+    }
+    .pkg-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+    .pkg-title{font-size:21px;font-weight:900;color:#fff;line-height:1.3;max-width:230px}
+    .pkg-price{display:flex;flex-direction:column;align-items:flex-start}
+    .price-old{
+      font-size:14px;color:rgba(250,248,244,.35);font-weight:600;
+      text-decoration:line-through;margin-bottom:2px;
+    }
+    .price-row{display:flex;align-items:baseline;gap:3px}
+    .price-currency{font-size:22px;font-weight:900;color:var(--orange)}
+    .price-amount{font-size:46px;font-weight:900;color:var(--orange);line-height:1}
+    .price-note{font-size:12px;color:rgba(250,248,244,.45);font-weight:600;margin-top:3px}
+
+    .pkg-list{list-style:none;display:flex;flex-direction:column;gap:2px}
+    .pkg-item{
+      display:flex;align-items:flex-start;gap:13px;
+      padding:13px 0;border-bottom:1px solid rgba(250,248,244,.07);
+      font-size:15px;color:rgba(250,248,244,.9);line-height:1.55;
+    }
+    .pkg-item:last-child{border-bottom:none}
+    .pkg-icon{
+      width:34px;height:34px;border-radius:10px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      font-size:16px;margin-top:1px;
+    }
+    .pkg-icon.gold{background:rgba(249,185,21,.14);border:1px solid rgba(249,185,21,.28)}
+    .pkg-icon.green{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.25)}
+    .pkg-bonus-sep{
+      display:flex;align-items:center;gap:10px;
+      padding:8px 0 4px;
+    }
+    .pkg-bonus-sep::before,.pkg-bonus-sep::after{content:'';flex:1;height:1px;background:rgba(74,222,128,.2)}
+    .bonus-label{font-size:11px;font-weight:900;color:var(--green);letter-spacing:.7px;text-transform:uppercase;white-space:nowrap}
+
+    /* CTA */
+    .cta-section{display:flex;flex-direction:column;gap:12px;align-items:center}
+    .mega-btn{
+      width:100%;padding:22px 28px;
+      background:linear-gradient(135deg,var(--orange) 0%,var(--orange-d) 100%);
+      color:#0a192f;border:none;border-radius:var(--r-lg);
+      font-size:20px;font-weight:900;cursor:pointer;
+      font-family:inherit;line-height:1.3;text-align:center;
+      box-shadow:0 10px 40px rgba(249,185,21,.42);
+      transition:all .22s;
+    }
+    .mega-btn:hover{transform:translateY(-2px);box-shadow:0 18px 52px rgba(249,185,21,.55)}
+    .mega-btn:active{transform:translateY(0)}
+    .cta-trust{
+      font-size:13px;color:rgba(250,248,244,.4);text-align:center;
+      display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
+    }
+    .cta-trust span{display:flex;align-items:center;gap:4px}
+
+    /* Animations */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .fade{animation:fadeUp .42s ease both}
+    .d1{animation-delay:.08s}  .d2{animation-delay:.18s}
+    .d3{animation-delay:.30s}  .d4{animation-delay:.44s}
+    .d5{animation-delay:.58s}  .d6{animation-delay:.72s}
+    .d7{animation-delay:.88s}
+
+    @media(max-width:480px){
+      .biz-name{font-size:22px}
+      .biz-rating-big{font-size:36px}
+      .price-amount{font-size:38px}
+      .mega-btn{font-size:18px;padding:20px}
+      .pkg-title{max-width:100%}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════ LOADING SCREEN ════ -->
+<div id="loadingScreen">
+  <div class="load-logo">★ NextVoice AI</div>
+  <div class="load-biz" id="loadBizName">מנתחים את העסק שלך</div>
+  <div class="load-subtitle">הסוכן הדיגיטלי שלנו עובד בשבילך...</div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="load-msg" id="loadMsg">מכין את הניתוח...</div>
+  <div class="load-steps">
+    <div class="load-step" id="lstep1"><div class="load-step-dot"></div>סריקת גוגל</div>
+    <div class="load-step" id="lstep2"><div class="load-step-dot"></div>ניתוח מתחרים</div>
+    <div class="load-step" id="lstep3"><div class="load-step-dot"></div>הכנת הדוח</div>
+  </div>
+</div>
+
+<!-- ════ MAIN PAGE ════ -->
+<div id="mainPage">
+  <a class="back-link" href="/" onclick="history.length>1?(history.back(),false):true">← חזרה לדף הבית</a>
+
+  <!-- Business header -->
+  <div class="biz-header fade">
+    <div class="biz-tag">📊 ניתוח עסקי מפורט</div>
+    <div class="biz-name" id="bizName">—</div>
+    <div class="biz-meta">
+      <div class="biz-rating-big" id="bizRating">—</div>
+      <div class="biz-meta-right">
+        <div class="biz-stars" id="bizStars"></div>
+        <div class="biz-reviews" id="bizReviews">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Missing fields -->
+  <div id="missingSection" style="display:none">
+    <div class="sec-label">ממצאים</div>
+    <div class="sec-title">🔎 חסרים שדות קריטיים בפרופיל שלך</div>
+    <div class="sec-sub">גוגל מעניש עסקים עם פרופיל חלקי — הם יורדים בדירוג</div>
+    <div class="warning-card fade d1">
+      <div class="warning-header">
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-title">גילינו חוסר בנתונים שגוגל מעניש עליהם</div>
+      </div>
+      <div class="warning-list" id="missingList"></div>
+    </div>
+  </div>
+
+  <!-- All good -->
+  <div id="allGoodSection" style="display:none" class="fade d1">
+    <div class="good-card">✅ פרופיל הגוגל שלך מלא ומעודכן — המשיכו לשמור על זה!</div>
+  </div>
+
+  <!-- Competitors -->
+  <div id="compSection" style="display:none">
+    <div class="sec-label">השוואת מתחרים</div>
+    <div class="sec-title">🏆 מתחרים מובילים באזורכם</div>
+    <div class="sec-sub">מי מוביל בגוגל ומי נשאר מאחור?</div>
+    <div class="comp-card fade d2">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>שם העסק</th>
+            <th>דירוג</th>
+            <th>ביקורות</th>
+          </tr>
+        </thead>
+        <tbody id="compBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- AI insight -->
+  <div class="ai-card fade d3">
+    <div class="ai-badge">🤖 תובנת בינה מלאכותית</div>
+    <div class="ai-main" id="aiMainText">במצב הנוכחי, מודלי AI לא ימליצו עליך כבחירה ראשונה</div>
+    <div class="ai-sub">ChatGPT, Gemini ו-Perplexity מדרגים עסקים לפי אמינות דיגיטלית: דירוג גוגל, כמות ביקורות ועדכניות הפרופיל. כדי להופיע כהמלצה הראשונה שמודלי AI נותנים — נדרשת אופטימיזציה אקטיבית ומתמשכת.</div>
+  </div>
+
+  <!-- Divider -->
+  <div class="styled-divider fade d4">
+    <span class="divider-text">הפתרון שלנו</span>
+  </div>
+
+  <!-- Package -->
+  <div class="package-card fade d5">
+    <div class="pkg-top">
+      <div class="pkg-title">מה תקבלו בחבילה המקצועית?</div>
+      <div class="pkg-price">
+        <div class="price-old">₪797</div>
+        <div class="price-row">
+          <span class="price-currency">₪</span>
+          <span class="price-amount">397</span>
+        </div>
+        <div class="price-note">תשלום חד פעמי · ללא חוזה</div>
+      </div>
+    </div>
+
+    <ul class="pkg-list">
+      <li class="pkg-item">
+        <div class="pkg-icon gold">📇</div>
+        <span><strong>כרטיס המלצות חכם</strong> עם מערכת סינון ביקורות — שולח לקוחות מרוצים לגוגל ומסנן ביקורות שליליות</span>
+      </li>
+      <li class="pkg-item">
+        <div class="pkg-icon gold">📄</div>
+        <span><strong>ערכת PDF ממותגת עם QR</strong> להדפסה ושיתוף — מוכנה לתלייה בעסק ולשליחה בווטסאפ</span>
+      </li>
+      <li class="pkg-item">
+        <div class="pkg-icon gold">📊</div>
+        <span><strong>דוח אופטימיזציה מלא</strong> וניתוח "מילים חמות" שהמתחרים שלך משתמשים בהם — ותוכל להשתמש בהם גם</span>
+      </li>
+
+      <li class="pkg-bonus-sep"><span class="bonus-label">🎁 בונוסים בלעדיים</span></li>
+
+      <li class="pkg-item">
+        <div class="pkg-icon green">📘</div>
+        <span><strong>המדריך המעשי</strong> ל-15 שיטות להשגת המלצות בקלות ובמהירות — כולל תסריטים מוכנים לשיחות עם לקוחות</span>
+      </li>
+      <li class="pkg-item">
+        <div class="pkg-icon green">💬</div>
+        <span><strong>תבניות WhatsApp מוכנות</strong> ומדריך מקצועי לניהול ביקורות שליליות בלי לפגוע במוניטין</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section fade d6">
+    <button class="mega-btn" onclick="handleCTA()">כן, אני רוצה להשתלט על המקום הראשון!</button>
+    <div class="cta-trust">
+      <span>✓ ללא התחייבות חוזית</span>
+      <span>✓ תוצאות מובטחות או החזר כספי</span>
+      <span>✓ מוכן תוך 48 שעות</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── URL params ── */
+  var params    = new URLSearchParams(window.location.search);
+  var placeId   = params.get('id')   || '';
+  var bizNameP  = decodeURIComponent(params.get('name') || '');
+
+  if (bizNameP) {
+    document.getElementById('loadBizName').textContent = bizNameP;
+  }
+
+  /* ── Loading messages & steps ── */
+  var DURATION = 5000;
+  var MESSAGES = [
+    'הסוכן הדיגיטלי שלנו מנתח כרגע את המתחרים בסביבתכם...',
+    'סורק דירוגים מעודכנים ב-Google Business Profile...',
+    'בודק התאמה למנועי בינה מלאכותית (ChatGPT, Gemini)...'
+  ];
+  var STEPS = [
+    { id:'lstep1', at:0    },
+    { id:'lstep2', at:1800 },
+    { id:'lstep3', at:3600 }
+  ];
+
+  var msgEl  = document.getElementById('loadMsg');
+  var fillEl = document.getElementById('progressFill');
+  var msgIdx = 0;
+  var startTs = Date.now();
+
+  msgEl.textContent = MESSAGES[0];
+
+  /* progress bar + step activation */
+  var progressTimer = setInterval(function(){
+    var elapsed = Date.now() - startTs;
+    fillEl.style.width = Math.min(96, (elapsed / DURATION) * 100) + '%';
+
+    STEPS.forEach(function(s, i){
+      var el = document.getElementById(s.id);
+      if (elapsed >= s.at) {
+        if (i > 0) {
+          var prevEl = document.getElementById(STEPS[i-1].id);
+          prevEl.classList.remove('active');
+          prevEl.classList.add('done');
+        }
+        if (!el.classList.contains('done')) el.classList.add('active');
+      }
+    });
+
+    if (elapsed >= DURATION) clearInterval(progressTimer);
+  }, 50);
+
+  /* cycling messages */
+  var msgTimer = setInterval(function(){
+    msgIdx = (msgIdx + 1) % MESSAGES.length;
+    msgEl.style.opacity = '0';
+    setTimeout(function(){
+      msgEl.textContent = MESSAGES[msgIdx];
+      msgEl.style.opacity = '1';
+    }, 300);
+  }, 1650);
+
+  /* ── API fetch ── */
+  var apiData   = null;
+  var apiDone   = false;
+  var timerDone = false;
+
+  function tryReveal(){
+    if (!apiDone || !timerDone) return;
+    clearInterval(msgTimer);
+    fillEl.style.width = '100%';
+    STEPS.forEach(function(s){
+      var el = document.getElementById(s.id);
+      el.classList.remove('active');
+      el.classList.add('done');
+    });
+    setTimeout(function(){
+      document.getElementById('loadingScreen').style.display = 'none';
+      renderPage(apiData);
+      document.getElementById('mainPage').style.display = 'flex';
+    }, 420);
+  }
+
+  if (placeId) {
+    fetch('/api/analysis?placeId=' + encodeURIComponent(placeId))
+      .then(function(r){ return r.json(); })
+      .then(function(d){ apiData = d; apiDone = true; tryReveal(); })
+      .catch(function(e){
+        console.error('[analysis]', e);
+        apiData = { status:'ERROR', name: bizNameP };
+        apiDone = true; tryReveal();
+      });
+  } else {
+    apiData = { status:'NO_ID', name: bizNameP };
+    apiDone = true;
+  }
+
+  setTimeout(function(){ timerDone = true; tryReveal(); }, DURATION);
+
+  /* ── Helpers ── */
+  function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function starStr(r){
+    var full = Math.floor(r), half = (r - full) >= 0.5;
+    var s = ''; for(var i=0;i<full;i++) s+='★'; if(half) s+='½';
+    return s;
+  }
+
+  function ratingCls(r){
+    return r >= 4.5 ? 'high' : r >= 3.5 ? 'mid' : 'low';
+  }
+
+  /* ── Render ── */
+  function renderPage(data){
+    var name = (data && data.name) || bizNameP || 'העסק שלכם';
+
+    /* header */
+    document.getElementById('bizName').textContent = name;
+    var rating = (data && typeof data.rating === 'number') ? data.rating : null;
+    if (rating !== null){
+      document.getElementById('bizRating').textContent = rating.toFixed(1);
+      document.getElementById('bizStars').textContent  = starStr(rating);
+    } else {
+      document.getElementById('bizRating').textContent = '—';
+    }
+    var rc = (data && data.reviewCount) ? data.reviewCount : 0;
+    document.getElementById('bizReviews').textContent = rc.toLocaleString('he-IL') + ' ביקורות';
+
+    if (!data || data.status === 'ERROR' || data.status === 'NO_ID' || data.status === 'API_ERROR') return;
+
+    /* missing fields */
+    var missing = data.missing || [];
+    if (missing.length){
+      document.getElementById('missingSection').style.display = 'block';
+      document.getElementById('missingList').innerHTML = missing.map(function(m){
+        return '<div class="warning-item"><div class="warning-dot"></div>'
+          + esc(m) + ' — חסר בפרופיל שלך</div>';
+      }).join('');
+    } else {
+      document.getElementById('allGoodSection').style.display = 'block';
+    }
+
+    /* competitors */
+    var comps = data.competitors || [];
+    if (comps.length){
+      document.getElementById('compSection').style.display = 'block';
+      var myR = rating || 0;
+      var rows = '<tr class="you-row">'
+        + '<td class="comp-name"><span class="you-tag">אתם</span>' + esc(name) + '</td>'
+        + '<td><span class="r-badge ' + ratingCls(myR) + '">★ ' + myR.toFixed(1) + '</span></td>'
+        + '<td>' + rc.toLocaleString('he-IL') + '</td></tr>';
+
+      comps.forEach(function(c){
+        rows += '<tr>'
+          + '<td class="comp-name">' + esc(c.name) + '</td>'
+          + '<td><span class="r-badge ' + ratingCls(c.rating||0) + '">★ ' + (c.rating||0).toFixed(1) + '</span></td>'
+          + '<td>' + (c.reviewCount||0).toLocaleString('he-IL') + '</td></tr>';
+      });
+      document.getElementById('compBody').innerHTML = rows;
+    }
+
+    /* AI insight tweak for strong profiles */
+    if (rating !== null && rating >= 4.7 && rc >= 150){
+      document.getElementById('aiMainText').textContent =
+        'אתם חזקים — אבל ללא אופטימיזציה מתמשכת מודלי AI עדיין יעדיפו את המתחרים שלכם';
+    }
+  }
+
+  /* ── CTA ── */
+  window.handleCTA = function(){
+    var base = '/?buy=1';
+    if (placeId) base += '&id=' + encodeURIComponent(placeId);
+    if (bizNameP) base += '&name=' + encodeURIComponent(bizNameP);
+    window.location.href = base;
+  };
+})();
+</script>
+</body>
+</html>
