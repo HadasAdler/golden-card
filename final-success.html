@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>בהצלחה! | NextVoice AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --navy:#0a192f;
+      --navy-mid:#0f2744;
+      --navy-card:#112240;
+      --orange:#f9b915;
+      --orange-d:#e8a800;
+      --turquoise:#22d3ee;
+      --cream:#faf8f4;
+      --r:14px;
+      --r-lg:22px;
+    }
+    html,body{
+      min-height:100%;font-family:'Heebo',sans-serif;
+      background:var(--navy);color:var(--cream);direction:rtl;
+      overflow-x:hidden;
+    }
+    body{
+      background:radial-gradient(ellipse at 50% 0%,rgba(249,185,21,.08) 0%,transparent 55%),
+                 radial-gradient(ellipse at 80% 80%,rgba(34,211,238,.06) 0%,transparent 50%),
+                 var(--navy);
+    }
+
+    /* ══ CONFETTI ══ */
+    #confetti-canvas{
+      position:fixed;inset:0;pointer-events:none;z-index:100;
+    }
+
+    /* ══ PAGE ══ */
+    .page{
+      max-width:660px;margin:0 auto;
+      padding:52px 20px 90px;
+      display:flex;flex-direction:column;gap:28px;
+      position:relative;z-index:1;
+    }
+
+    /* ── Hero block ── */
+    .hero-block{
+      display:flex;flex-direction:column;align-items:center;
+      gap:20px;text-align:center;
+      padding:44px 28px 36px;
+      background:linear-gradient(145deg,rgba(249,185,21,.1) 0%,rgba(34,211,238,.07) 100%);
+      border:2px solid rgba(249,185,21,.32);
+      border-radius:var(--r-lg);
+    }
+    .hero-trophy{
+      font-size:64px;
+      filter:drop-shadow(0 6px 20px rgba(249,185,21,.45));
+      animation:bounce .7s ease .3s both;
+    }
+    @keyframes bounce{
+      0%  {transform:scale(.5);opacity:0}
+      65% {transform:scale(1.12)}
+      80% {transform:scale(.96)}
+      100%{transform:scale(1);opacity:1}
+    }
+    .hero-title{
+      font-size:36px;font-weight:900;color:#fff;
+      line-height:1.22;
+    }
+    .hero-sub{
+      font-size:17px;color:rgba(250,248,244,.7);
+      font-weight:500;line-height:1.7;max-width:480px;
+    }
+
+    /* ── Delivery list ── */
+    .delivery-card{
+      background:var(--navy-card);
+      border:1.5px solid rgba(250,248,244,.1);
+      border-radius:var(--r-lg);padding:26px 22px;
+      display:flex;flex-direction:column;gap:4px;
+    }
+    .delivery-title{
+      font-size:14px;font-weight:900;color:var(--turquoise);
+      letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;
+    }
+    .delivery-item{
+      display:flex;align-items:flex-start;gap:13px;
+      padding:13px 0;
+      border-bottom:1px solid rgba(250,248,244,.06);
+      font-size:16px;color:rgba(250,248,244,.88);font-weight:600;line-height:1.5;
+    }
+    .delivery-item:last-child{border-bottom:none}
+    .delivery-icon{
+      width:38px;height:38px;border-radius:11px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      font-size:17px;margin-top:1px;
+      background:rgba(249,185,21,.13);border:1px solid rgba(249,185,21,.26);
+    }
+    .delivery-text strong{color:#fff}
+
+    /* ── ETA badge ── */
+    .eta-badge{
+      display:flex;align-items:center;gap:12px;justify-content:center;
+      background:rgba(34,211,238,.08);
+      border:1.5px solid rgba(34,211,238,.22);
+      border-radius:var(--r-lg);padding:18px 22px;
+      font-size:16px;color:var(--turquoise);font-weight:700;
+      text-align:center;line-height:1.5;
+    }
+    .eta-icon{font-size:24px;flex-shrink:0}
+
+    /* ── Support / WhatsApp ── */
+    .support-card{
+      background:rgba(250,248,244,.04);
+      border:1.5px solid rgba(250,248,244,.1);
+      border-radius:var(--r-lg);padding:28px 24px;
+      display:flex;flex-direction:column;align-items:center;
+      gap:16px;text-align:center;
+    }
+    .support-title{
+      font-size:20px;font-weight:900;color:#fff;line-height:1.3;
+    }
+    .support-sub{
+      font-size:15px;color:rgba(250,248,244,.55);font-weight:500;line-height:1.6;
+    }
+    .wa-btn{
+      display:inline-flex;align-items:center;gap:11px;
+      background:#25d366;color:#fff;
+      border:none;border-radius:var(--r-lg);
+      padding:18px 36px;font-size:19px;font-weight:900;
+      font-family:inherit;cursor:pointer;text-decoration:none;
+      box-shadow:0 8px 36px rgba(37,211,102,.42);
+      transition:all .22s;
+    }
+    .wa-btn:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(37,211,102,.56)}
+    .wa-btn:active{transform:translateY(0)}
+
+    /* ── Back link ── */
+    .back-link{
+      display:inline-flex;align-items:center;gap:6px;
+      font-size:14px;color:rgba(250,248,244,.3);font-weight:600;
+      text-decoration:none;cursor:pointer;transition:color .2s;
+      width:fit-content;
+    }
+    .back-link:hover{color:var(--turquoise)}
+
+    /* ── Animations ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .fade{animation:fadeUp .45s ease both}
+    .d1{animation-delay:.15s}
+    .d2{animation-delay:.32s}
+    .d3{animation-delay:.50s}
+    .d4{animation-delay:.70s}
+    .d5{animation-delay:.90s}
+
+    @media(max-width:500px){
+      .hero-title{font-size:27px}
+      .hero-trophy{font-size:50px}
+      .wa-btn{font-size:16px;padding:16px 24px}
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="page">
+
+  <a class="back-link" href="/">← חזרה לדף הבית</a>
+
+  <!-- ── Hero ── -->
+  <div class="hero-block fade d1">
+    <div class="hero-trophy">🏆</div>
+    <div class="hero-title">בהצלחה!<br>אנחנו כבר בעבודה על הפרופיל שלך</div>
+    <div class="hero-sub">
+      הסוכן הדיגיטלי שלנו מכין עבורך את הדוח המלא וערכת הפרימיום.<br>
+      בשעה הקרובה הכל יחכה לך בתיבת המייל שלך.
+    </div>
+  </div>
+
+  <!-- ── What's coming ── -->
+  <div class="delivery-card fade d2">
+    <div class="delivery-title">מה נשלח אליך בקרוב</div>
+
+    <div class="delivery-item">
+      <div class="delivery-icon">📇</div>
+      <div class="delivery-text"><strong>כרטיס ההמלצות החכם הממותג שלך</strong> — עם מערכת סינון ביקורות שמנתבת לקוחות מרוצים ישירות לגוגל</div>
+    </div>
+    <div class="delivery-item">
+      <div class="delivery-icon">📄</div>
+      <div class="delivery-text"><strong>ערכת PDF מוכנה להדפסה עם ה-QR האישי</strong> — לתלייה בעסק, שיתוף בווטסאפ ושליחה ללקוחות</div>
+    </div>
+    <div class="delivery-item">
+      <div class="delivery-icon">📊</div>
+      <div class="delivery-text"><strong>דוח אופטימיזציה מקיף לדירוג גבוה בגוגל</strong> — כולל ניתוח מתחרים ומילות המפתח שיביאו לך לקוחות חדשים</div>
+    </div>
+    <div class="delivery-item">
+      <div class="delivery-icon">🎁</div>
+      <div class="delivery-text"><strong>בונוסים בלעדיים</strong> — מדריך 15 שיטות להשגת המלצות + תבניות WhatsApp מוכנות לשימוש</div>
+    </div>
+  </div>
+
+  <!-- ── ETA ── -->
+  <div class="eta-badge fade d3">
+    <span class="eta-icon">⏱️</span>
+    <span>הכל יגיע למייל שלך <strong>תוך שעה אחת</strong> מרגע ההצטרפות</span>
+  </div>
+
+  <!-- ── Support ── -->
+  <div class="support-card fade d4">
+    <div class="support-title">לא קיבלת את המייל? יש לך שאלה נוספת?<br>אנחנו כאן בשבילך! 💪</div>
+    <div class="support-sub">
+      שלחו לנו הודעה ישירה בוואטסאפ ונחזור אליכם בהקדם האפשרי
+    </div>
+    <a class="wa-btn" href="https://wa.me/972524444468" target="_blank" rel="noopener">
+      <span>💬</span>
+      <span>שלחו לנו הודעה בוואטסאפ</span>
+    </a>
+  </div>
+
+</div>
+
+<!-- ══ Confetti ══ -->
+<script>
+(function(){
+  var canvas  = document.getElementById('confetti-canvas');
+  var ctx     = canvas.getContext('2d');
+  var W, H, particles = [];
+  var COLORS  = ['#f9b915','#22d3ee','#fff','#fbbf24','#60d8f0','#fde68a','#a5f3fc'];
+  var COUNT   = 110;
+  var running = true;
+
+  function resize(){
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function rand(a,b){ return a + Math.random()*(b-a); }
+
+  function Particle(){
+    this.reset = function(){
+      this.x    = rand(0, W);
+      this.y    = rand(-H * .5, 0);
+      this.w    = rand(6, 14);
+      this.h    = rand(3, 7);
+      this.vx   = rand(-1.5, 1.5);
+      this.vy   = rand(2, 5);
+      this.rot  = rand(0, Math.PI*2);
+      this.vr   = rand(-.08, .08);
+      this.color= COLORS[Math.floor(Math.random()*COLORS.length)];
+      this.life = 1;
+    };
+    this.reset();
+    this.y = rand(-200, H * .4); /* start spread */
+  }
+
+  for(var i=0;i<COUNT;i++) particles.push(new Particle());
+
+  var startTime = Date.now();
+  var DURATION  = 3800; /* ms confetti runs */
+
+  function draw(){
+    if(!running) return;
+    ctx.clearRect(0,0,W,H);
+
+    var elapsed = Date.now() - startTime;
+    var progress = Math.min(elapsed / DURATION, 1);
+
+    particles.forEach(function(p){
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.rot+= p.vr;
+      p.vy += .055; /* gravity */
+      p.life = Math.max(0, 1 - Math.max(0, (p.y - H*.7) / (H*.3)));
+
+      ctx.save();
+      ctx.globalAlpha = p.life * (1 - progress * .6);
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+
+    if(elapsed < DURATION){
+      requestAnimationFrame(draw);
+    } else {
+      /* fade out canvas */
+      canvas.style.transition = 'opacity .8s ease';
+      canvas.style.opacity = '0';
+      setTimeout(function(){ running = false; }, 900);
+    }
+  }
+
+  /* start with short delay so page is rendered first */
+  setTimeout(function(){ requestAnimationFrame(draw); }, 200);
+})();
+</script>
+</body>
+</html>

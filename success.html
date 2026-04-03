@@ -241,13 +241,17 @@
 </div>
 
 <script>
+  var RETAINER_URL = 'https://secure.cardcom.solutions/EA/EA5/erYbppWafk2D0fHH4xp9oA/PaymentSP';
+
   window.handleUpsell = function(){
-    // TODO: replace with actual upsell payment URL
-    alert('מעביר לדף תשלום הליווי החודשי...');
+    var btn = document.querySelector('.upsell-cta-btn');
+    btn.textContent = 'מעביר לדף תשלום מאובטח... 🔒';
+    btn.disabled = true;
+    setTimeout(function(){ window.location.href = RETAINER_URL; }, 700);
   };
 
   window.skipUpsell = function(){
-    window.location.href = '/';
+    window.location.href = '/final-success';
   };
 </script>
 </body>
