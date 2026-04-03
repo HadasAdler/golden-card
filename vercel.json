@@ -5,6 +5,7 @@
     { "source": "/analysis",      "destination": "/analysis.html"      },
     { "source": "/success",       "destination": "/success.html"       },
     { "source": "/final-success", "destination": "/final-success.html" },
+    { "source": "/dashboard",     "destination": "/dashboard.html"     },
     { "source": "/((?!api/).*)",  "destination": "/index.html"         }
   ]
 }

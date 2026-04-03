@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>מרכז השליטה | NextVoice AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0a192f;
+  --navy-card:#112240;
+  --gold:#f9b915;
+  --gold-d:#e8a800;
+  --turquoise:#22d3ee;
+  --cream:#faf8f4;
+}
+html,body{
+  min-height:100%;
+  font-family:'Heebo',sans-serif;
+  direction:rtl;
+  color:var(--cream);
+  background:var(--navy);
+  background:
+    radial-gradient(ellipse at 20% 0%,rgba(249,185,21,.13) 0%,transparent 55%),
+    radial-gradient(ellipse at 90% 95%,rgba(34,211,238,.12) 0%,transparent 55%),
+    var(--navy);
+  background-attachment:fixed;
+}
+
+/* ─── LAYOUT ─── */
+.app-wrap{
+  display:flex;
+  flex-direction:row-reverse; /* sidebar on right in RTL */
+  min-height:100vh;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar{
+  width:240px;
+  flex-shrink:0;
+  background:var(--navy-card);
+  border-left:2px solid var(--gold);
+  display:flex;
+  flex-direction:column;
+  position:fixed;
+  right:0;
+  top:0;
+  height:100%;
+  z-index:100;
+  overflow-y:auto;
+}
+.sidebar-brand{
+  padding:28px 20px 20px;
+  border-bottom:1px solid rgba(249,185,21,.18);
+}
+.sidebar-brand-name{
+  font-size:18px;
+  font-weight:800;
+  color:var(--turquoise);
+  letter-spacing:-.3px;
+  margin-bottom:4px;
+}
+.sidebar-brand-sub{
+  font-size:11px;
+  color:rgba(250,248,244,.45);
+  font-weight:400;
+}
+.sidebar-greeting{
+  padding:18px 20px 14px;
+  border-bottom:1px solid rgba(249,185,21,.12);
+}
+.sidebar-greeting-label{
+  font-size:11px;
+  color:rgba(250,248,244,.45);
+  margin-bottom:4px;
+}
+.sidebar-greeting-name{
+  font-size:15px;
+  font-weight:700;
+  color:var(--cream);
+}
+.sidebar-greeting-biz{
+  font-size:12px;
+  color:var(--gold);
+  margin-top:3px;
+  font-weight:500;
+}
+.sidebar-nav{
+  padding:14px 12px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.nav-btn{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-family:'Heebo',sans-serif;
+  font-size:14px;
+  font-weight:500;
+  color:rgba(250,248,244,.7);
+  background:transparent;
+  border:none;
+  width:100%;
+  text-align:right;
+  transition:all .18s ease;
+  position:relative;
+}
+.nav-btn:hover{
+  background:rgba(249,185,21,.08);
+  color:var(--cream);
+}
+.nav-btn.active{
+  background:rgba(249,185,21,.12);
+  color:var(--gold);
+  font-weight:700;
+}
+.nav-btn.active::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:6px;
+  bottom:6px;
+  width:3px;
+  border-radius:0 3px 3px 0;
+  background:var(--gold);
+}
+.nav-btn .nav-icon{
+  font-size:18px;
+  flex-shrink:0;
+}
+.sidebar-credit{
+  padding:14px 20px 20px;
+  border-top:1px solid rgba(249,185,21,.12);
+  font-size:11px;
+  color:rgba(250,248,244,.3);
+  text-align:center;
+  line-height:1.6;
+}
+
+/* ─── CONTENT ─── */
+.content{
+  flex:1;
+  margin-right:240px;
+  padding:32px 36px 60px;
+  min-height:100vh;
+}
+
+/* ─── MOBILE TAB BAR ─── */
+.mobile-tabbar{
+  display:none;
+  position:sticky;
+  top:0;
+  z-index:200;
+  background:var(--navy-card);
+  border-bottom:2px solid var(--gold);
+  width:100%;
+}
+.mobile-tabbar-inner{
+  display:flex;
+  width:100%;
+}
+.mob-tab{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  padding:10px 4px 8px;
+  cursor:pointer;
+  border:none;
+  background:transparent;
+  font-family:'Heebo',sans-serif;
+  color:rgba(250,248,244,.55);
+  font-size:11px;
+  font-weight:500;
+  min-height:56px;
+  transition:all .15s ease;
+  border-bottom:3px solid transparent;
+}
+.mob-tab .mob-icon{
+  font-size:20px;
+  line-height:1;
+}
+.mob-tab.active{
+  color:var(--gold);
+  border-bottom-color:var(--gold);
+  background:rgba(249,185,21,.07);
+}
+
+/* ─── TAB PANELS ─── */
+.tab-panel{
+  display:none;
+  opacity:0;
+  transition:opacity .22s ease;
+}
+.tab-panel.active{
+  display:block;
+  opacity:1;
+}
+
+/* ─── PAGE TITLE ─── */
+.page-title{
+  font-size:26px;
+  font-weight:800;
+  color:var(--cream);
+  margin-bottom:6px;
+  letter-spacing:-.4px;
+}
+.page-sub{
+  font-size:14px;
+  color:rgba(250,248,244,.55);
+  margin-bottom:28px;
+  font-weight:400;
+}
+
+/* ─── LINK DISPLAY BOX ─── */
+.link-box-wrap{
+  background:var(--navy-card);
+  border:2px solid var(--gold);
+  border-radius:14px;
+  padding:20px 22px;
+  margin-bottom:20px;
+}
+.link-box-label{
+  font-size:11px;
+  font-weight:600;
+  color:rgba(250,248,244,.45);
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  margin-bottom:10px;
+}
+.link-box-url{
+  font-size:14px;
+  color:var(--cream);
+  word-break:break-all;
+  line-height:1.5;
+  font-family:monospace;
+  background:rgba(10,25,47,.5);
+  border-radius:8px;
+  padding:10px 14px;
+  margin-bottom:16px;
+  border:1px solid rgba(249,185,21,.2);
+}
+.link-box-url.truncate{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-family:'Heebo',sans-serif;
+  font-size:13px;
+}
+.btn-copy-link{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  width:100%;
+  padding:15px 20px;
+  background:var(--gold);
+  color:var(--navy);
+  border:none;
+  border-radius:12px;
+  font-family:'Heebo',sans-serif;
+  font-size:17px;
+  font-weight:800;
+  cursor:pointer;
+  transition:all .18s ease;
+  letter-spacing:-.2px;
+}
+.btn-copy-link:hover{
+  background:var(--gold-d);
+  transform:translateY(-1px);
+  box-shadow:0 6px 20px rgba(249,185,21,.35);
+}
+.btn-copy-link:active{
+  transform:translateY(0);
+}
+.btn-copy-link.copied{
+  background:#16a34a;
+  color:#fff;
+}
+
+/* ─── INSTRUCTIONS CARD ─── */
+.instr-card{
+  background:rgba(34,211,238,.06);
+  border:1.5px solid rgba(34,211,238,.3);
+  border-radius:14px;
+  padding:20px 22px;
+  margin-bottom:20px;
+}
+.instr-card-title{
+  font-size:15px;
+  font-weight:700;
+  color:var(--turquoise);
+  margin-bottom:14px;
+}
+.instr-list{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.instr-list li{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  font-size:14px;
+  color:rgba(250,248,244,.8);
+  line-height:1.5;
+}
+.instr-list li::before{
+  content:'✦';
+  color:var(--turquoise);
+  font-size:10px;
+  margin-top:4px;
+  flex-shrink:0;
+}
+
+/* ─── MANUAL INPUT ─── */
+.manual-input-card{
+  background:rgba(249,185,21,.07);
+  border:1.5px solid rgba(249,185,21,.3);
+  border-radius:14px;
+  padding:22px;
+  margin-bottom:20px;
+}
+.manual-input-card p{
+  font-size:14px;
+  color:rgba(250,248,244,.75);
+  margin-bottom:14px;
+  line-height:1.5;
+}
+.manual-input-row{
+  display:flex;
+  gap:10px;
+}
+.manual-input-field{
+  flex:1;
+  padding:12px 16px;
+  border-radius:10px;
+  border:1.5px solid rgba(249,185,21,.35);
+  background:var(--navy);
+  color:var(--cream);
+  font-family:'Heebo',sans-serif;
+  font-size:13px;
+  outline:none;
+  direction:ltr;
+}
+.manual-input-field:focus{
+  border-color:var(--gold);
+}
+.btn-save-link{
+  padding:12px 20px;
+  background:var(--gold);
+  color:var(--navy);
+  border:none;
+  border-radius:10px;
+  font-family:'Heebo',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:background .15s;
+  white-space:nowrap;
+}
+.btn-save-link:hover{background:var(--gold-d)}
+
+/* ─── MESSAGES TAB ─── */
+.msg-category{
+  margin-bottom:28px;
+}
+.msg-cat-header{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:12px;
+  padding-bottom:8px;
+  border-bottom:1px solid rgba(249,185,21,.18);
+}
+.msg-cat-title{
+  font-size:15px;
+  font-weight:700;
+  color:var(--gold);
+}
+.msg-cards{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.msg-card{
+  background:#f1f5f9;
+  border-radius:12px;
+  padding:14px 16px;
+  border:1.5px solid #e2e8f0;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  position:relative;
+}
+.msg-num{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  background:var(--navy);
+  color:var(--gold);
+  font-size:12px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.msg-body{
+  flex:1;
+}
+.msg-text{
+  font-size:14px;
+  color:#1a202c;
+  line-height:1.65;
+  direction:rtl;
+}
+.msg-link{
+  color:#0891b2;
+  font-weight:600;
+  word-break:break-all;
+  font-size:12px;
+}
+.btn-copy-msg{
+  position:absolute;
+  top:12px;
+  left:12px;
+  padding:5px 12px;
+  border-radius:7px;
+  background:var(--navy);
+  color:var(--gold);
+  border:1px solid rgba(249,185,21,.3);
+  font-family:'Heebo',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .15s;
+  white-space:nowrap;
+}
+.btn-copy-msg:hover{
+  background:rgba(249,185,21,.15);
+}
+.btn-copy-msg.copied{
+  background:#16a34a;
+  color:#fff;
+  border-color:#16a34a;
+}
+
+/* ─── CALENDAR TAB ─── */
+.cal-wrap{
+  overflow-x:auto;
+  margin-bottom:24px;
+  border-radius:14px;
+  border:1px solid rgba(249,185,21,.18);
+}
+.cal-table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:620px;
+}
+.cal-table th,
+.cal-table td{
+  border:1px solid rgba(249,185,21,.14);
+  padding:0;
+  text-align:center;
+  vertical-align:middle;
+}
+.col-week{
+  background:var(--navy);
+  color:var(--gold);
+  font-size:12px;
+  font-weight:700;
+  width:60px;
+  padding:10px 4px;
+  white-space:nowrap;
+}
+.col-day-header{
+  background:#e8f0f7;
+  color:var(--navy);
+  font-size:12px;
+  font-weight:700;
+  padding:10px 6px;
+}
+.cal-task{
+  background:var(--navy);
+  color:var(--gold);
+  font-size:9.5px;
+  font-weight:700;
+  padding:10px 6px;
+  line-height:1.4;
+}
+.btn-download-cal{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:14px 26px;
+  background:var(--gold);
+  color:var(--navy);
+  border:none;
+  border-radius:12px;
+  font-family:'Heebo',sans-serif;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  transition:all .18s;
+}
+.btn-download-cal:hover{
+  background:var(--gold-d);
+  transform:translateY(-1px);
+  box-shadow:0 6px 20px rgba(249,185,21,.3);
+}
+
+/* ─── GUIDE TAB ─── */
+.tip-card{
+  background:var(--navy-card);
+  border-radius:12px;
+  padding:18px 20px;
+  border-right:4px solid var(--gold);
+  margin-bottom:12px;
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+}
+.tip-num{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:var(--gold);
+  color:var(--navy);
+  font-size:14px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.tip-title{
+  font-size:15px;
+  font-weight:700;
+  color:var(--cream);
+  line-height:1.4;
+  padding-top:6px;
+}
+.btn-download-guide{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:14px 26px;
+  background:var(--turquoise);
+  color:var(--navy);
+  border:none;
+  border-radius:12px;
+  font-family:'Heebo',sans-serif;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  transition:all .18s;
+  margin-top:24px;
+}
+.btn-download-guide:hover{
+  background:#06b6d4;
+  transform:translateY(-1px);
+  box-shadow:0 6px 20px rgba(34,211,238,.3);
+}
+.more-hint{
+  text-align:center;
+  padding:16px;
+  color:rgba(250,248,244,.4);
+  font-size:13px;
+  font-style:italic;
+}
+
+/* ─── FOOTER ─── */
+.page-footer{
+  text-align:center;
+  padding:28px 0 0;
+  font-size:12px;
+  color:rgba(250,248,244,.28);
+  line-height:1.6;
+}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .sidebar{display:none}
+  .mobile-tabbar{display:flex}
+  .content{
+    margin-right:0;
+    padding:20px 16px 60px;
+  }
+  .app-wrap{flex-direction:column}
+  .page-title{font-size:20px}
+  .manual-input-row{flex-direction:column}
+  .msg-card{padding:14px 14px 44px}
+  .btn-copy-msg{
+    top:auto;
+    bottom:10px;
+    left:14px;
+    right:auto;
+  }
+  .btn-copy-link{font-size:15px;padding:13px}
+  .col-week{width:44px;font-size:10px}
+}
+
+/* ─── SECTION CARD ─── */
+.section-card{
+  background:rgba(17,34,64,.6);
+  border:1px solid rgba(249,185,21,.12);
+  border-radius:16px;
+  padding:24px;
+  margin-bottom:24px;
+}
+</style>
+</head>
+<body>
+
+<div class="app-wrap">
+
+  <!-- ══════ SIDEBAR ══════ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-name">NextVoice AI</div>
+      <div class="sidebar-brand-sub">מרכז שליטה לביקורות גוגל</div>
+    </div>
+    <div class="sidebar-greeting">
+      <div class="sidebar-greeting-label">שלום,</div>
+      <div class="sidebar-greeting-name" id="customerNameEl">לקוח יקר</div>
+      <div class="sidebar-greeting-biz" id="bizNameEl"></div>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" onclick="switchTab(0)" data-tab="0">
+        <span class="nav-icon">🔗</span>
+        הקישור שלי
+      </button>
+      <button class="nav-btn" onclick="switchTab(1)" data-tab="1">
+        <span class="nav-icon">💬</span>
+        נוסחים מוכנים
+      </button>
+      <button class="nav-btn" onclick="switchTab(2)" data-tab="2">
+        <span class="nav-icon">📅</span>
+        תוכנית עבודה
+      </button>
+      <button class="nav-btn" onclick="switchTab(3)" data-tab="3">
+        <span class="nav-icon">📘</span>
+        המדריך המלא
+      </button>
+    </nav>
+    <div class="sidebar-credit">
+      המלצות לקידום פרופיל<br>העסק בגוגל<br>
+      <span style="color:rgba(250,248,244,.18);font-size:10px;">נבנה ע״י הדס אדלר</span>
+    </div>
+  </aside>
+
+  <!-- ══════ MOBILE TAB BAR ══════ -->
+  <div class="mobile-tabbar">
+    <div class="mobile-tabbar-inner">
+      <button class="mob-tab active" onclick="switchTab(0)" data-tab="0">
+        <span class="mob-icon">🔗</span>
+        הקישור שלי
+      </button>
+      <button class="mob-tab" onclick="switchTab(1)" data-tab="1">
+        <span class="mob-icon">💬</span>
+        נוסחים
+      </button>
+      <button class="mob-tab" onclick="switchTab(2)" data-tab="2">
+        <span class="mob-icon">📅</span>
+        תוכנית
+      </button>
+      <button class="mob-tab" onclick="switchTab(3)" data-tab="3">
+        <span class="mob-icon">📘</span>
+        מדריך
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════ CONTENT ══════ -->
+  <main class="content">
+
+    <!-- ── TAB 1: הקישור שלי ── -->
+    <div class="tab-panel active" id="tab-0">
+      <div class="page-title">הקישור האישי שלך לביקורות</div>
+      <div class="page-sub" id="tab1-sub">קישור הביקורת הגוגל שלך מוכן לשימוש מיידי</div>
+
+      <!-- Link box (shown when link exists) -->
+      <div id="link-display-section">
+        <div class="link-box-wrap">
+          <div class="link-box-label">הקישור שלך לביקורות גוגל</div>
+          <div class="link-box-url truncate" id="linkDisplayEl">טוען...</div>
+          <button class="btn-copy-link" id="copyLinkBtn" onclick="copyReviewLink()">
+            📋 העתק קישור
+          </button>
+        </div>
+
+        <div class="instr-card">
+          <div class="instr-card-title">כיצד להשתמש בקישור?</div>
+          <ul class="instr-list">
+            <li>שתפו עם כל לקוח מרוצה בסיום שירות</li>
+            <li>הדביקו בחתימת המייל שלכם</li>
+            <li>שלחו בווטסאפ ישירות מדף הנוסחים</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Manual input (shown when no link) -->
+      <div id="manual-input-section" style="display:none;">
+        <div class="manual-input-card">
+          <p>לא מצאנו את הקישור שלך אוטומטית. הדביקו כאן את קישור הביקורת בגוגל שלכם:</p>
+          <div class="manual-input-row">
+            <input
+              type="url"
+              class="manual-input-field"
+              id="manualLinkInput"
+              placeholder="https://search.google.com/local/writereview?placeid=..."
+            >
+            <button class="btn-save-link" onclick="saveManualLink()">שמור</button>
+          </div>
+        </div>
+        <div class="instr-card">
+          <div class="instr-card-title">איפה למצוא את הקישור?</div>
+          <ul class="instr-list">
+            <li>היכנסו ל־Google Business Profile שלכם</li>
+            <li>חפשו את "קבל קישור לביקורת" בלוח הבקרה</li>
+            <li>העתיקו את הקישור המלא והדביקו כאן</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="page-footer">
+        המלצות לקידום פרופיל העסק בגוגל | נבנה ע״י הדס אדלר
+      </div>
+    </div>
+
+    <!-- ── TAB 2: נוסחים מוכנים ── -->
+    <div class="tab-panel" id="tab-1">
+      <div class="page-title">20 נוסחים לוואטסאפ — מוכנים לשליחה</div>
+      <div class="page-sub">הקישור האישי שלך כבר מוכנס בתוך כל נוסח</div>
+
+      <div id="messages-container">
+        <!-- Populated by JS -->
+      </div>
+
+      <div class="page-footer">
+        המלצות לקידום פרופיל העסק בגוגל | נבנה ע״י הדס אדלר
+      </div>
+    </div>
+
+    <!-- ── TAB 3: תוכנית עבודה ── -->
+    <div class="tab-panel" id="tab-2">
+      <div class="page-title">תוכנית עבודה שבועית — 4 שבועות</div>
+      <div class="page-sub">5 משימות לשבוע, ימי א׳–ה׳</div>
+
+      <div class="cal-wrap">
+        <table class="cal-table">
+          <thead>
+            <tr>
+              <th class="col-week"></th>
+              <th class="col-day-header">ראשון</th>
+              <th class="col-day-header">שני</th>
+              <th class="col-day-header">שלישי</th>
+              <th class="col-day-header">רביעי</th>
+              <th class="col-day-header">חמישי</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-week">שבוע 1</td>
+              <td class="cal-task">פוסט פתיחת חודש</td>
+              <td class="cal-task">בדיקת נוכחות בביו</td>
+              <td class="cal-task">סטורי מאחורי הקלעים</td>
+              <td class="cal-task">סידור חתימת מייל</td>
+              <td class="cal-task">פנייה אישית בוואטסאפ</td>
+            </tr>
+            <tr>
+              <td class="col-week">שבוע 2</td>
+              <td class="cal-task">הודעה בקבוצה משפחתית</td>
+              <td class="cal-task">תחזוקת תגובות בגוגל</td>
+              <td class="cal-task">הוכחה חברתית בסטורי</td>
+              <td class="cal-task">משימת דלפק / QR</td>
+              <td class="cal-task">דיוור לרשימת תפוצה</td>
+            </tr>
+            <tr>
+              <td class="col-week">שבוע 3</td>
+              <td class="cal-task">תמונה לסטטוס וואטסאפ</td>
+              <td class="cal-task">גיוס קולגות</td>
+              <td class="cal-task">קידום אישי לחברים</td>
+              <td class="cal-task">פנייה ללקוח עבר</td>
+              <td class="cal-task">פוסט 3 המלצות חזקות</td>
+            </tr>
+            <tr>
+              <td class="col-week">שבוע 4</td>
+              <td class="cal-task">פוסט / סטורי חוזר</td>
+              <td class="cal-task">פנייה פנים אל פנים</td>
+              <td class="cal-task">סטורי הדרכה</td>
+              <td class="cal-task">פוסט תודה לקהילה</td>
+              <td class="cal-task">תכנון לשבוע הבא</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button class="btn-download-cal" onclick="triggerCalendarDownload()">
+        📥 הורד PDF מעוצב
+      </button>
+
+      <div class="page-footer" style="margin-top:32px;">
+        המלצות לקידום פרופיל העסק בגוגל | נבנה ע״י הדס אדלר
+      </div>
+    </div>
+
+    <!-- ── TAB 4: המדריך המלא ── -->
+    <div class="tab-panel" id="tab-3">
+      <div class="page-title">מדריך 30 הדרכים להזנקת המלצות</div>
+      <div class="page-sub">30 שיטות מוכחות עם ניסוחים מוכנים</div>
+
+      <div id="tips-preview">
+        <div class="tip-card">
+          <div class="tip-num">1</div>
+          <div class="tip-title">הגדרת הודעה אוטומטית בוואטסאפ</div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-num">2</div>
+          <div class="tip-title">חתימת מייל חכמה עם קישור</div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-num">3</div>
+          <div class="tip-title">דף תודה אחרי רכישה</div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-num">4</div>
+          <div class="tip-title">SMS לאחר שירות</div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-num">5</div>
+          <div class="tip-title">ביקורת בסיום פגישה</div>
+        </div>
+      </div>
+
+      <div class="more-hint">... ועוד 25 שיטות נוספות במדריך המלא</div>
+
+      <button class="btn-download-guide" onclick="triggerGuideDownload()">
+        📥 הורד את המדריך המלא (PDF)
+      </button>
+
+      <div class="page-footer" style="margin-top:32px;">
+        המלצות לקידום פרופיל העסק בגוגל | נבנה ע״י הדס אדלר
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- External PDF scripts (loaded relative to page location on server) -->
+<script src="/pdf-guide.js"></script>
+<script src="/pdf-calendar.js"></script>
+
+<script>
+// ═══════════════════════════════════════
+//  DATA LOADING
+// ═══════════════════════════════════════
+var lead = {}, biz = {}, brand = {}, gcLead = {};
+try { lead   = JSON.parse(localStorage.getItem('rl_lead')  || '{}'); } catch(e){}
+try { biz    = JSON.parse(localStorage.getItem('rl_biz')   || '{}'); } catch(e){}
+try { brand  = JSON.parse(localStorage.getItem('rl_brand') || '{}'); } catch(e){}
+try { gcLead = JSON.parse(localStorage.getItem('_gcLead')  || '{}'); } catch(e){}
+
+var customerName = lead.name   || gcLead.name    || '';
+var bizName      = lead.bizName || biz.name || gcLead.name || 'העסק שלך';
+var reviewLink   = brand.url   || gcLead.brandUrl || '';
+
+// Update greeting elements
+if (customerName) {
+  document.getElementById('customerNameEl').textContent = customerName;
+}
+if (bizName) {
+  var bizEl = document.getElementById('bizNameEl');
+  if (bizEl) bizEl.textContent = bizName;
+}
+
+// ═══════════════════════════════════════
+//  TAB 1 — LINK SETUP
+// ═══════════════════════════════════════
+function initLinkTab() {
+  var displaySection = document.getElementById('link-display-section');
+  var manualSection  = document.getElementById('manual-input-section');
+  var linkEl         = document.getElementById('linkDisplayEl');
+
+  if (reviewLink) {
+    displaySection.style.display = 'block';
+    manualSection.style.display  = 'none';
+    linkEl.textContent = reviewLink;
+  } else {
+    displaySection.style.display = 'none';
+    manualSection.style.display  = 'block';
+  }
+}
+
+function saveManualLink() {
+  var val = document.getElementById('manualLinkInput').value.trim();
+  if (!val) return;
+  reviewLink = val;
+  // Save to localStorage for persistence
+  try {
+    var b = JSON.parse(localStorage.getItem('rl_brand') || '{}');
+    b.url = val;
+    localStorage.setItem('rl_brand', JSON.stringify(b));
+  } catch(e){}
+  // Re-render
+  initLinkTab();
+  buildMessages();
+}
+
+function copyReviewLink() {
+  if (!reviewLink) return;
+  var btn = document.getElementById('copyLinkBtn');
+  copyText(reviewLink, function() {
+    btn.textContent = '✅ הועתק!';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.innerHTML = '📋 העתק קישור';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// ═══════════════════════════════════════
+//  CLIPBOARD HELPER
+// ═══════════════════════════════════════
+function copyText(text, cb) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(cb).catch(function() {
+      fallbackCopy(text, cb);
+    });
+  } else {
+    fallbackCopy(text, cb);
+  }
+}
+
+function fallbackCopy(text, cb) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity  = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e){}
+  document.body.removeChild(ta);
+}
+
+// ═══════════════════════════════════════
+//  TAB 2 — MESSAGES
+// ═══════════════════════════════════════
+var MESSAGES = [
+  {
+    cat: '😊 הסגנון החברי (Low-Touch)',
+    items: [
+      { num: 1,  text: 'היי [שם הלקוח], היה לי ממש כיף לעבוד איתך! אם ייצא לך לפרגן לי במילה בקישור הזה, זה יעזור לי בטירוף: [קישור]' },
+      { num: 2,  text: 'אהלן [שם], מה שלומך? אשמח ממש אם תוכל/י להקדיש 20 שניות לכתוב לי מילה טובה בגוגל. הנה הלינק: [קישור]' },
+      { num: 3,  text: 'היי [שם], רק רציתי להגיד שוב תודה על האמון. אם בא לך לפרגן לי בחזרה, אשמח להמלצה קטנה כאן: [קישור]' }
+    ]
+  },
+  {
+    cat: '💼 הסגנון המקצועי / רשמי',
+    items: [
+      { num: 4,  text: 'שלום [שם], שמחנו לראות שהשירות הסתיים לשביעות רצונך. נשמח מאוד אם תסכים/י לשתף את החוויה שלך בקישור הבא: [קישור]' },
+      { num: 5,  text: 'שלום [שם], אנו משקיעים רבות בשיפור חוויית הלקוח שלנו. נשמח אם תסייע/י לנו ותכתוב/י חוות דעת קצרה בגוגל: [קישור]' }
+    ]
+  },
+  {
+    cat: '🎯 סגנון "יעד משותף"',
+    items: [
+      { num: 6,  text: 'היי [שם], שמתי לי למטרה להגיע ל-50 המלצות החודש. אשמח מאוד אם תעזור/י לי להגיע ליעד בקישור המצורף: [קישור]' },
+      { num: 7,  text: 'אהלן [שם], אנחנו בתנופה של צמיחה בגוגל! יעזור לי מאוד אם תוכל/י להצטרף לממליצים שלנו כאן: [קישור]' }
+    ]
+  },
+  {
+    cat: '🤝 סגנון "הכנה למחויבות"',
+    items: [
+      { num: 8,  text: '[שם], היה לי לעונג לעבוד איתך. אני משדרג את הנוכחות הדיגיטלית שלי, אשמח אם תוכל/י לעזור לי במילה על החוויה שלך? (אם הלקוח עונה כן, שלחו: מעולה, הנה הקישור: [קישור])' }
+    ]
+  },
+  {
+    cat: '📋 סגנון "האסיסטנטית"',
+    items: [
+      { num: 9,  text: 'שלום [שם], כאן המשרד של [שם העסק]. אנו עורכים משאל קצר בקרב לקוחותינו, ונשמח מאוד אם תכתוב/י מילה על השירות שקיבלת: [קישור]' },
+      { num: 10, text: 'היי [שם], כאן [שם המזכירה] מהמשרד של [שם בעל העסק]. אשמח אם תוכל/י להקדיש דקה לפרגון קטן בקישור הבא: [קישור]' }
+    ]
+  },
+  {
+    cat: '💛 סגנון ה"תודה על התודה"',
+    items: [
+      { num: 11, text: 'וואו [שם], איזה כיף לקרוא את המילים האלה! אכפת לך להעתיק אותן גם לגוגל? זה ממש יעזור לי: [קישור]' },
+      { num: 12, text: 'המחמאה שלך עשתה לי את היום! אשמח אם תסכים/י לשתף אותה גם כאן כדי שכולם יראו: [קישור]' }
+    ]
+  },
+  {
+    cat: '🔔 סגנון התזכורת העדינה',
+    items: [
+      { num: 13, text: 'היי [שם], רק מקפיץ בעדינות 🙏 אשמח מאוד אם ייצא לך להמליץ בקישור ששלחתי. תודה מראש!' },
+      { num: 14, text: 'שלום [שם], בטח הלכת לאיבוד בין כל ההודעות... רק מזכיר/ה לגבי ההמלצה בגוגל. הנה הלינק שוב: [קישור]' }
+    ]
+  },
+  {
+    cat: '❤️ סגנון "העסק הקטן"',
+    items: [
+      { num: 15, text: 'היי [שם], בתור עסק קטן, כל המלצה שלך היא כמו זהב עבורי. אשמח אם תפרגן/י לי כאן: [קישור]' },
+      { num: 16, text: 'אהלן [שם], הדירוג בגוגל משפיע עלינו מאוד. נשמח מאוד למילה טובה ממך בקישור המצורף: [קישור]' }
+    ]
+  },
+  {
+    cat: '😄 סגנון ההומור',
+    items: [
+      { num: 17, text: 'היי [שם], אם היית מרוצה — זה הלינק להמלצה [קישור]. אם לא — בוא נדבר בוואטסאפ 😄' },
+      { num: 18, text: 'מבטיח/ה שזה הקישור הכי משתלם שתלחץ/י עליו היום 😉 המלצה קטנה כאן תעזור לי המון: [קישור]' }
+    ]
+  },
+  {
+    cat: '📱 סגנון ה"ביו" והסטטוס',
+    items: [
+      { num: 19, text: 'נהניתם מהשירות? נשמח לשמוע על זה! לחצו כאן לדירוג מהיר: [קישור]' },
+      { num: 20, text: 'משדרגים את המוניטין שלנו! מוזמנים להצטרף למאות הממליצים בקישור הבא: [קישור]' }
+    ]
+  }
+];
+
+function buildMessages() {
+  var container = document.getElementById('messages-container');
+  if (!container) return;
+
+  var link = reviewLink || 'https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID';
+  var html = '';
+
+  MESSAGES.forEach(function(cat) {
+    html += '<div class="msg-category">';
+    html += '<div class="msg-cat-header"><span class="msg-cat-title">' + escHtml(cat.cat) + '</span></div>';
+    html += '<div class="msg-cards">';
+
+    cat.items.forEach(function(msg) {
+      // Build display text: replace [קישור] with styled span
+      var displayText = escHtml(msg.text).replace(
+        /\[קישור\]/g,
+        '<span class="msg-link">' + escHtml(link) + '</span>'
+      );
+      // Copy text: replace [קישור] with real link
+      var copyRaw = msg.text.replace(/\[קישור\]/g, link);
+      var copyEncoded = escAttr(copyRaw);
+
+      html += '<div class="msg-card">';
+      html += '<div class="msg-num">' + msg.num + '</div>';
+      html += '<div class="msg-body"><div class="msg-text">' + displayText + '</div></div>';
+      html += '<button class="btn-copy-msg" onclick="copyMsg(this, \'' + copyEncoded + '\')">העתק</button>';
+      html += '</div>';
+    });
+
+    html += '</div></div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function copyMsg(btn, encodedText) {
+  var text = decAttr(encodedText);
+  copyText(text, function() {
+    var orig = btn.textContent;
+    btn.textContent = '✅ הועתק!';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = 'העתק';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// Safe HTML helpers
+function escHtml(s) {
+  return s
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
+function escAttr(s) {
+  return s
+    .replace(/\\/g,'\\\\')
+    .replace(/'/g,"\\'")
+    .replace(/\n/g,'\\n');
+}
+function decAttr(s) {
+  // decode escaped newlines
+  return s.replace(/\\n/g,'\n');
+}
+
+// ═══════════════════════════════════════
+//  TAB SWITCHING
+// ═══════════════════════════════════════
+function switchTab(idx) {
+  // Hide all panels
+  var panels = document.querySelectorAll('.tab-panel');
+  panels.forEach(function(p){ p.classList.remove('active'); });
+
+  // Deactivate all nav buttons (sidebar)
+  var navBtns = document.querySelectorAll('.nav-btn');
+  navBtns.forEach(function(b){ b.classList.remove('active'); });
+
+  // Deactivate all mobile tabs
+  var mobTabs = document.querySelectorAll('.mob-tab');
+  mobTabs.forEach(function(b){ b.classList.remove('active'); });
+
+  // Activate selected
+  var panel = document.getElementById('tab-' + idx);
+  if (panel) {
+    panel.classList.add('active');
+    // Force reflow for transition
+    void panel.offsetWidth;
+    panel.style.opacity = '1';
+  }
+
+  // Activate nav/mob buttons with matching data-tab
+  document.querySelectorAll('[data-tab="' + idx + '"]').forEach(function(b){
+    b.classList.add('active');
+  });
+
+  // Scroll to top on mobile
+  if (window.innerWidth < 900) {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+}
+
+// ═══════════════════════════════════════
+//  PDF DOWNLOAD TRIGGERS
+// ═══════════════════════════════════════
+function triggerCalendarDownload() {
+  if (typeof downloadCalendar === 'function') {
+    downloadCalendar();
+  } else {
+    // Try loading script dynamically
+    var s = document.createElement('script');
+    s.src = '/pdf-calendar.js';
+    s.onload = function() {
+      if (typeof downloadCalendar === 'function') downloadCalendar();
+    };
+    document.body.appendChild(s);
+  }
+}
+
+function triggerGuideDownload() {
+  if (typeof downloadGuide === 'function') {
+    downloadGuide();
+  } else {
+    var s = document.createElement('script');
+    s.src = '/pdf-guide.js';
+    s.onload = function() {
+      if (typeof downloadGuide === 'function') downloadGuide();
+    };
+    document.body.appendChild(s);
+  }
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+initLinkTab();
+buildMessages();
+
+// Ensure first tab is visually active on load
+switchTab(0);
+</script>
+</body>
+</html>
