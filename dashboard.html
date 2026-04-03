@@ -680,6 +680,10 @@ html,body{
         <span class="nav-icon">📘</span>
         המדריך המלא
       </button>
+      <button class="nav-btn" onclick="switchTab(4)" data-tab="4">
+        <span class="nav-icon">📲</span>
+        ערכת QR
+      </button>
     </nav>
     <div class="sidebar-credit">
       המלצות לקידום פרופיל<br>העסק בגוגל<br>
@@ -706,6 +710,10 @@ html,body{
         <span class="mob-icon">📘</span>
         מדריך
       </button>
+      <button class="mob-tab" onclick="switchTab(4)" data-tab="4">
+        <span class="mob-icon">📲</span>
+        QR
+      </button>
     </div>
   </div>
 
@@ -717,23 +725,39 @@ html,body{
       <div class="page-title">כרטיס ההמלצות החכם שלך</div>
       <div class="page-sub">הכרטיס מסנן ביקורות שליליות ומוביל לקוחות מרוצים ישירות לגוגל</div>
 
-      <!-- Smart card (always shown — pending state until card is ready) -->
+      <!-- Smart card — dual state: link active OR pending -->
       <div id="link-display-section">
 
-        <!-- Card status banner -->
-        <div style="background:rgba(249,185,21,.1);border:2px solid rgba(249,185,21,.45);
-                    border-radius:16px;padding:28px 24px 22px;margin-bottom:20px;text-align:center;">
-          <div style="font-size:40px;margin-bottom:14px;">🎴</div>
-          <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:8px;">הכרטיס שלך בהכנה</div>
-          <div style="font-size:15px;color:rgba(250,248,244,.65);line-height:1.65;margin-bottom:20px;">
-            הצוות שלנו מכין עבורך כרטיס המלצות חכם, ממותג ואישי.<br>
-            הוא יישלח אליך למייל תוך 24 שעות ממועד ההצטרפות.
+        <!-- ── STATE A: Link is ready ── -->
+        <div id="card-link-section" style="display:none;">
+          <div style="background:rgba(249,185,21,.12);border:2.5px solid rgba(249,185,21,.6);
+                      border-radius:16px;padding:28px 24px 24px;margin-bottom:20px;text-align:center;">
+            <div style="font-size:40px;margin-bottom:14px;">🔗</div>
+            <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:14px;">הקישור לכרטיס ההמלצות שלך מוכן!</div>
+            <div style="font-size:12px;color:rgba(250,248,244,.5);word-break:break-all;
+                        background:rgba(0,0,0,.25);border-radius:8px;padding:10px 14px;
+                        margin-bottom:18px;line-height:1.55;text-align:center;"
+                 id="card-link-display"></div>
+            <button class="btn-copy-link" id="copyCardLinkBtn" onclick="copyCardLink()">📋 העתק קישור</button>
           </div>
-          <div style="display:inline-flex;align-items:center;gap:8px;
-                      background:rgba(249,185,21,.15);border:1px solid rgba(249,185,21,.4);
-                      border-radius:10px;padding:10px 20px;
-                      font-size:14px;font-weight:700;color:var(--gold);">
-            ⏳ ממתין לכרטיס האישי שלך...
+        </div>
+
+        <!-- ── STATE B: Pending ── -->
+        <div id="card-pending-section" style="display:none;">
+          <div style="background:rgba(249,185,21,.1);border:2px solid rgba(249,185,21,.45);
+                      border-radius:16px;padding:28px 24px 22px;margin-bottom:20px;text-align:center;">
+            <div style="font-size:40px;margin-bottom:14px;">🎴</div>
+            <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:8px;">הכרטיס שלך בהכנה</div>
+            <div style="font-size:15px;color:rgba(250,248,244,.65);line-height:1.65;margin-bottom:20px;">
+              הצוות שלנו מכין עבורך כרטיס המלצות חכם, ממותג ואישי.<br>
+              הוא יישלח אליך למייל תוך 24 שעות ממועד ההצטרפות.
+            </div>
+            <div style="display:inline-flex;align-items:center;gap:8px;
+                        background:rgba(249,185,21,.15);border:1px solid rgba(249,185,21,.4);
+                        border-radius:10px;padding:10px 20px;
+                        font-size:14px;font-weight:700;color:var(--gold);">
+              ⏳ ממתין לכרטיס האישי שלך...
+            </div>
           </div>
         </div>
 
@@ -881,14 +905,68 @@ html,body{
       </div>
     </div>
 
+    <!-- ── TAB 5: ערכת QR ── -->
+    <div class="tab-panel" id="tab-4">
+      <div class="page-title">ערכת QR להמלצות גוגל</div>
+      <div class="page-sub">דף QR מוכן להדפסה — מקמו בדלפק, בחדר המתנה ובכל נקודת מפגש עם לקוחות</div>
+
+      <!-- QR Preview -->
+      <div style="text-align:center;margin:32px 0 24px;">
+        <div style="display:inline-block;background:#fff;border-radius:16px;
+                    padding:18px;border:2.5px solid rgba(249,185,21,.5);
+                    box-shadow:0 8px 32px rgba(249,185,21,.18);">
+          <img id="qrPreviewImg" src="" alt="QR Code"
+               style="display:block;width:200px;height:200px;image-rendering:pixelated;" />
+        </div>
+        <div style="margin-top:14px;font-size:16px;font-weight:800;color:var(--gold);"
+             id="qrBizLabel"></div>
+        <div style="margin-top:6px;font-size:13px;color:rgba(250,248,244,.45);">
+          סריקת QR → ביקורת גוגל
+        </div>
+      </div>
+
+      <div class="instr-card" style="margin-bottom:24px;">
+        <div class="instr-card-title">📋 כיצד להשתמש בדף ה-QR?</div>
+        <ul class="instr-list">
+          <li>לחצו על כפתור ההורדה — יורד קובץ PDF מוכן להדפסה</li>
+          <li>הדפיסו בשחור-לבן או צבע והציבו בנקודת מפגש עם לקוחות</li>
+          <li>לקוח סורק בטלפון → מועבר ישירות לכתיבת ביקורת בגוגל</li>
+          <li>מומלץ להניח על הדלפק, בחדר המתנה ובכניסה לעסק</li>
+        </ul>
+      </div>
+
+      <button class="btn-download-cal" id="qrDownloadBtn" onclick="triggerQRDownload()">
+        📥 הורד דף QR להדפסה (PDF)
+      </button>
+
+      <div class="page-footer" style="margin-top:36px;">
+        המלצות לקידום פרופיל העסק בגוגל | נבנה ע״י הדס אדלר
+      </div>
+    </div>
+
   </main>
 </div>
 
 <!-- External PDF scripts (loaded relative to page location on server) -->
 <script src="/pdf-guide.js"></script>
 <script src="/pdf-calendar.js"></script>
+<script src="/pdf-qr.js"></script>
 
 <script>
+// ═══════════════════════════════════════
+//  TEST DATA — מיכל מוזס (בדיקת מערכת)
+// ═══════════════════════════════════════
+(function seedTestData() {
+  var existing = localStorage.getItem('rl_lead');
+  if (!existing || existing === '{}') {
+    localStorage.setItem('rl_lead',  JSON.stringify({ name: 'מיכל מוזס', bizName: 'מיכל מוזס חברת עו"ד' }));
+  }
+  var existingBrand = localStorage.getItem('rl_brand');
+  if (!existingBrand || existingBrand === '{}') {
+    localStorage.setItem('rl_brand', JSON.stringify({ url: 'https://search.google.com/local/writereview?placeid=ChIJ5STF2epJHRUR84efkJj5lkM' }));
+  }
+})();
+
 // ═══════════════════════════════════════
 //  DATA LOADING
 // ═══════════════════════════════════════
@@ -912,10 +990,33 @@ if (bizName) {
 }
 
 // ═══════════════════════════════════════
-//  TAB 1 — CARD STATUS (static display)
+//  TAB 1 — CARD LINK (dynamic)
 // ═══════════════════════════════════════
 function initLinkTab() {
-  /* Tab 1 is now a static "card in preparation" view — no dynamic link needed */
+  var linkSec    = document.getElementById('card-link-section');
+  var pendingSec = document.getElementById('card-pending-section');
+  var linkEl     = document.getElementById('card-link-display');
+
+  if (reviewLink) {
+    if (linkEl)     linkEl.textContent    = reviewLink;
+    if (linkSec)    linkSec.style.display  = 'block';
+    if (pendingSec) pendingSec.style.display = 'none';
+  } else {
+    if (linkSec)    linkSec.style.display  = 'none';
+    if (pendingSec) pendingSec.style.display = 'block';
+  }
+}
+
+function copyCardLink() {
+  if (!reviewLink) return;
+  var btn = document.getElementById('copyCardLinkBtn');
+  copyText(reviewLink, function () {
+    if (btn) {
+      var orig = btn.textContent;
+      btn.textContent = '✅ הועתק!';
+      setTimeout(function () { btn.textContent = orig; }, 2000);
+    }
+  });
 }
 
 // ═══════════════════════════════════════
@@ -1151,6 +1252,21 @@ function triggerGuideDownload() {
   }
 }
 
+function triggerQRDownload() {
+  var link = reviewLink || 'https://search.google.com/local/writereview?placeid=ChIJ5STF2epJHRUR84efkJj5lkM';
+  var biz  = bizName   || 'מיכל מוזס חברת עו"ד';
+  if (typeof downloadQR === 'function') {
+    downloadQR(biz, link);
+  } else {
+    var s = document.createElement('script');
+    s.src = '/pdf-qr.js';
+    s.onload = function() {
+      if (typeof downloadQR === 'function') downloadQR(biz, link);
+    };
+    document.body.appendChild(s);
+  }
+}
+
 // ═══════════════════════════════════════
 //  TAB 4 — 30 TIPS
 // ═══════════════════════════════════════
@@ -1207,6 +1323,20 @@ function buildTips() {
 initLinkTab();
 buildMessages();
 buildTips();
+
+// Init QR preview image (Google Charts API)
+(function initQRPreview() {
+  var qrLink = reviewLink || 'https://search.google.com/local/writereview?placeid=ChIJ5STF2epJHRUR84efkJj5lkM';
+  var qrImg  = document.getElementById('qrPreviewImg');
+  if (qrImg) {
+    qrImg.src = 'https://chart.googleapis.com/chart?cht=qr&chs=400x400&chl=' +
+                encodeURIComponent(qrLink) + '&choe=UTF-8';
+  }
+  var qrLbl = document.getElementById('qrBizLabel');
+  if (qrLbl) {
+    qrLbl.textContent = bizName || 'מיכל מוזס חברת עו"ד';
+  }
+})();
 
 // Ensure first tab is visually active on load
 switchTab(0);
