@@ -379,10 +379,10 @@ body{
 }
 .analysis-items{
   display:flex;gap:10px;padding:16px;
-  flex-wrap:wrap;
+  flex-wrap:wrap;justify-content:center;
 }
 .analysis-item{
-  flex:1;min-width:130px;
+  flex:1;min-width:140px;max-width:180px;
   background:rgba(250,248,244,.06);
   border:1px solid rgba(250,248,244,.1);
   border-radius:var(--r);
@@ -413,6 +413,23 @@ body{
 .analysis-item-val.sm{font-size:16px}
 .analysis-item-icon.ic-stability{ background:rgba(74,222,128,.2); border:1.5px solid rgba(74,222,128,.4); color:#4ade80; }
 .analysis-item-sub{font-size:11px;color:rgba(250,248,244,.55);font-weight:500;margin-top:4px;display:block;line-height:1.3}
+
+/* Improvement teaser card */
+.improvement-teaser{
+  width:100%;max-width:560px;
+  background:rgba(74,222,128,.07);
+  border:1.5px solid rgba(74,222,128,.28);
+  border-radius:var(--r);padding:16px 20px;
+  display:flex;align-items:center;gap:16px;
+  margin-bottom:12px;animation:fadeUp .35s ease both;
+}
+.it-icon{font-size:28px;color:#4ade80;flex-shrink:0;
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(74,222,128,.15);border:1.5px solid rgba(74,222,128,.35);
+  display:flex;align-items:center;justify-content:center;
+}
+.it-label{font-size:14px;font-weight:800;color:#fff;margin-bottom:4px}
+.it-val{font-size:12px;color:rgba(250,248,244,.55);font-weight:500}
 
 /* קו מפריד */
 .section-divider{
@@ -1497,8 +1514,8 @@ body{
   <button class="top-share-btn" onclick="doShareSite()" title="שתף את האתר"><span>🔗</span> שתף</button>
   <div class="anim"><div class="hero-badge">אבחון עסקי חינמי - Google Business</div></div>
   <h1 class="hero-h1 anim anim-d1">
-    פרופיל העסק שלכם לא מופיע בשלושת התוצאות הראשונות בגוגל?<br>
-    <em>אתם מפסידים לקוחות בכל יום.</em>
+    פרופיל העסק שלכם לא מופיע<br>
+    <em>בשלושת התוצאות הראשונות בגוגל?</em>
   </h1>
   <p class="hero-sub anim anim-d2">
     פרופיל עסק מושקע והמלצות עדכניות ומרובות הם המפתח לעלייה בדירוג בגוגל
@@ -1519,7 +1536,7 @@ body{
       <button class="search-go-btn" id="searchGoBtn" onclick="doSearch()">חפש עסק</button>
     </div>
     <div class="sdrop" id="sdrop"></div>
-    <p class="scan-desc">הסריקה המיידית כוללת: <strong>בדיקת דירוג העסק</strong>, <strong>השוואה מהירה למתחרים באזור</strong> וזיהוי חסמים ראשוניים.</p>
+    <p class="scan-desc">הסריקה המיידית כוללת: <strong>אבחון עוצמת הפרופיל</strong>, <strong>בדיקת טריות הביקורות</strong> וזיהוי חסמים ראשוניים להופעה בגוגל.</p>
   </div>
   <div class="biz-card" id="bizCard" style="display:none">
     <div class="biz-card-pin">📍</div>
@@ -1544,13 +1561,21 @@ body{
         <div class="bsi-row" id="bsiPhone"></div>
         <div class="bsi-row" id="bsiWeb"></div>
       </div>
+      <!-- המלצות לשיפור - תיזר לדוח -->
+      <div class="improvement-teaser" id="improvementTeaser" style="display:none">
+        <div class="it-icon">◆</div>
+        <div>
+          <div class="it-label">המלצות לשיפור וקידום הדירוג</div>
+          <div class="it-val">יופיעו בדוח המפורט</div>
+        </div>
+      </div>
       <div class="report-promise">
         <div class="report-promise-title">הכנו עבורך דוח מקיף <span style="color:var(--orange);font-weight:900">בחינם</span> הכולל:</div>
         <ul class="report-promise-list">
           <li data-icon="🔍">ניתוח פערים מול מתחרים - איפה הם עוקפים אותך ואיך לסגור את הפער</li>
           <li data-icon="⭐">מפת דרכים לדירוג 5 כוכבים - שלבים פרקטיים להפיכת כל לקוח לממליץ</li>
           <li data-icon="✅">צ׳ק-ליסט אופטימיזציה לדירוג גבוה - מה חסר בפרופיל שלך כדי להופיע ב-Top 3</li>
-          <li data-icon="🎁">...ועוד הפתעות נוספות שמחכות לך בדוח!</li>
+          <li data-icon="🎁">ועוד הפתעות נוספות שמחכות לך בדוח...</li>
         </ul>
       </div>
       <div class="local-rank-card" id="localRankCard" style="display:none">
@@ -2563,20 +2588,14 @@ function openAnalysis() {
       var rating   = biz.rating;
       var reviews  = biz.count;
 
-      // חישוב תאריך אמיתי מ-Unix timestamp
+      // חישוב תאריך אמיתי מ-Unix timestamp — מציג DD/MM/YYYY בלבד
       var lastReviewDisplay = 'לא זמין';
       if (biz.lastReviewTs) {
         var d = new Date(biz.lastReviewTs * 1000);
         var dd = String(d.getDate()).padStart(2,'0');
         var mm = String(d.getMonth()+1).padStart(2,'0');
         var yyyy = d.getFullYear();
-        var dateStr = dd+'.'+mm+'.'+yyyy;
-        var diffDays = Math.floor((Date.now() - d.getTime()) / 86400000);
-        var relStr = diffDays < 7  ? 'לפני '+diffDays+' ימים'
-                   : diffDays < 30 ? 'לפני '+Math.floor(diffDays/7)+' שבועות'
-                   : diffDays < 365? 'לפני '+Math.floor(diffDays/30)+' חודשים'
-                   : 'לפני '+Math.floor(diffDays/365)+' שנים';
-        lastReviewDisplay = dateStr + ' - ' + relStr;
+        lastReviewDisplay = dd+'/'+mm+'/'+yyyy;
       } else if (biz.lastReview) {
         lastReviewDisplay = biz.lastReview;
       }
@@ -2585,13 +2604,12 @@ function openAnalysis() {
 
       var ratingCls = rating >= 4.5 ? 'good' : rating >= 4.0 ? 'warn' : 'bad';
 
-      // 4 כרטיסים - label מעל, ערך מתחת
-      // אייקונים: תווים Unicode שמגיבים ל-CSS color (לא emoji) לתצוגה לבנה ואחידה
+      // 3 כרטיסים ויזואליים בראש — כרטיס שיפור מוצג בנפרד מתחת
+      // אייקונים: תווים Unicode שמגיבים ל-CSS color לתצוגה אחידה
       var cards = [
-        { icon:'★', iconCls:'ic-rating',    label:'דירוג נוכחי בגוגל', val: rating.toFixed(1)+' / 5.0',    cls: ratingCls },
-        { icon:'◉', iconCls:'ic-reviews',   label:'ביקורות קיימות',    val: reviews.toLocaleString(),       cls: '' },
-        { icon:'◑', iconCls:'ic-time',      label:'ביקורת אחרונה',     val: lastReviewDisplay,              cls: '' },
-        { icon:'◆', iconCls:'ic-stability', label:'ציון יציבות',       val: 'יופיע בדו\u05f4ח המלא',      sub: '', cls: 'sm' }
+        { icon:'★', iconCls:'ic-rating',  label:'דירוג נוכחי בגוגל',       val: rating.toFixed(1)+' / 5.0', cls: ratingCls },
+        { icon:'◉', iconCls:'ic-reviews', label:'כמות ההמלצות שלכם בגוגל', val: reviews.toLocaleString(),   cls: '' },
+        { icon:'◑', iconCls:'ic-time',    label:'ביקורת אחרונה',            val: lastReviewDisplay,          cls: '' }
       ];
       document.getElementById('analysisItems').innerHTML = cards.map(function(item, i) {
         var valClass = 'analysis-item-val'+(item.cls?' '+item.cls:'')+((!item.cls && item.val.length>10)?' sm':'');
@@ -2608,6 +2626,10 @@ function openAnalysis() {
       if (rankCard) {
         rankCard.style.display = (rating < 4.3 || reviews < 30) ? 'flex' : 'none';
       }
+
+      // הצג כרטיס "המלצות לשיפור" תמיד אחרי מידע הסריקה
+      var improvEl = document.getElementById('improvementTeaser');
+      if (improvEl) improvEl.style.display = 'flex';
 
       // מידע נוסף מסריקת גוגל - שעות, טלפון, אתר
       var scanBox = document.getElementById('bizScanInfo');
@@ -2777,9 +2799,9 @@ function openResultsPage() {
       nameEl.textContent = snap2.bizName || (biz ? biz.name : '');
       var s3cards = [
         { icon:'★', cls:'ic-rating',    label:'דירוג נוכחי בגוגל', val: (snap2.rating||0).toFixed(1)+' / 5.0', vcls: snap2.ratingCls||'' },
-        { icon:'◉', cls:'ic-reviews',   label:'ביקורות קיימות',    val: (snap2.reviews||0).toLocaleString(),    vcls: '' },
-        { icon:'◑', cls:'ic-time',      label:'ביקורת אחרונה',     val: snap2.lastReviewDisplay||'לא זמין',     vcls: '' },
-        { icon:'◆', cls:'ic-stability', label:'ציון יציבות',       val: 'יופיע בדו\u05f4ח המלא',               vcls: 'sm' }
+        { icon:'◉', cls:'ic-reviews',   label:'כמות ההמלצות שלכם בגוגל', val: (snap2.reviews||0).toLocaleString(),    vcls: '' },
+        { icon:'◑', cls:'ic-time',      label:'ביקורת אחרונה',            val: snap2.lastReviewDisplay||'לא זמין',     vcls: '' },
+        { icon:'◆', cls:'ic-stability', label:'המלצות לשיפור וקידום הדירוג', val: 'יופיעו בדוח המפורט',               vcls: 'sm' }
       ];
       cardsEl.innerHTML = s3cards.map(function(c,i){
         return '<div class="s3-card" style="animation-delay:'+(i*0.1)+'s">'
