@@ -1529,17 +1529,31 @@ body{
     פרופיל העסק שלכם לא מופיע<br>
     <em>בשלושת התוצאות הראשונות בגוגל?</em>
   </h1>
+
+  <!-- Losing customers line -->
+  <div class="anim anim-d1" style="text-align:center;margin:-4px 0 16px;">
+    <span style="
+      display:inline-block;
+      font-size:clamp(20px,5vw,28px);
+      font-weight:900;
+      color:#f9b915;
+      background:rgba(249,185,21,.12);
+      border:2px solid rgba(249,185,21,.45);
+      border-radius:10px;
+      padding:6px 22px;
+      letter-spacing:-.3px;
+      animation:lc-pulse 2.4s ease-in-out infinite;
+    ">⚠️ אתם מפסידים לקוחות!</span>
+  </div>
+  <style>
+    @keyframes lc-pulse{0%,100%{box-shadow:0 0 0 0 rgba(249,185,21,.3)}60%{box-shadow:0 0 0 8px rgba(249,185,21,0)}}
+  </style>
+
   <p class="hero-sub anim anim-d2">
     פרופיל עסק מושקע והמלצות עדכניות ומרובות הם המפתח לעלייה בדירוג בגוגל
     ולהופעה בתוצאות החיפוש של בינה מלאכותית, כמו <strong>ChatGPT</strong> ו-<strong>Gemini</strong>.<br>
     <span style="color:var(--orange);font-weight:800">בואו לבדוק היכן אתם ממוקמים ביחס למתחרים שלכם.</span>
   </p>
-
-  <!-- Social proof counter -->
-  <div class="social-proof anim anim-d2">
-    <div class="sp-dot"></div>
-    <div class="sp-text">הצטרפו ל-<span class="sp-num" id="spCount">1,452</span> בעלי עסקים שכבר בדקו את המיקום שלהם בגוגל</div>
-  </div>
 
   <div class="search-wrap anim anim-d3">
     <div class="search-input-row">
@@ -1550,6 +1564,13 @@ body{
     <div class="sdrop" id="sdrop"></div>
     <p class="scan-desc">הסריקה המיידית כוללת: <strong>אבחון עוצמת הפרופיל</strong>, <strong>בדיקת טריות הביקורות</strong> וזיהוי חסמים ראשוניים להופעה בגוגל.</p>
   </div>
+
+  <!-- Social proof counter — מתחת לשדה החיפוש -->
+  <div class="social-proof anim anim-d2">
+    <div class="sp-dot"></div>
+    <div class="sp-text">הצטרפו ל-<span class="sp-num" id="spCount">1,452</span> בעלי עסקים שכבר בדקו את המיקום שלהם בגוגל</div>
+  </div>
+
   <div class="biz-card" id="bizCard" style="display:none">
     <div class="biz-card-pin">📍</div>
     <div class="biz-card-body">
@@ -2467,7 +2488,17 @@ function _showPlacesDropdown(predictions) {
 
 // הודעת "לא נמצאו תוצאות"
 function _showNoResults() {
-  sdrop.innerHTML = '<div class="di di-empty"><div class="di-icon">🔍</div><div><div class="di-main">לא נמצאו עסקים, נסה שם אחר</div></div></div>';
+  sdrop.innerHTML =
+    '<div class="di di-empty" style="flex-direction:column;align-items:flex-start;gap:10px;padding:14px 16px;">' +
+      '<div style="display:flex;align-items:center;gap:10px;">' +
+        '<div class="di-icon">🔍</div>' +
+        '<div class="di-main" style="font-size:15px;font-weight:900;color:#1a2e4a;">לא מצאנו את העסק?</div>' +
+      '</div>' +
+      '<div style="font-size:13px;color:#3a5278;line-height:1.65;padding-right:38px;">' +
+        'נסו להקליד <strong>שם מדויק יותר</strong>, כתובת, או שם עיר.<br>' +
+        '<span style="color:#0055bb;">לדוגמה: "בלונים בדרך תל אביב" או "רחוב הרצל 5 ירושלים"</span>' +
+      '</div>' +
+    '</div>';
   sdrop.classList.add('open');
 }
 

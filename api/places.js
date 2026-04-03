@@ -25,35 +25,50 @@ module.exports = async function handler(req, res) {
     return res.status(503).json({ status: 'NOT_CONFIGURED', predictions: [] });
   }
 
+  /* ── helper: build a Places Autocomplete URL ── */
+  function buildPlacesUrl(input, withTypeFilter) {
+    const u = new URL('https://maps.googleapis.com/maps/api/place/autocomplete/json');
+    u.searchParams.set('input', input);
+    u.searchParams.set('components', 'country:il');
+    u.searchParams.set('language', 'he');
+    u.searchParams.set('key', key);
+    if (withTypeFilter) u.searchParams.set('types', 'establishment');
+    return u.toString();
+  }
+
+  function mapPrediction(p) {
+    return {
+      place_id: p.place_id,
+      description: p.description,
+      structured_formatting: {
+        main_text: p.structured_formatting ? p.structured_formatting.main_text : p.description,
+        secondary_text: p.structured_formatting ? p.structured_formatting.secondary_text : ''
+      }
+    };
+  }
+
   try {
-    const url = new URL('https://maps.googleapis.com/maps/api/place/autocomplete/json');
-    url.searchParams.set('input', q.trim());
-    url.searchParams.set('types', 'establishment');
-    url.searchParams.set('components', 'country:il');
-    url.searchParams.set('language', 'he');
-    url.searchParams.set('key', key);
+    const input = q.trim();
 
-    const response = await fetch(url.toString());
+    /* 1st attempt — with establishment type filter (more precise) */
+    const r1 = await fetch(buildPlacesUrl(input, true));
+    if (!r1.ok) throw new Error('Google Places returned ' + r1.status);
+    let data = await r1.json();
 
-    if (!response.ok) {
-      throw new Error('Google Places returned ' + response.status);
+    /* 2nd attempt — without type filter if 0 results (broader search) */
+    if (!data.predictions || data.predictions.length === 0) {
+      const r2 = await fetch(buildPlacesUrl(input, false));
+      if (r2.ok) {
+        const data2 = await r2.json();
+        if (data2.predictions && data2.predictions.length > 0) {
+          data = data2;
+        }
+      }
     }
 
-    const data = await response.json();
-
-    // מחזיר רק את השדות הנחוצים — לא חושף את ה-key
     return res.status(200).json({
       status: data.status,
-      predictions: (data.predictions || []).slice(0, 5).map(function(p) {
-        return {
-          place_id: p.place_id,
-          description: p.description,
-          structured_formatting: {
-            main_text: p.structured_formatting ? p.structured_formatting.main_text : p.description,
-            secondary_text: p.structured_formatting ? p.structured_formatting.secondary_text : ''
-          }
-        };
-      })
+      predictions: (data.predictions || []).slice(0, 8).map(mapPrediction)
     });
   } catch (err) {
     console.error('[places API error]', err.message);

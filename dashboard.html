@@ -1501,9 +1501,23 @@ try { biz    = JSON.parse(localStorage.getItem('rl_biz')   || '{}'); } catch(e){
 try { brand  = JSON.parse(localStorage.getItem('rl_brand') || '{}'); } catch(e){}
 try { gcLead = JSON.parse(localStorage.getItem('_gcLead')  || '{}'); } catch(e){}
 
-var customerName = lead.name   || gcLead.name    || '';
-var bizName      = lead.bizName || biz.name || gcLead.name || 'העסק שלך';
-var reviewLink   = brand.url   || gcLead.brandUrl || '';
+var customerName = lead.name    || gcLead.name    || '';
+var bizName      = lead.bizName || biz.name       || gcLead.name || 'העסק שלך';
+var reviewLink   = brand.url    || gcLead.brandUrl || '';
+
+// ── Data rescue: sync missing reviewLink from _gcLead into rl_brand ──
+if (!reviewLink && gcLead.brandUrl) {
+  reviewLink = gcLead.brandUrl;
+  try {
+    var _b = JSON.parse(localStorage.getItem('rl_brand') || '{}');
+    _b.url = gcLead.brandUrl;
+    localStorage.setItem('rl_brand', JSON.stringify(_b));
+  } catch(e){}
+}
+// Also rescue bizName from rl_biz if lead form was skipped
+if ((!bizName || bizName === 'העסק שלך') && biz && biz.name) {
+  bizName = biz.name;
+}
 
 // Update greeting elements
 if (customerName) {
