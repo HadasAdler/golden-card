@@ -646,6 +646,179 @@ html,body{
   padding:24px;
   margin-bottom:24px;
 }
+
+/* ─── ANALYSIS TAB ─── */
+.score-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-bottom:28px;
+}
+.score-card{
+  background:var(--navy-card);
+  border:1.5px solid rgba(249,185,21,.22);
+  border-radius:14px;
+  padding:18px 12px;
+  text-align:center;
+}
+.score-val{
+  font-size:30px;
+  font-weight:900;
+  color:var(--gold);
+  line-height:1.1;
+}
+.score-label{
+  font-size:12px;
+  color:rgba(250,248,244,.5);
+  margin-top:5px;
+  font-weight:500;
+  line-height:1.4;
+}
+.section-heading{
+  font-size:17px;
+  font-weight:800;
+  color:var(--cream);
+  margin-bottom:16px;
+  padding-bottom:10px;
+  border-bottom:2px solid rgba(249,185,21,.2);
+}
+.bar-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:11px;
+}
+.bar-label{
+  width:150px;
+  font-size:13px;
+  font-weight:600;
+  color:var(--cream);
+  flex-shrink:0;
+  text-align:right;
+  line-height:1.3;
+}
+.bar-track{
+  flex:1;
+  height:30px;
+  background:rgba(250,248,244,.06);
+  border-radius:8px;
+  overflow:hidden;
+}
+.bar-fill{
+  height:100%;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  padding-right:10px;
+  font-size:12px;
+  font-weight:800;
+  color:#0a192f;
+  min-width:36px;
+}
+.bar-fill.me{ background:var(--gold); }
+.bar-fill.comp{ background:rgba(34,211,238,.65); color:#0a192f; }
+.bar-fill.avg{ background:rgba(250,248,244,.35); color:#0a192f; }
+.word-cloud{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  padding:22px 18px;
+  background:rgba(17,34,64,.6);
+  border-radius:16px;
+  border:1px solid rgba(249,185,21,.14);
+  margin-bottom:24px;
+  justify-content:center;
+  align-items:center;
+}
+.word-tag{
+  background:rgba(249,185,21,.1);
+  border:1.5px solid rgba(249,185,21,.28);
+  border-radius:8px;
+  padding:5px 13px;
+  color:var(--gold);
+  font-weight:700;
+  cursor:default;
+  transition:background .2s;
+}
+.word-tag:hover{ background:rgba(249,185,21,.2); }
+.word-tag.sm{ font-size:12px; opacity:.65; }
+.word-tag.md{ font-size:15px; }
+.word-tag.lg{ font-size:19px; }
+.word-tag.xl{
+  font-size:24px;
+  border-color:rgba(249,185,21,.6);
+  background:rgba(249,185,21,.15);
+}
+.checklist-item{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:14px 16px;
+  background:rgba(17,34,64,.5);
+  border:1.5px solid rgba(249,185,21,.15);
+  border-radius:12px;
+  margin-bottom:10px;
+  cursor:pointer;
+  transition:all .2s;
+  user-select:none;
+}
+.checklist-item:hover{
+  border-color:rgba(249,185,21,.38);
+  background:rgba(249,185,21,.05);
+}
+.checklist-item.done{
+  border-color:rgba(34,197,94,.3);
+  background:rgba(34,197,94,.05);
+}
+.check-box{
+  width:22px;height:22px;
+  border-radius:6px;
+  border:2px solid rgba(249,185,21,.5);
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;
+  font-weight:900;
+  color:transparent;
+  transition:all .2s;
+  margin-top:1px;
+}
+.checklist-item.done .check-box{
+  background:rgba(34,197,94,.3);
+  border-color:#22c55e;
+  color:#22c55e;
+}
+.check-badge{
+  font-size:10px;
+  font-weight:800;
+  padding:2px 7px;
+  border-radius:4px;
+  flex-shrink:0;
+  margin-top:3px;
+  white-space:nowrap;
+}
+.check-badge.urgent{
+  background:rgba(239,68,68,.15);
+  color:#ef4444;
+  border:1px solid rgba(239,68,68,.3);
+}
+.check-badge.high{
+  background:rgba(249,185,21,.15);
+  color:var(--gold);
+  border:1px solid rgba(249,185,21,.3);
+}
+.check-badge.medium{
+  background:rgba(34,211,238,.1);
+  color:var(--turquoise);
+  border:1px solid rgba(34,211,238,.25);
+}
+.check-text-wrap{ flex:1; }
+.check-title{ font-size:15px;font-weight:700;color:var(--cream);margin-bottom:3px; }
+.check-desc{ font-size:13px;color:rgba(250,248,244,.52);line-height:1.55; }
+@media(max-width:600px){
+  .score-val{ font-size:22px; }
+  .bar-label{ width:90px;font-size:11px; }
+  .word-tag.xl{ font-size:19px; }
+}
 </style>
 </head>
 <body>
@@ -684,6 +857,10 @@ html,body{
         <span class="nav-icon">📲</span>
         ערכת QR
       </button>
+      <button class="nav-btn" onclick="switchTab(5)" data-tab="5">
+        <span class="nav-icon">📊</span>
+        דוח אופטימיזציה
+      </button>
     </nav>
     <div class="sidebar-credit">
       המלצות לקידום פרופיל<br>העסק בגוגל<br>
@@ -713,6 +890,10 @@ html,body{
       <button class="mob-tab" onclick="switchTab(4)" data-tab="4">
         <span class="mob-icon">📲</span>
         QR
+      </button>
+      <button class="mob-tab" onclick="switchTab(5)" data-tab="5">
+        <span class="mob-icon">📊</span>
+        דוח
       </button>
     </div>
   </div>
@@ -944,6 +1125,184 @@ html,body{
       </div>
     </div>
 
+    <!-- ── TAB 6: דוח אופטימיזציה ── -->
+    <div class="tab-panel" id="tab-5">
+      <div class="page-title">דוח אופטימיזציה — ניתוח ביצועים</div>
+      <div class="page-sub">השוואה למתחרים מובילים · ניתוח מילים חמות · צ׳ק-ליסט פעולות</div>
+
+      <!-- ── Score cards ── -->
+      <div class="score-grid">
+        <div class="score-card">
+          <div class="score-val">47</div>
+          <div class="score-label">ביקורות גוגל<br>כרגע</div>
+        </div>
+        <div class="score-card">
+          <div class="score-val">4.9⭐</div>
+          <div class="score-label">דירוג ממוצע<br>מצוין!</div>
+        </div>
+        <div class="score-card" style="border-color:rgba(239,68,68,.3);">
+          <div class="score-val" style="color:#ef4444;">−91</div>
+          <div class="score-label">פער ממתחרה<br>המוביל</div>
+        </div>
+      </div>
+
+      <!-- ── Bar chart: review count ── -->
+      <div style="margin-bottom:28px;">
+        <div class="section-heading">📊 כמות ביקורות — השוואה למתחרים</div>
+        <div class="bar-row">
+          <div class="bar-label">מיכל מוזס<br><span style="color:var(--gold);font-size:11px;">⭐ 4.9</span></div>
+          <div class="bar-track">
+            <div class="bar-fill me" style="width:34%;">47</div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">משרד לוי ושות׳<br><span style="color:rgba(34,211,238,.8);font-size:11px;">⭐ 4.8</span></div>
+          <div class="bar-track">
+            <div class="bar-fill comp" style="width:100%;">138</div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">עו"ד כהן ושות׳<br><span style="color:rgba(34,211,238,.8);font-size:11px;">⭐ 4.7</span></div>
+          <div class="bar-track">
+            <div class="bar-fill comp" style="width:68%;">94</div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">עו"ד נועה גולן<br><span style="color:rgba(34,211,238,.8);font-size:11px;">⭐ 4.9</span></div>
+          <div class="bar-track">
+            <div class="bar-fill comp" style="width:53%;">73</div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">ממוצע ענף<br><span style="color:rgba(250,248,244,.4);font-size:11px;">⭐ 4.8</span></div>
+          <div class="bar-track">
+            <div class="bar-fill avg" style="width:63%;">87</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:rgba(250,248,244,.35);margin-top:8px;text-align:center;">
+          🟡 מיכל מוזס &nbsp;|&nbsp; 🔵 מתחרים &nbsp;|&nbsp; ⬜ ממוצע ענף
+        </div>
+      </div>
+
+      <!-- ── Word cloud ── -->
+      <div style="margin-bottom:28px;">
+        <div class="section-heading">🔥 מילים חמות — המופיעות בהמלצות המובילות</div>
+        <div style="font-size:13px;color:rgba(250,248,244,.4);margin-bottom:14px;">
+          מילים שחוזרות בביקורות 5 כוכבים של המתחרים המובילים — מומלץ להטמיע בפרופיל ובניסוחי הבקשות
+        </div>
+        <div class="word-cloud">
+          <span class="word-tag xl">מקצועי</span>
+          <span class="word-tag xl">זמין</span>
+          <span class="word-tag lg">אמין</span>
+          <span class="word-tag lg">ליווי אישי</span>
+          <span class="word-tag lg">ניסיון</span>
+          <span class="word-tag md">יסודי</span>
+          <span class="word-tag md">ברור</span>
+          <span class="word-tag md">מסור</span>
+          <span class="word-tag md">נגיש</span>
+          <span class="word-tag md">מהיר</span>
+          <span class="word-tag sm">שירות</span>
+          <span class="word-tag sm">ידע</span>
+          <span class="word-tag sm">עקבי</span>
+          <span class="word-tag sm">מומלץ</span>
+          <span class="word-tag sm">מיומן</span>
+          <span class="word-tag sm">דיסקרטי</span>
+          <span class="word-tag sm">אנושי</span>
+          <span class="word-tag sm">אפקטיבי</span>
+        </div>
+        <div style="font-size:12px;color:rgba(250,248,244,.3);text-align:center;">
+          גודל המילה = תדירות הופעה בביקורות מובילות
+        </div>
+      </div>
+
+      <!-- ── Action checklist ── -->
+      <div style="margin-bottom:28px;">
+        <div class="section-heading">✅ צ׳ק-ליסט פעולות דחופות לשיפור הדירוג</div>
+
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-badge urgent">דחוף</span>
+          <div class="check-text-wrap">
+            <div class="check-title">הוסיפו "ליווי אישי" ו"זמינות" לתיאור הפרופיל</div>
+            <div class="check-desc">שתי המילים החמות ביותר בענף — הטמיעו אותן בתיאור העסק בגוגל.</div>
+          </div>
+        </div>
+
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-badge urgent">דחוף</span>
+          <div class="check-text-wrap">
+            <div class="check-title">השיגו 5 ביקורות חדשות השבוע</div>
+            <div class="check-desc">הפגיעה הגדולה ביותר: פער של 91 ביקורות מהמוביל. כל שבוע = 5 ביקורות לפחות.</div>
+          </div>
+        </div>
+
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-badge urgent">דחוף</span>
+          <div class="check-text-wrap">
+            <div class="check-title">הגיבו לכל הביקורות הקיימות תוך 24 שעות</div>
+            <div class="check-desc">תגובה לביקורות משפרת דירוג בגוגל ומראה ללקוחות פוטנציאליים שאתם קשובים.</div>
+          </div>
+        </div>
+
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-badge high">גבוה</span>
+          <div class="check-text-wrap">
+            <div class="check-title">עדכנו תמונות פרופיל — לוגו + תמונת צוות</div>
+            <div class="check-desc">פרופילים עם תמונות מקצועיות מקבלים 35% יותר קליקים ממתחרים ללא תמונות.</div>
+          </div>
+        </div>
+
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-badge high">גבוה</span>
+          <div class="check-text-wrap">
+            <div class="check-title">הוסיפו שעות פעילות מדויקות ועדכניות</div>
+            <div class="check-desc">שעות שגויות = לקוחות שמגיעים בזמן שגוי = ביקורות שליליות. בדקו עכשיו.</div>
+          </div>
+        </div>
+
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-badge high">גבוה</span>
+          <div class="check-text-wrap">
+            <div class="check-title">הגדילו את תיאור העסק לפחות ל-750 תווים</div>
+            <div class="check-desc">הטמיעו מילות מפתח: מקצועיות, ניסיון, ליווי אישי, זמינות. גוגל אוהב תיאורים עשירים.</div>
+          </div>
+        </div>
+
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-badge medium">בינוני</span>
+          <div class="check-text-wrap">
+            <div class="check-title">הוסיפו 5+ תמונות ממשרד / עבודה לגלריה</div>
+            <div class="check-desc">תמונות מקצועיות מהמשרד מעלות אמון אצל לקוחות חדשים שמחפשים בגוגל.</div>
+          </div>
+        </div>
+
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="check-box">✓</div>
+          <span class="check-badge medium">בינוני</span>
+          <div class="check-text-wrap">
+            <div class="check-title">הוסיפו שאלות ותשובות (Q&A) לפרופיל</div>
+            <div class="check-desc">השיבו על שאלות נפוצות ישירות בפרופיל הגוגל — זה משפר נוכחות בחיפוש.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Download button ── -->
+      <button class="btn-download-cal" id="analysisDownloadBtn" onclick="triggerAnalysisDownload()">
+        📥 הורד דוח אופטימיזציה מלא (PDF)
+      </button>
+
+      <div class="page-footer" style="margin-top:36px;">
+        המלצות לקידום פרופיל העסק בגוגל | נבנה ע״י הדס אדלר
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -951,6 +1310,7 @@ html,body{
 <script src="/pdf-guide.js"></script>
 <script src="/pdf-calendar.js"></script>
 <script src="/pdf-qr.js"></script>
+<script src="/pdf-analysis.js"></script>
 
 <script>
 // ═══════════════════════════════════════
@@ -1250,6 +1610,25 @@ function triggerGuideDownload() {
     };
     document.body.appendChild(s);
   }
+}
+
+function triggerAnalysisDownload() {
+  var biz  = bizName   || 'מיכל מוזס חברת עו"ד';
+  var link = reviewLink || 'https://search.google.com/local/writereview?placeid=ChIJ5STF2epJHRUR84efkJj5lkM';
+  if (typeof downloadAnalysis === 'function') {
+    downloadAnalysis(biz, link);
+  } else {
+    var s = document.createElement('script');
+    s.src = '/pdf-analysis.js';
+    s.onload = function() {
+      if (typeof downloadAnalysis === 'function') downloadAnalysis(biz, link);
+    };
+    document.body.appendChild(s);
+  }
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('done');
 }
 
 function triggerQRDownload() {
