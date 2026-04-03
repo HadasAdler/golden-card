@@ -668,19 +668,19 @@ html,body{
   line-height:1.1;
 }
 .score-label{
-  font-size:12px;
-  color:rgba(250,248,244,.5);
-  margin-top:5px;
-  font-weight:500;
-  line-height:1.4;
+  font-size:13px;
+  color:#fff;
+  margin-top:6px;
+  font-weight:600;
+  line-height:1.45;
 }
 .section-heading{
-  font-size:17px;
-  font-weight:800;
-  color:var(--cream);
+  font-size:19px;
+  font-weight:900;
+  color:#fff;
   margin-bottom:16px;
   padding-bottom:10px;
-  border-bottom:2px solid rgba(249,185,21,.2);
+  border-bottom:2px solid rgba(249,185,21,.28);
 }
 .bar-row{
   display:flex;
@@ -690,12 +690,12 @@ html,body{
 }
 .bar-label{
   width:150px;
-  font-size:13px;
-  font-weight:600;
-  color:var(--cream);
+  font-size:14px;
+  font-weight:700;
+  color:#fff;
   flex-shrink:0;
   text-align:right;
-  line-height:1.3;
+  line-height:1.35;
 }
 .bar-track{
   flex:1;
@@ -741,13 +741,13 @@ html,body{
   transition:background .2s;
 }
 .word-tag:hover{ background:rgba(249,185,21,.2); }
-.word-tag.sm{ font-size:12px; opacity:.65; }
-.word-tag.md{ font-size:15px; }
-.word-tag.lg{ font-size:19px; }
+.word-tag.sm{ font-size:13px; opacity:.8; }
+.word-tag.md{ font-size:16px; }
+.word-tag.lg{ font-size:20px; }
 .word-tag.xl{
-  font-size:24px;
-  border-color:rgba(249,185,21,.6);
-  background:rgba(249,185,21,.15);
+  font-size:26px;
+  border-color:rgba(249,185,21,.7);
+  background:rgba(249,185,21,.18);
 }
 .checklist-item{
   display:flex;
@@ -812,12 +812,88 @@ html,body{
   border:1px solid rgba(34,211,238,.25);
 }
 .check-text-wrap{ flex:1; }
-.check-title{ font-size:15px;font-weight:700;color:var(--cream);margin-bottom:3px; }
-.check-desc{ font-size:13px;color:rgba(250,248,244,.52);line-height:1.55; }
+.check-title{ font-size:15px;font-weight:700;color:#fff;margin-bottom:3px; }
+.check-desc{ font-size:13px;color:rgba(250,248,244,.75);line-height:1.6; }
+
+/* ─── CHECK CARD (large card style) ─── */
+.check-card{
+  display:flex;
+  gap:16px;
+  padding:18px 20px;
+  background:rgba(17,34,64,.65);
+  border:1.5px solid rgba(249,185,21,.22);
+  border-radius:16px;
+  margin-bottom:14px;
+  cursor:pointer;
+  transition:all .22s;
+  user-select:none;
+  align-items:flex-start;
+}
+.check-card:hover{
+  border-color:rgba(249,185,21,.5);
+  background:rgba(249,185,21,.07);
+  transform:translateY(-1px);
+}
+.check-card.done{
+  border-color:rgba(34,197,94,.4);
+  background:rgba(34,197,94,.07);
+}
+.check-card-icon{
+  font-size:26px;
+  flex-shrink:0;
+  width:48px;height:48px;
+  background:rgba(249,185,21,.12);
+  border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(249,185,21,.28);
+  transition:all .22s;
+}
+.check-card.done .check-card-icon{
+  background:rgba(34,197,94,.15);
+  border-color:rgba(34,197,94,.4);
+}
+.check-card-body{ flex:1; }
+.check-card-header{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:7px;
+}
+.check-card-title{
+  font-size:17px;
+  font-weight:800;
+  color:#fff;
+  flex:1;
+  line-height:1.35;
+}
+.check-card-desc{
+  font-size:14px;
+  color:rgba(250,248,244,.82);
+  line-height:1.7;
+}
+.check-card-tick{
+  width:26px;height:26px;
+  border-radius:8px;
+  border:2px solid rgba(249,185,21,.5);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;
+  font-weight:900;
+  color:transparent;
+  flex-shrink:0;
+  transition:all .2s;
+}
+.check-card.done .check-card-tick{
+  background:rgba(34,197,94,.3);
+  border-color:#22c55e;
+  color:#22c55e;
+}
+
 @media(max-width:600px){
   .score-val{ font-size:22px; }
-  .bar-label{ width:90px;font-size:11px; }
-  .word-tag.xl{ font-size:19px; }
+  .bar-label{ width:90px;font-size:12px; }
+  .word-tag.xl{ font-size:20px; }
+  .check-card-title{ font-size:15px; }
+  .check-card-icon{ width:40px;height:40px;font-size:22px; }
 }
 </style>
 </head>
@@ -841,6 +917,10 @@ html,body{
         <span class="nav-icon">🔗</span>
         הקישור שלי
       </button>
+      <button class="nav-btn" onclick="switchTab(5)" data-tab="5">
+        <span class="nav-icon">📊</span>
+        דוח אופטימיזציה
+      </button>
       <button class="nav-btn" onclick="switchTab(1)" data-tab="1">
         <span class="nav-icon">💬</span>
         נוסחים מוכנים
@@ -857,10 +937,6 @@ html,body{
         <span class="nav-icon">📲</span>
         ערכת QR
       </button>
-      <button class="nav-btn" onclick="switchTab(5)" data-tab="5">
-        <span class="nav-icon">📊</span>
-        דוח אופטימיזציה
-      </button>
     </nav>
     <div class="sidebar-credit">
       המלצות לקידום פרופיל<br>העסק בגוגל<br>
@@ -874,6 +950,10 @@ html,body{
       <button class="mob-tab active" onclick="switchTab(0)" data-tab="0">
         <span class="mob-icon">🔗</span>
         הקישור שלי
+      </button>
+      <button class="mob-tab" onclick="switchTab(5)" data-tab="5">
+        <span class="mob-icon">📊</span>
+        דוח
       </button>
       <button class="mob-tab" onclick="switchTab(1)" data-tab="1">
         <span class="mob-icon">💬</span>
@@ -890,10 +970,6 @@ html,body{
       <button class="mob-tab" onclick="switchTab(4)" data-tab="4">
         <span class="mob-icon">📲</span>
         QR
-      </button>
-      <button class="mob-tab" onclick="switchTab(5)" data-tab="5">
-        <span class="mob-icon">📊</span>
-        דוח
       </button>
     </div>
   </div>
@@ -1128,21 +1204,21 @@ html,body{
     <!-- ── TAB 6: דוח אופטימיזציה ── -->
     <div class="tab-panel" id="tab-5">
       <div class="page-title">דוח אופטימיזציה — ניתוח ביצועים</div>
-      <div class="page-sub">השוואה למתחרים מובילים · ניתוח מילים חמות · צ׳ק-ליסט פעולות</div>
+      <div class="page-sub">השוואה למתחרים מובילים · מילים מנצחות · צ׳ק-ליסט עם אייקונים</div>
 
       <!-- ── Score cards ── -->
       <div class="score-grid">
         <div class="score-card">
           <div class="score-val">47</div>
-          <div class="score-label">ביקורות גוגל<br>כרגע</div>
+          <div class="score-label">ביקורות גוגל כרגע</div>
         </div>
         <div class="score-card">
           <div class="score-val">4.9⭐</div>
-          <div class="score-label">דירוג ממוצע<br>מצוין!</div>
+          <div class="score-label">דירוג ממוצע — מצוין!</div>
         </div>
-        <div class="score-card" style="border-color:rgba(239,68,68,.3);">
+        <div class="score-card" style="border-color:rgba(239,68,68,.4);">
           <div class="score-val" style="color:#ef4444;">−91</div>
-          <div class="score-label">פער ממתחרה<br>המוביל</div>
+          <div class="score-label">פער ממתחרה המוביל</div>
         </div>
       </div>
 
@@ -1150,45 +1226,86 @@ html,body{
       <div style="margin-bottom:28px;">
         <div class="section-heading">📊 כמות ביקורות — השוואה למתחרים</div>
         <div class="bar-row">
-          <div class="bar-label">מיכל מוזס<br><span style="color:var(--gold);font-size:11px;">⭐ 4.9</span></div>
+          <div class="bar-label">מיכל מוזס<br><span style="color:var(--gold);font-size:12px;font-weight:700;">⭐ 4.9</span></div>
           <div class="bar-track">
             <div class="bar-fill me" style="width:34%;">47</div>
           </div>
         </div>
         <div class="bar-row">
-          <div class="bar-label">משרד לוי ושות׳<br><span style="color:rgba(34,211,238,.8);font-size:11px;">⭐ 4.8</span></div>
+          <div class="bar-label">משרד לוי ושות׳<br><span style="color:#22d3ee;font-size:12px;font-weight:700;">⭐ 4.8</span></div>
           <div class="bar-track">
             <div class="bar-fill comp" style="width:100%;">138</div>
           </div>
         </div>
         <div class="bar-row">
-          <div class="bar-label">עו"ד כהן ושות׳<br><span style="color:rgba(34,211,238,.8);font-size:11px;">⭐ 4.7</span></div>
+          <div class="bar-label">עו"ד כהן ושות׳<br><span style="color:#22d3ee;font-size:12px;font-weight:700;">⭐ 4.7</span></div>
           <div class="bar-track">
             <div class="bar-fill comp" style="width:68%;">94</div>
           </div>
         </div>
         <div class="bar-row">
-          <div class="bar-label">עו"ד נועה גולן<br><span style="color:rgba(34,211,238,.8);font-size:11px;">⭐ 4.9</span></div>
+          <div class="bar-label">עו"ד נועה גולן<br><span style="color:#22d3ee;font-size:12px;font-weight:700;">⭐ 4.9</span></div>
           <div class="bar-track">
             <div class="bar-fill comp" style="width:53%;">73</div>
           </div>
         </div>
         <div class="bar-row">
-          <div class="bar-label">ממוצע ענף<br><span style="color:rgba(250,248,244,.4);font-size:11px;">⭐ 4.8</span></div>
+          <div class="bar-label">ממוצע ענף<br><span style="color:rgba(250,248,244,.7);font-size:12px;font-weight:700;">⭐ 4.8</span></div>
           <div class="bar-track">
             <div class="bar-fill avg" style="width:63%;">87</div>
           </div>
         </div>
-        <div style="font-size:12px;color:rgba(250,248,244,.35);margin-top:8px;text-align:center;">
-          🟡 מיכל מוזס &nbsp;|&nbsp; 🔵 מתחרים &nbsp;|&nbsp; ⬜ ממוצע ענף
+        <!-- Legend — clear, bold, white -->
+        <div style="display:flex;gap:20px;justify-content:center;margin-top:14px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div style="width:18px;height:18px;border-radius:5px;background:var(--gold);flex-shrink:0;"></div>
+            <span style="font-size:14px;font-weight:700;color:#fff;">העסק שלכם</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div style="width:18px;height:18px;border-radius:5px;background:rgba(34,211,238,.65);flex-shrink:0;"></div>
+            <span style="font-size:14px;font-weight:700;color:#fff;">מתחרים</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;">
+            <div style="width:18px;height:18px;border-radius:5px;background:rgba(250,248,244,.35);flex-shrink:0;"></div>
+            <span style="font-size:14px;font-weight:700;color:#fff;">ממוצע ענף</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Performance Gap Box ── -->
+      <div style="background:linear-gradient(135deg,rgba(239,68,68,.13),rgba(239,68,68,.05));
+                  border:2px solid rgba(239,68,68,.38);border-radius:16px;
+                  padding:22px 24px;margin-bottom:28px;">
+        <div style="font-size:17px;font-weight:900;color:#fff;margin-bottom:16px;">
+          📉 מדד פער הביצועים שלכם
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px;">
+          <div style="text-align:center;background:rgba(0,0,0,.2);border-radius:12px;padding:14px 8px;">
+            <div style="font-size:26px;font-weight:900;color:#22d3ee;">101</div>
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-top:5px;">ממוצע Top 3</div>
+          </div>
+          <div style="text-align:center;background:rgba(0,0,0,.2);border-radius:12px;padding:14px 8px;">
+            <div style="font-size:26px;font-weight:900;color:var(--gold);">47</div>
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-top:5px;">ביקורות שלכם</div>
+          </div>
+          <div style="text-align:center;background:rgba(0,0,0,.2);border-radius:12px;padding:14px 8px;">
+            <div style="font-size:26px;font-weight:900;color:#ef4444;">54</div>
+            <div style="font-size:13px;font-weight:700;color:#fff;margin-top:5px;">ביקורות חסרות</div>
+          </div>
+        </div>
+        <div style="font-size:15px;font-weight:600;color:#fff;text-align:center;
+                    background:rgba(0,0,0,.25);border-radius:10px;padding:12px 16px;line-height:1.65;">
+          ⏱️ בקצב של <strong style="color:var(--gold);">5 ביקורות בשבוע</strong>
+          — תגיעו לממוצע ה-Top 3 תוך <strong style="color:var(--gold);">כ-11 שבועות</strong>
         </div>
       </div>
 
       <!-- ── Word cloud ── -->
       <div style="margin-bottom:28px;">
-        <div class="section-heading">🔥 מילים חמות — המופיעות בהמלצות המובילות</div>
-        <div style="font-size:13px;color:rgba(250,248,244,.4);margin-bottom:14px;">
-          מילים שחוזרות בביקורות 5 כוכבים של המתחרים המובילים — מומלץ להטמיע בפרופיל ובניסוחי הבקשות
+        <div class="section-heading">🔥 מילים מנצחות מהביקורות של המתחרים שלכם</div>
+        <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:16px;line-height:1.7;">
+          אלו המילים שגוגל סורק ומזהה כסימני איכות.<br>
+          <span style="color:var(--gold);">מומלץ לשלב אותן בתיאור העסק שלכם ובתגובות ללקוחות.</span>
         </div>
         <div class="word-cloud">
           <span class="word-tag xl">מקצועי</span>
@@ -1210,84 +1327,132 @@ html,body{
           <span class="word-tag sm">אנושי</span>
           <span class="word-tag sm">אפקטיבי</span>
         </div>
-        <div style="font-size:12px;color:rgba(250,248,244,.3);text-align:center;">
-          גודל המילה = תדירות הופעה בביקורות מובילות
+        <div style="font-size:13px;font-weight:600;color:rgba(250,248,244,.65);text-align:center;margin-top:10px;">
+          גודל המילה = תדירות הופעה בביקורות 5 כוכבים של מתחרים
         </div>
       </div>
 
-      <!-- ── Action checklist ── -->
+      <!-- ── Gold tip ── -->
+      <div style="background:linear-gradient(135deg,rgba(249,185,21,.18),rgba(249,185,21,.07));
+                  border:2px solid rgba(249,185,21,.55);border-radius:18px;
+                  padding:24px 22px;margin-bottom:28px;position:relative;overflow:hidden;">
+        <div style="position:absolute;left:-8px;bottom:-12px;font-size:90px;opacity:.07;line-height:1;">💡</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="font-size:30px;">💡</div>
+          <div style="font-size:16px;font-weight:900;color:var(--gold);letter-spacing:.4px;">
+            טיפ האופטימיזציה של הדס
+          </div>
+        </div>
+        <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:10px;line-height:1.45;">
+          הדרך המהירה ביותר להכפיל המלצות בשבוע אחד:
+        </div>
+        <div style="font-size:15px;font-weight:500;color:rgba(250,248,244,.92);line-height:1.8;">
+          שלחו הודעת וואטסאפ <em>אישית</em> ל-10 לקוחות מרוצים שעבדתם איתם
+          ב-6 החודשים האחרונים. לא נוסחה — הודעה אישית בשמם.
+          ציפייה ריאלית: <strong style="color:var(--gold);">4–6 ביקורות חדשות תוך שבוע אחד.</strong>
+        </div>
+      </div>
+
+      <!-- ── Card-style checklist ── -->
       <div style="margin-bottom:28px;">
         <div class="section-heading">✅ צ׳ק-ליסט פעולות דחופות לשיפור הדירוג</div>
+        <div style="font-size:14px;font-weight:600;color:rgba(250,248,244,.75);margin-bottom:18px;">
+          לחצו על כל כרטיסייה כדי לסמן ביצוע
+        </div>
 
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <div class="check-box">✓</div>
-          <span class="check-badge urgent">דחוף</span>
-          <div class="check-text-wrap">
-            <div class="check-title">הוסיפו "ליווי אישי" ו"זמינות" לתיאור הפרופיל</div>
-            <div class="check-desc">שתי המילים החמות ביותר בענף — הטמיעו אותן בתיאור העסק בגוגל.</div>
+        <div class="check-card" onclick="toggleCard(this)">
+          <div class="check-card-icon">📝</div>
+          <div class="check-card-body">
+            <div class="check-card-header">
+              <div class="check-card-title">הוסיפו "ליווי אישי" ו"זמינות" לתיאור הפרופיל</div>
+              <span class="check-badge urgent">דחוף</span>
+              <div class="check-card-tick">✓</div>
+            </div>
+            <div class="check-card-desc">שתי המילים החמות ביותר בענף — הטמיעו אותן בתיאור העסק בגוגל.</div>
           </div>
         </div>
 
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <div class="check-box">✓</div>
-          <span class="check-badge urgent">דחוף</span>
-          <div class="check-text-wrap">
-            <div class="check-title">השיגו 5 ביקורות חדשות השבוע</div>
-            <div class="check-desc">הפגיעה הגדולה ביותר: פער של 91 ביקורות מהמוביל. כל שבוע = 5 ביקורות לפחות.</div>
+        <div class="check-card" onclick="toggleCard(this)">
+          <div class="check-card-icon">⭐</div>
+          <div class="check-card-body">
+            <div class="check-card-header">
+              <div class="check-card-title">השיגו 5 ביקורות חדשות השבוע</div>
+              <span class="check-badge urgent">דחוף</span>
+              <div class="check-card-tick">✓</div>
+            </div>
+            <div class="check-card-desc">פער של 91 ביקורות מהמוביל. כל שבוע = 5 ביקורות לפחות עד סגירת הפער.</div>
           </div>
         </div>
 
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <div class="check-box">✓</div>
-          <span class="check-badge urgent">דחוף</span>
-          <div class="check-text-wrap">
-            <div class="check-title">הגיבו לכל הביקורות הקיימות תוך 24 שעות</div>
-            <div class="check-desc">תגובה לביקורות משפרת דירוג בגוגל ומראה ללקוחות פוטנציאליים שאתם קשובים.</div>
+        <div class="check-card" onclick="toggleCard(this)">
+          <div class="check-card-icon">💬</div>
+          <div class="check-card-body">
+            <div class="check-card-header">
+              <div class="check-card-title">הגיבו לכל הביקורות הקיימות תוך 24 שעות</div>
+              <span class="check-badge urgent">דחוף</span>
+              <div class="check-card-tick">✓</div>
+            </div>
+            <div class="check-card-desc">תגובה לביקורות משפרת דירוג בגוגל ומראה ללקוחות שאתם קשובים ונגישים.</div>
           </div>
         </div>
 
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <div class="check-box">✓</div>
-          <span class="check-badge high">גבוה</span>
-          <div class="check-text-wrap">
-            <div class="check-title">עדכנו תמונות פרופיל — לוגו + תמונת צוות</div>
-            <div class="check-desc">פרופילים עם תמונות מקצועיות מקבלים 35% יותר קליקים ממתחרים ללא תמונות.</div>
+        <div class="check-card" onclick="toggleCard(this)">
+          <div class="check-card-icon">📸</div>
+          <div class="check-card-body">
+            <div class="check-card-header">
+              <div class="check-card-title">עדכנו תמונות פרופיל — לוגו + תמונת צוות</div>
+              <span class="check-badge high">גבוה</span>
+              <div class="check-card-tick">✓</div>
+            </div>
+            <div class="check-card-desc">פרופילים עם תמונות מקצועיות מקבלים 35% יותר קליקים ממתחרים ללא תמונות.</div>
           </div>
         </div>
 
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <div class="check-box">✓</div>
-          <span class="check-badge high">גבוה</span>
-          <div class="check-text-wrap">
-            <div class="check-title">הוסיפו שעות פעילות מדויקות ועדכניות</div>
-            <div class="check-desc">שעות שגויות = לקוחות שמגיעים בזמן שגוי = ביקורות שליליות. בדקו עכשיו.</div>
+        <div class="check-card" onclick="toggleCard(this)">
+          <div class="check-card-icon">🕐</div>
+          <div class="check-card-body">
+            <div class="check-card-header">
+              <div class="check-card-title">הוסיפו שעות פעילות מדויקות ועדכניות</div>
+              <span class="check-badge high">גבוה</span>
+              <div class="check-card-tick">✓</div>
+            </div>
+            <div class="check-card-desc">שעות שגויות = לקוחות שמגיעים בזמן שגוי = ביקורות שליליות. בדקו עכשיו.</div>
           </div>
         </div>
 
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <div class="check-box">✓</div>
-          <span class="check-badge high">גבוה</span>
-          <div class="check-text-wrap">
-            <div class="check-title">הגדילו את תיאור העסק לפחות ל-750 תווים</div>
-            <div class="check-desc">הטמיעו מילות מפתח: מקצועיות, ניסיון, ליווי אישי, זמינות. גוגל אוהב תיאורים עשירים.</div>
+        <div class="check-card" onclick="toggleCard(this)">
+          <div class="check-card-icon">📄</div>
+          <div class="check-card-body">
+            <div class="check-card-header">
+              <div class="check-card-title">הגדילו את תיאור העסק לפחות ל-750 תווים</div>
+              <span class="check-badge high">גבוה</span>
+              <div class="check-card-tick">✓</div>
+            </div>
+            <div class="check-card-desc">הטמיעו מילות מפתח: מקצועיות, ניסיון, ליווי אישי, זמינות. גוגל אוהב תיאורים עשירים.</div>
           </div>
         </div>
 
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <div class="check-box">✓</div>
-          <span class="check-badge medium">בינוני</span>
-          <div class="check-text-wrap">
-            <div class="check-title">הוסיפו 5+ תמונות ממשרד / עבודה לגלריה</div>
-            <div class="check-desc">תמונות מקצועיות מהמשרד מעלות אמון אצל לקוחות חדשים שמחפשים בגוגל.</div>
+        <div class="check-card" onclick="toggleCard(this)">
+          <div class="check-card-icon">🖼️</div>
+          <div class="check-card-body">
+            <div class="check-card-header">
+              <div class="check-card-title">הוסיפו 5+ תמונות ממשרד / עבודה לגלריה</div>
+              <span class="check-badge medium">בינוני</span>
+              <div class="check-card-tick">✓</div>
+            </div>
+            <div class="check-card-desc">תמונות מקצועיות מהמשרד מעלות אמון אצל לקוחות חדשים שמחפשים בגוגל.</div>
           </div>
         </div>
 
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <div class="check-box">✓</div>
-          <span class="check-badge medium">בינוני</span>
-          <div class="check-text-wrap">
-            <div class="check-title">הוסיפו שאלות ותשובות (Q&A) לפרופיל</div>
-            <div class="check-desc">השיבו על שאלות נפוצות ישירות בפרופיל הגוגל — זה משפר נוכחות בחיפוש.</div>
+        <div class="check-card" onclick="toggleCard(this)">
+          <div class="check-card-icon">❓</div>
+          <div class="check-card-body">
+            <div class="check-card-header">
+              <div class="check-card-title">הוסיפו שאלות ותשובות (Q&amp;A) לפרופיל</div>
+              <span class="check-badge medium">בינוני</span>
+              <div class="check-card-tick">✓</div>
+            </div>
+            <div class="check-card-desc">השיבו על שאלות נפוצות ישירות בפרופיל הגוגל — זה משפר נוכחות בחיפוש.</div>
           </div>
         </div>
 
@@ -1628,6 +1793,9 @@ function triggerAnalysisDownload() {
 }
 
 function toggleCheck(el) {
+  el.classList.toggle('done');
+}
+function toggleCard(el) {
   el.classList.toggle('done');
 }
 
