@@ -1562,14 +1562,12 @@ function initLinkTab() {
   var linkEl        = document.getElementById('card-link-display');
   var smartLinkEl   = document.getElementById('smart-card-link-display');
 
-  /* חישוב slug מ-bizName — תמיכה בעברית ולטינית */
-  var slug = (bizName || '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^\u0590-\u05FFa-zA-Z0-9\-]/g, '')
-    .toLowerCase()
+  /* slug: מה שנבחר ב-analysis (lead.slug) או חישוב אוטומטי מ-bizName */
+  var slug = lead.slug
+    || gcLead.slug
+    || (bizName || '').trim().replace(/\s+/g,'-').replace(/[^\u0590-\u05FFa-zA-Z0-9\-]/g,'').toLowerCase()
     || 'card';
-  var smartCardUrl  = 'https://reviewme.co.il/card/' + slug;
+  var smartCardUrl = 'https://review-me.org/' + slug;
 
   if (reviewLink) {
     if (linkEl)       linkEl.textContent       = reviewLink;

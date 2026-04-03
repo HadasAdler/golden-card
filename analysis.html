@@ -6,6 +6,7 @@
   <title>ניתוח עסקי מפורט | פרופיל העסק בגוגל</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -403,6 +404,32 @@
       cursor:default;text-align:center;
     }
 
+    /* Slug field */
+    .slug-wrap{
+      background:rgba(249,185,21,.07);border:1.5px solid rgba(249,185,21,.3);
+      border-radius:var(--r);padding:18px 18px 14px;display:flex;flex-direction:column;gap:10px;
+    }
+    .slug-label{font-size:15px;font-weight:800;color:var(--orange);margin-bottom:2px}
+    .slug-label-sub{font-size:12px;color:rgba(250,248,244,.5);font-weight:500}
+    .slug-row{
+      display:flex;align-items:center;
+      background:rgba(250,248,244,.06);border:1.5px solid rgba(250,248,244,.15);
+      border-radius:10px;overflow:hidden;
+    }
+    .slug-prefix{
+      padding:12px 14px;font-size:13px;font-weight:700;
+      color:rgba(249,185,21,.75);white-space:nowrap;
+      border-left:1px solid rgba(250,248,244,.12);background:rgba(0,0,0,.15);
+      direction:ltr;
+    }
+    .slug-input{
+      flex:1;padding:12px 12px;background:transparent;border:none;
+      color:#fff;font-size:14px;font-weight:600;font-family:'Heebo',sans-serif;
+      outline:none;direction:ltr;
+    }
+    .slug-input::placeholder{color:rgba(250,248,244,.3);font-weight:400}
+    .slug-status{font-size:13px;font-weight:700;min-height:18px;padding-right:2px}
+
     /* Submit button */
     .submit-btn{
       width:100%;padding:20px 24px;
@@ -652,6 +679,19 @@
           </div>
         </div>
 
+        <!-- ── Slug chooser ── -->
+        <div class="slug-wrap" style="margin-bottom:20px">
+          <div class="slug-label">🔗 בחרו את הכתובת האישית שלכם</div>
+          <div class="slug-label-sub">זוהי הכתובת שתשלחו ללקוחות. היא קצרה, ייחודית ושלכם בלבד.</div>
+          <div class="slug-row">
+            <div class="slug-prefix">review-me.org/</div>
+            <input class="slug-input" id="fieldSlug" type="text"
+                   placeholder="your-name" autocomplete="off" autocorrect="off" spellcheck="false"
+                   oninput="onSlugInput(this.value)">
+          </div>
+          <div class="slug-status" id="slugStatus"></div>
+        </div>
+
         <button class="submit-btn" onclick="handleSubmit()">שלחו - ואנו נבנה לכם את ערכת הפרימיום לקידום העסק שלכם</button>
 
         <!-- Feature list below submit -->
@@ -694,6 +734,18 @@
 (function(){
   'use strict';
 
+  /* ── Supabase (same project as index.html) ── */
+  var SUPA_URL = 'https://kjykdleskbqewntkfzky.supabase.co';
+  var SUPA_KEY = 'sb_publishable__14W1IrEqGnHdyiIUuo39A_1j0gpnls';
+  var _sbA = null;
+  try {
+    if (window.supabase && window.supabase.createClient) {
+      _sbA = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+      window._sbAnalysis = _sbA;
+      console.log('%c✅ Supabase מחובר (analysis)', 'color:#22c55e;font-weight:bold');
+    }
+  } catch(e){ console.warn('Supabase init:', e.message); }
+
   /* ── URL params ── */
   var params   = new URLSearchParams(window.location.search);
   var placeId  = params.get('id')   || '';
@@ -703,6 +755,79 @@
   if (bizNameP) {
     document.getElementById('loadBizName').textContent = bizNameP;
     document.getElementById('previewBizName').textContent = bizNameP;
+  }
+
+  /* ── Slug helpers ── */
+  var _slugAvail = true; // optimistic default
+  var _slugTimer = null;
+
+  function toSlug(s) {
+    return (s || '').trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\u0590-\u05FFa-zA-Z0-9\-]/g, '')
+      .toLowerCase()
+      || '';
+  }
+
+  function setSlugStatus(msg, color) {
+    var el = document.getElementById('slugStatus');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = color;
+  }
+
+  function checkSlugAvail(slug) {
+    if (!slug) { setSlugStatus('', ''); _slugAvail = true; return; }
+    setSlugStatus('⏳ בודק זמינות...', 'rgba(250,248,244,.5)');
+    clearTimeout(_slugTimer);
+    _slugTimer = setTimeout(function() {
+      if (!_sbA) {
+        setSlugStatus('✅ הכתובת זמינה', '#22c55e');
+        _slugAvail = true;
+        return;
+      }
+      var cardUrl = 'https://review-me.org/' + slug;
+      _sbA.from('leads').select('id').eq('card_url', cardUrl)
+        .then(function(res) {
+          if (res.error || !res.data) {
+            setSlugStatus('✅ הכתובת זמינה', '#22c55e');
+            _slugAvail = true;
+          } else if (res.data.length > 0) {
+            setSlugStatus('❌ הכתובת תפוסה – נסו שם אחר', '#ef4444');
+            _slugAvail = false;
+          } else {
+            setSlugStatus('✅ הכתובת זמינה', '#22c55e');
+            _slugAvail = true;
+          }
+        }).catch(function() {
+          setSlugStatus('✅ הכתובת זמינה', '#22c55e');
+          _slugAvail = true;
+        });
+    }, 600);
+  }
+
+  window.onSlugInput = function(val) {
+    var clean = toSlug(val);
+    var inp = document.getElementById('fieldSlug');
+    if (inp && inp.value !== clean) {
+      /* keep cursor at end if value changed */
+      inp.value = clean;
+    }
+    checkSlugAvail(clean);
+  };
+
+  /* auto-fill slug from business name after a short delay */
+  if (bizNameP) {
+    var autoSlug = toSlug(bizNameP);
+    if (autoSlug) {
+      setTimeout(function(){
+        var inp = document.getElementById('fieldSlug');
+        if (inp && !inp.value) {
+          inp.value = autoSlug;
+          checkSlugAvail(autoSlug);
+        }
+      }, 1200);
+    }
   }
 
   /* ── Loading ── */
@@ -916,23 +1041,87 @@
     if (el) el.textContent = val.trim() || bizNameP || 'שם העסק שלכם';
   };
 
-  /* ── Submit → payment ── */
+  /* ── Submit → שמירה ל-DB + מעבר לדאשבורד (TESTING MODE) ──
+     להחזרה לייצור: החלף '/dashboard' ב-PAYMENT_URL              */
   var PAYMENT_URL = 'https://secure.cardcom.solutions/EA/EA5/izkLsqHzXE2BUeMo5vOAOg/PaymentSP';
+
   window.handleSubmit = function(){
     var name  = document.getElementById('fieldName').value.trim();
     var phone = document.getElementById('fieldPhone').value.trim();
     var email = document.getElementById('fieldEmail').value.trim();
-    if (!name || !phone || !email){
+    var slug  = document.getElementById('fieldSlug').value.trim();
+
+    /* ולידציה בסיסית */
+    if (!name || !phone || !email) {
       alert('אנא מלאו שם, טלפון ומייל כדי להמשיך');
       return;
     }
+    if (!slug) {
+      alert('אנא בחרו כתובת אישית לכרטיס שלכם (שדה הכתובת ריק)');
+      var inp = document.getElementById('fieldSlug');
+      if (inp) inp.focus();
+      return;
+    }
+    if (_slugAvail === false) {
+      alert('הכתובת שבחרתם תפוסה. אנא בחרו שם אחר.');
+      var inp = document.getElementById('fieldSlug');
+      if (inp) inp.focus();
+      return;
+    }
+
+    var cardUrl = 'https://review-me.org/' + slug;
     var btn = document.querySelector('.submit-btn');
-    btn.textContent = 'מעביר לדף תשלום מאובטח... 🔒';
+    btn.textContent = '⏳ שומר נתונים...';
     btn.disabled = true;
-    /* redirect to payment after short delay so user sees feedback */
-    setTimeout(function(){
-      window.location.href = PAYMENT_URL;
-    }, 900);
+
+    /* ── שמירה ב-localStorage ── */
+    try {
+      var gcLead = JSON.parse(localStorage.getItem('_gcLead') || '{}');
+      gcLead.slug    = slug;
+      gcLead.cardUrl = cardUrl;
+      localStorage.setItem('_gcLead', JSON.stringify(gcLead));
+
+      var leadData = {
+        name: name, bizName: bizNameP || name,
+        phone: phone, email: email,
+        slug: slug, cardUrl: cardUrl
+      };
+      localStorage.setItem('rl_lead', JSON.stringify(leadData));
+
+      var rlBrand = JSON.parse(localStorage.getItem('rl_brand') || '{}');
+      rlBrand.cardUrl = cardUrl;
+      localStorage.setItem('rl_brand', JSON.stringify(rlBrand));
+    } catch(e){}
+
+    /* ── שמירה ל-Supabase ── */
+    var gcL = {};
+    try { gcL = JSON.parse(localStorage.getItem('_gcLead') || '{}'); } catch(e){}
+
+    function _goNext() {
+      setTimeout(function(){ window.location.href = '/dashboard'; }, 300);
+    }
+
+    if (_sbA) {
+      try {
+        _sbA.rpc('upsert_lead', {
+          p_name:        name,
+          p_biz_name:    bizNameP || name,
+          p_phone:       phone,
+          p_email:       email,
+          p_card_url:    cardUrl,
+          p_upsell:      false,
+          p_brand_color: '#0b1d3a',
+          p_review_url:  gcL.brandUrl || '',
+          p_has_logo:    false
+        }).then(function(res) {
+          if (res && res.error) console.error('❌ Supabase:', res.error.message);
+          else console.log('%c✅ ליד נשמר ב-Supabase', 'color:#22c55e;font-weight:bold');
+          _goNext();
+        }).catch(function(){ _goNext(); });
+      } catch(e){ _goNext(); }
+    } else {
+      _goNext();
+    }
   };
 })();
 </script>
