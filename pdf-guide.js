@@ -256,7 +256,7 @@
       // קרדיט תחתית
       + '<div style="'+ ff +'text-align:center;margin-top:16px;'
       + 'font-size:11px;color:#94a3b8;font-weight:500;">'
-      + 'מסמך זה הוכן ע"י הדס אדלר</div>'
+      + 'המלצות לקידום פרופיל העסק בגוגל | נבנה ע"י הדס אדלר</div>'
 
       + '</div>'; // /wrapper
 
