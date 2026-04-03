@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>התשלום התקבל! | NextVoice AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --navy:#0a192f;
+      --navy-mid:#0f2744;
+      --navy-card:#112240;
+      --orange:#f9b915;
+      --orange-d:#e8a800;
+      --turquoise:#22d3ee;
+      --cream:#faf8f4;
+      --r:14px;
+      --r-lg:22px;
+    }
+    html,body{
+      min-height:100%;font-family:'Heebo',sans-serif;
+      background:var(--navy);color:var(--cream);direction:rtl;
+    }
+    body{
+      background:radial-gradient(ellipse at 50% -10%,rgba(34,211,238,.09) 0%,transparent 60%),var(--navy);
+    }
+
+    .page{
+      max-width:680px;margin:0 auto;
+      padding:48px 20px 80px;
+      display:flex;flex-direction:column;gap:28px;
+    }
+
+    /* ── Confirmation box ── */
+    .confirm-box{
+      background:linear-gradient(135deg,rgba(34,211,238,.1),rgba(249,185,21,.06));
+      border:2px solid rgba(34,211,238,.35);
+      border-radius:var(--r-lg);padding:36px 28px;
+      display:flex;flex-direction:column;align-items:center;
+      gap:16px;text-align:center;
+    }
+    .confirm-icon{
+      width:80px;height:80px;border-radius:50%;
+      background:rgba(34,211,238,.14);border:2px solid rgba(34,211,238,.4);
+      display:flex;align-items:center;justify-content:center;
+      font-size:38px;
+    }
+    .confirm-title{
+      font-size:32px;font-weight:900;color:#fff;line-height:1.25;
+    }
+    .confirm-sub{
+      font-size:17px;color:rgba(250,248,244,.65);font-weight:500;line-height:1.65;
+      max-width:460px;
+    }
+
+    /* ── WhatsApp CTA ── */
+    .wa-section{
+      background:rgba(250,248,244,.04);
+      border:1.5px solid rgba(250,248,244,.1);
+      border-radius:var(--r-lg);padding:24px 22px;
+      display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;
+    }
+    .wa-label{font-size:16px;color:rgba(250,248,244,.7);font-weight:600;line-height:1.55}
+    .wa-btn{
+      display:inline-flex;align-items:center;gap:10px;
+      background:#25d366;color:#fff;
+      border:none;border-radius:var(--r-lg);
+      padding:16px 32px;font-size:18px;font-weight:900;
+      font-family:inherit;cursor:pointer;text-decoration:none;
+      box-shadow:0 8px 32px rgba(37,211,102,.4);
+      transition:all .22s;
+    }
+    .wa-btn:hover{transform:translateY(-2px);box-shadow:0 14px 44px rgba(37,211,102,.52)}
+
+    /* ── Divider ── */
+    .styled-divider{display:flex;align-items:center;gap:14px;margin:4px 0}
+    .styled-divider::before,.styled-divider::after{
+      content:'';flex:1;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(249,185,21,.35),transparent);
+    }
+    .divider-text{
+      font-size:20px;color:var(--orange);font-weight:900;
+      letter-spacing:.5px;white-space:nowrap;
+    }
+
+    /* ── Upsell card ── */
+    .upsell-card{
+      background:linear-gradient(160deg,rgba(249,185,21,.1) 0%,rgba(249,185,21,.04) 55%,rgba(34,211,238,.04) 100%);
+      border:2px solid rgba(249,185,21,.4);
+      border-radius:var(--r-lg);padding:32px 26px 28px;
+      display:flex;flex-direction:column;gap:22px;
+    }
+    .upsell-hook{
+      font-size:13px;font-weight:900;color:var(--turquoise);
+      letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;
+    }
+    .upsell-title{
+      font-size:28px;font-weight:900;color:#fff;line-height:1.3;
+    }
+    .upsell-sub{
+      font-size:16px;color:rgba(250,248,244,.6);font-weight:500;line-height:1.65;
+    }
+    .upsell-price-row{
+      display:flex;align-items:baseline;gap:6px;
+    }
+    .upsell-price-amount{font-size:52px;font-weight:900;color:var(--orange);line-height:1}
+    .upsell-price-currency{font-size:26px;font-weight:900;color:var(--orange)}
+    .upsell-price-period{font-size:16px;color:rgba(250,248,244,.5);font-weight:600;margin-right:4px}
+    .upsell-features{
+      list-style:none;display:flex;flex-direction:column;gap:0;
+    }
+    .upsell-feature{
+      display:flex;align-items:flex-start;gap:13px;
+      padding:14px 0;border-bottom:1px solid rgba(250,248,244,.07);
+      font-size:16px;color:rgba(250,248,244,.88);font-weight:600;line-height:1.5;
+    }
+    .upsell-feature:last-child{border-bottom:none}
+    .upsell-feature-icon{
+      width:36px;height:36px;border-radius:10px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      font-size:16px;margin-top:2px;
+      background:rgba(249,185,21,.14);border:1px solid rgba(249,185,21,.28);
+    }
+
+    /* ── Upsell CTA ── */
+    .upsell-cta-btn{
+      width:100%;padding:22px 24px;
+      background:linear-gradient(135deg,var(--orange) 0%,var(--orange-d) 100%);
+      color:#0a192f;border:none;border-radius:var(--r-lg);
+      font-size:20px;font-weight:900;cursor:pointer;
+      font-family:inherit;line-height:1.3;text-align:center;
+      box-shadow:0 10px 40px rgba(249,185,21,.48),0 2px 8px rgba(249,185,21,.22);
+      transition:all .22s;
+    }
+    .upsell-cta-btn:hover{transform:translateY(-2px);box-shadow:0 18px 56px rgba(249,185,21,.6)}
+    .upsell-skip{
+      text-align:center;font-size:14px;color:rgba(250,248,244,.3);
+      cursor:pointer;font-weight:600;margin-top:4px;
+      transition:color .2s;
+    }
+    .upsell-skip:hover{color:rgba(250,248,244,.55)}
+
+    /* ── Back link ── */
+    .back-link{
+      display:inline-flex;align-items:center;gap:6px;
+      font-size:14px;color:rgba(250,248,244,.35);font-weight:600;
+      text-decoration:none;cursor:pointer;transition:color .2s;
+      width:fit-content;
+    }
+    .back-link:hover{color:var(--turquoise)}
+
+    /* ── Animations ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    .fade{animation:fadeUp .44s ease both}
+    .d1{animation-delay:.1s}
+    .d2{animation-delay:.25s}
+    .d3{animation-delay:.42s}
+    .d4{animation-delay:.60s}
+    .d5{animation-delay:.80s}
+
+    @media(max-width:500px){
+      .confirm-title{font-size:26px}
+      .upsell-title{font-size:23px}
+      .upsell-price-amount{font-size:42px}
+      .upsell-cta-btn{font-size:17px;padding:19px 20px}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <a class="back-link" href="/">← חזרה לדף הבית</a>
+
+  <!-- ── Confirmation ── -->
+  <div class="confirm-box fade d1">
+    <div class="confirm-icon">✅</div>
+    <div class="confirm-title">התשלום התקבל בהצלחה!<br>אנחנו מכינים לך את הדוח</div>
+    <div class="confirm-sub">
+      בשעה הקרובה הדוח וערכת הפרימיום יחכו לך במייל.<br>
+      כולל כרטיס ההמלצות החכם, ערכת ה-PDF עם QR, ודוח האופטימיזציה המלא.
+    </div>
+  </div>
+
+  <!-- ── WhatsApp contact ── -->
+  <div class="wa-section fade d2">
+    <div class="wa-label">
+      לא קיבלת את המייל? יש שאלה? אנחנו כאן בשבילך:<br>
+      <strong style="color:#fff">צרו איתנו קשר ישירות בוואטסאפ</strong>
+    </div>
+    <a class="wa-btn" href="https://wa.me/972524444468" target="_blank" rel="noopener">
+      <span>💬</span>
+      <span>שלחו לנו הודעה בוואטסאפ</span>
+    </a>
+  </div>
+
+  <!-- ── Transition to upsell ── -->
+  <div class="styled-divider fade d3">
+    <span class="divider-text">אבל רגע לפני שממשיכים...</span>
+  </div>
+
+  <!-- ── Upsell ── -->
+  <div class="upsell-card fade d4">
+    <div>
+      <div class="upsell-hook">הצעה בלעדית לרוכשים חדשים</div>
+      <div class="upsell-title">איך שומרים על המקום הראשון בגוגל לאורך זמן?</div>
+    </div>
+    <div class="upsell-sub">
+      כרטיס ההמלצות הוא צעד מצוין — אבל המתחרים שלך לא עוצרים.<br>
+      שירות הליווי החודשי שלנו שומר עליך בראש התוצאות, כל חודש מחדש, בלי מאמץ מצדך.
+    </div>
+
+    <div class="upsell-price-row">
+      <span class="upsell-price-amount">49</span>
+      <span class="upsell-price-currency">₪</span>
+      <span class="upsell-price-period">לחודש · ביטול בכל עת</span>
+    </div>
+
+    <ul class="upsell-features">
+      <li class="upsell-feature">
+        <div class="upsell-feature-icon">📊</div>
+        <span><strong>דוח צמיחה חודשי אוטומטי</strong> — ראו בדיוק כמה המלצות חדשות קיבלתם ואיך הדירוג שלכם משתנה לאורך הזמן</span>
+      </li>
+      <li class="upsell-feature">
+        <div class="upsell-feature-icon">🔭</div>
+        <span><strong>מעקב מתחרים שוטף</strong> — קבלו התראה כשמתחרה עולה בדירוג ודעו בדיוק מה לעשות כדי לשמור על היתרון</span>
+      </li>
+      <li class="upsell-feature">
+        <div class="upsell-feature-icon">🔔</div>
+        <span><strong>תזכורות חכמות לניהול מוניטין</strong> — תזכורות בזמן הנכון לבקש המלצות מלקוחות מרוצים ולהגיב לביקורות שליליות</span>
+      </li>
+    </ul>
+
+    <button class="upsell-cta-btn" onclick="handleUpsell()">
+      כן, אני רוצה לשמור על הדירוג שלי ב-49 ש"ח לחודש
+    </button>
+    <div class="upsell-skip" onclick="skipUpsell()">לא תודה, אני מסתדר לבד</div>
+  </div>
+
+</div>
+
+<script>
+  window.handleUpsell = function(){
+    // TODO: replace with actual upsell payment URL
+    alert('מעביר לדף תשלום הליווי החודשי...');
+  };
+
+  window.skipUpsell = function(){
+    window.location.href = '/';
+  };
+</script>
+</body>
+</html>
