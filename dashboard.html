@@ -990,24 +990,37 @@ html,body{
           <div style="background:rgba(249,185,21,.12);border:2.5px solid rgba(249,185,21,.6);
                       border-radius:16px;padding:28px 24px 24px;margin-bottom:20px;text-align:center;">
             <div style="font-size:40px;margin-bottom:14px;">🔗</div>
-            <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:14px;">הקישור לכרטיס ההמלצות שלך מוכן!</div>
+            <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:20px;">הקישור לכרטיס ההמלצות שלך מוכן!</div>
 
-            <!-- הקישור לכרטיס החכם (reviewme.co.il/card/slug) -->
-            <div style="font-size:11px;color:rgba(250,248,244,.5);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;text-align:right;">🌐 כרטיס ההמלצות החכם שלך</div>
-            <div style="font-size:13px;color:var(--gold);word-break:break-all;
-                        background:rgba(249,185,21,.08);border:1.5px solid rgba(249,185,21,.35);border-radius:8px;padding:10px 14px;
-                        margin-bottom:12px;line-height:1.55;text-align:center;font-weight:700;"
-                 id="smart-card-link-display"></div>
+            <!-- ── כרטיס חכם (עיקרי) ── -->
+            <div style="background:rgba(249,185,21,.1);border:2px solid rgba(249,185,21,.5);
+                        border-radius:12px;padding:16px 18px;margin-bottom:10px;text-align:right;">
+              <div style="font-size:11px;color:rgba(249,185,21,.7);font-weight:700;letter-spacing:.06em;margin-bottom:8px;">
+                🌐 כרטיס ההמלצות החכם שלך
+              </div>
+              <div id="smart-card-link-display"
+                   style="font-size:14px;color:var(--gold);font-weight:800;word-break:break-all;
+                          line-height:1.55;margin-bottom:14px;text-align:center;direction:ltr;"></div>
+              <button class="btn-copy-link" id="copySmartLinkBtn" onclick="copySmartLink()"
+                      style="width:100%;background:var(--gold);color:#0a192f;font-weight:800;">
+                🔗 העתק קישור לכרטיס החכם
+              </button>
+            </div>
 
-            <!-- קישור הביקורת בגוגל -->
-            <div style="font-size:11px;color:rgba(250,248,244,.5);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;text-align:right;">⭐ קישור ישיר לביקורת בגוגל</div>
-            <div style="font-size:12px;color:rgba(250,248,244,.5);word-break:break-all;
-                        background:rgba(0,0,0,.25);border-radius:8px;padding:10px 14px;
-                        margin-bottom:18px;line-height:1.55;text-align:center;"
-                 id="card-link-display"></div>
-
-            <button class="btn-copy-link" id="copyCardLinkBtn" onclick="copyCardLink()">📋 העתק קישור גוגל</button>
-            <button class="btn-copy-link" id="copySmartLinkBtn" onclick="copySmartLink()" style="margin-right:10px;background:var(--gold);color:#0a192f;">🔗 העתק כרטיס חכם</button>
+            <!-- ── קישור גוגל (משני) ── -->
+            <div style="background:rgba(0,0,0,.2);border:1px solid rgba(250,248,244,.1);
+                        border-radius:12px;padding:14px 18px;margin-bottom:18px;text-align:right;">
+              <div style="font-size:11px;color:rgba(250,248,244,.4);font-weight:700;letter-spacing:.06em;margin-bottom:8px;">
+                ⭐ קישור ישיר לביקורת בגוגל
+              </div>
+              <div id="card-link-display"
+                   style="font-size:11px;color:rgba(250,248,244,.45);word-break:break-all;
+                          line-height:1.55;margin-bottom:12px;text-align:center;direction:ltr;"></div>
+              <button class="btn-copy-link" id="copyCardLinkBtn" onclick="copyCardLink()"
+                      style="width:100%;background:rgba(250,248,244,.1);color:rgba(250,248,244,.8);font-size:13px;">
+                📋 העתק קישור גוגל
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1549,8 +1562,13 @@ function initLinkTab() {
   var linkEl        = document.getElementById('card-link-display');
   var smartLinkEl   = document.getElementById('smart-card-link-display');
 
-  /* חישוב slug מ-bizName */
-  var slug = (bizName || '').replace(/\s+/g,'-').toLowerCase().replace(/[^a-z0-9\-]/g,'') || 'card';
+  /* חישוב slug מ-bizName — תמיכה בעברית ולטינית */
+  var slug = (bizName || '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\u0590-\u05FFa-zA-Z0-9\-]/g, '')
+    .toLowerCase()
+    || 'card';
   var smartCardUrl  = 'https://reviewme.co.il/card/' + slug;
 
   if (reviewLink) {

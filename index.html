@@ -179,11 +179,12 @@ body{
   color:var(--orange);
 }
 .hero-sub{
-  font-size:clamp(16px,2.5vw,20px);color:rgba(250,248,244,.88);
-  text-align:center;max-width:600px;margin-bottom:36px;
-  line-height:1.85;
+  font-size:clamp(18px,2.8vw,22px);color:#fff;
+  text-align:center;max-width:640px;margin-bottom:36px;
+  line-height:1.9;font-weight:500;
+  text-shadow:0 1px 6px rgba(0,0,0,.35);
 }
-.hero-sub strong{color:var(--turquoise);font-weight:700}
+.hero-sub strong{color:#fff;font-weight:800}
 
 /* Social proof counter */
 .social-proof{
@@ -308,7 +309,14 @@ body{
   -webkit-overflow-scrolling:touch;
 }
 .sdrop.open{display:block;animation:slideDown .18s ease}
-.sdrop.open+#sdropClose{display:block!important}
+.sdrop{position:relative}
+#sdropClose{
+  position:absolute;left:8px;top:8px;
+  background:none;border:none;cursor:pointer;
+  font-size:17px;color:#9ab0cc;line-height:1;padding:4px 7px;
+  z-index:10;border-radius:6px;transition:background .15s, color .15s;
+}
+#sdropClose:hover{background:rgba(0,85,187,.1);color:#0055bb}
 .di{
   display:flex;align-items:center;gap:12px;
   padding:12px 18px;cursor:pointer;
@@ -1550,9 +1558,9 @@ body{
     @keyframes lc-pulse{0%,100%{box-shadow:0 0 0 0 rgba(249,185,21,.3)}60%{box-shadow:0 0 0 8px rgba(249,185,21,0)}}
   </style>
 
-  <p class="hero-sub anim anim-d2" style="color:#fff;">
+  <p class="hero-sub anim anim-d2">
     פרופיל עסק מושקע והמלצות עדכניות ומרובות הם המפתח לעלייה בדירוג בגוגל
-    ולהופעה בתוצאות החיפוש של בינה מלאכותית, כמו <strong style="color:#fff;">ChatGPT</strong> ו-<strong style="color:#fff;">Gemini</strong>.<br>
+    ולהופעה בתוצאות החיפוש של בינה מלאכותית, כמו <strong>ChatGPT</strong> ו-<strong>Gemini</strong>.<br>
     <span style="color:var(--orange);font-weight:800">בואו לבדוק היכן אתם ממוקמים ביחס למתחרים שלכם.</span>
   </p>
 
@@ -1562,13 +1570,10 @@ body{
       <input class="search-input" id="searchInput" type="text" placeholder="הקלידו את שם העסק שלכם..." autocomplete="off">
       <button class="search-go-btn" id="searchGoBtn" onclick="doSearch()">חפש עסק</button>
     </div>
-    <div class="sdrop" id="sdrop"></div>
-    <button id="sdropClose" onclick="var s=document.getElementById('sdrop');s.classList.remove('open');s.innerHTML='';this.style.display='none';" style="
-      display:none;position:absolute;left:10px;top:8px;
-      background:rgba(0,0,0,.08);border:none;cursor:pointer;
-      font-size:16px;color:#3a5278;line-height:1;padding:4px 9px;
-      z-index:20;border-radius:6px;transition:background .15s;font-weight:700;
-    " title="סגור">✕</button>
+    <div class="sdrop" id="sdrop">
+      <button id="sdropClose" onclick="document.getElementById('sdrop').classList.remove('open')" title="סגור">✕</button>
+      <div id="sdrop-results"></div>
+    </div>
     <p class="scan-desc">הסריקה המיידית כוללת: <strong>אבחון עוצמת הפרופיל</strong>, <strong>בדיקת טריות הביקורות</strong> וזיהוי חסמים ראשוניים להופעה בגוגל.</p>
   </div>
 
@@ -2440,7 +2445,7 @@ var sdrop = document.getElementById('sdrop');
 
 // הקלדה חיה — נקה תוצאות ישנות בלבד
 searchInput.addEventListener('input', function(){
-  if (!this.value.trim()) { sdrop.classList.remove('open'); sdrop.innerHTML=''; }
+  if (!this.value.trim()) { sdrop.classList.remove('open'); document.getElementById('sdrop-results').innerHTML=''; }
 });
 
 searchInput.addEventListener('keydown', function(e){ if(e.key==='Enter') doSearch(); });
@@ -2482,7 +2487,8 @@ function doSearch() {
 
 // הצגת תוצאות מ-Google Places (דרך /api/places)
 function _showPlacesDropdown(predictions) {
-  sdrop.innerHTML =
+  var res = document.getElementById('sdrop-results');
+  res.innerHTML =
     '<div style="padding:9px 16px 7px;font-size:13px;color:#1a2e4a;font-weight:800;border-bottom:1px solid #e8edf2;margin-bottom:4px">✅ נמצא עסק מתאים! לחצו עליו להמשך האבחון</div>'
     + predictions.slice(0,5).map(function(p) {
     var main = escHtml(p.structured_formatting.main_text);
@@ -2497,7 +2503,8 @@ function _showPlacesDropdown(predictions) {
 
 // הודעת "לא נמצאו תוצאות"
 function _showNoResults() {
-  sdrop.innerHTML =
+  var res = document.getElementById('sdrop-results');
+  res.innerHTML =
     '<div class="di di-empty" style="flex-direction:column;align-items:flex-start;gap:10px;padding:14px 16px;">' +
       '<div style="display:flex;align-items:center;gap:10px;">' +
         '<div class="di-icon">🔍</div>' +
@@ -2515,7 +2522,8 @@ function _showMockDropdown(q) {
   var ql = q.toLowerCase();
   var matches = MOCK.filter(function(b){ return b.name.includes(ql)||b.city.includes(ql)||b.type.includes(ql); });
   if (!matches.length) matches = MOCK;
-  sdrop.innerHTML = matches.slice(0,5).map(function(b){
+  var res = document.getElementById('sdrop-results');
+  res.innerHTML = matches.slice(0,5).map(function(b){
     return '<div class="di" onclick="selectBiz(\''+b.id+'\')">'
       +'<div class="di-icon">'+b.emoji+'</div>'
       +'<div><div class="di-main">'+b.name+'</div><div class="di-sub">'+b.city+' · ★'+b.rating+' ('+b.count+' ביקורות)</div></div>'
