@@ -87,12 +87,13 @@
      בניית ה-HTML לצילום
   ═══════════════════════════════════════ */
   function buildTemplate(){
-    var navy     = '#0a192f';
-    var gold     = '#f9b915';
-    var light    = '#f1f5f9';
-    var slate    = '#374151';
-    var restBg   = '#e8edf3'; /* שישי/שבת */
-    var ff       = 'font-family:Heebo,Arial,sans-serif;';
+    var navy    = '#0a192f';
+    var gold    = '#f9b915';
+    var light   = '#f1f5f9';   /* אפור-כחלחל בהיר — כותרות ימים */
+    var lighter = '#f8fafc';   /* לבן-אפרפר — שורות זוגיות */
+    var slate   = '#374151';
+    var restBg  = '#e2e8f0';   /* אפור-כחלחל לימי מנוחה */
+    var ff      = 'font-family:Heebo,Arial,sans-serif;';
 
     /* ── עטיפה ── */
     var html =
@@ -113,32 +114,31 @@
 
     /* ── טבלת לוח שבועי ──
        8 עמודות: תווית שבוע + 7 ימי שבוע (א-ז)
-       כל תא-משימה: רקע נייבי + כותרת זהב + טקסט לבן
-       שישי/שבת: עמוד מנוחה (אפור)
+       כותרות ימים: רקע אפור בהיר + טקסט נייבי (רגועים לעין)
+       תאי משימה: נייבי + כתב זהב
+       שישי/שבת: אפור כהה יותר — "יום מנוחה"
     */
 
-    /* גובה כותרת עמודות */
-    var HDR_H  = '34px';
-    /* גובה שורת שבוע */
-    var ROW_H  = '90px';
-    /* רוחב תווית שבוע */
-    var WK_W   = '46px';
+    var HDR_H  = '36px';   /* גובה כותרת ימים */
+    var ROW_H  = '90px';   /* גובה שורת שבוע */
+    var WK_W   = '58px';   /* רוחב עמודת שבוע */
 
     html += '<table style="width:100%;border-collapse:separate;border-spacing:3px;'
       + 'margin-bottom:18px;">';
 
-    /* שורת כותרת */
+    /* שורת כותרת ימים */
     html += '<tr>';
-    /* תא ריק מעל תווית השבוע */
-    html += '<th style="width:'+ WK_W +';height:'+ HDR_H +';background:'+ light +';'
-      + 'border-radius:6px;"></th>';
-    /* ימי השבוע */
+    /* תא ריק מעל עמודת השבוע */
+    html += '<th style="width:'+ WK_W +';height:'+ HDR_H +';"></th>';
+
     DAY_LABELS.forEach(function(day, idx){
       var isFri = idx === 5, isSat = idx === 6, isRest = isFri || isSat;
-      var bg    = isRest ? restBg : navy;
-      var color = isRest ? '#94a3b8' : gold;
-      html += '<th style="height:'+ HDR_H +';background:'+ bg +';border-radius:6px;'
-        + ff +'font-size:12px;font-weight:900;color:'+ color +';text-align:center;">'
+      /* ימי עבודה: אפור בהיר + נייבי | ימי מנוחה: אפור כהה + אפור */
+      var bg    = isRest ? restBg : light;
+      var color = isRest ? '#94a3b8' : navy;
+      var fw    = isRest ? '600' : '800';
+      html += '<th style="height:'+ HDR_H +';background:'+ bg +';border-radius:7px 7px 0 0;'
+        + ff +'font-size:12px;font-weight:'+ fw +';color:'+ color +';text-align:center;">'
         + day +'</th>';
     });
     html += '</tr>';
@@ -147,13 +147,12 @@
     WEEKS.forEach(function(week){
       html += '<tr>';
 
-      /* תווית שבוע */
+      /* תווית שבוע — כפתור קטן מעוגל, ללא writing-mode */
       html += '<td style="width:'+ WK_W +';height:'+ ROW_H +';background:'+ navy +';'
-        + 'border-radius:7px;text-align:center;vertical-align:middle;'
-        + 'padding:4px 3px;">'
+        + 'border-radius:7px;text-align:center;vertical-align:middle;padding:6px 4px;">'
         + '<div style="'+ ff +'font-size:10px;font-weight:900;color:'+ gold
-        + ';writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);">'
-        + week.label +'</div>'
+        + ';line-height:1.4;white-space:nowrap;">'
+        + week.label.replace(' ','<br>') +'</div>'
         + '</td>';
 
       /* 7 ימים */
@@ -161,25 +160,22 @@
         var isFri = idx === 5, isSat = idx === 6, isRest = isFri || isSat;
 
         if (isRest){
-          /* שישי/שבת — מנוחה */
           html += '<td style="height:'+ ROW_H +';background:'+ restBg +';'
-            + 'border-radius:7px;text-align:center;vertical-align:middle;">'
+            + 'border-radius:0 0 7px 7px;text-align:center;vertical-align:middle;">'
             + '<div style="'+ ff +'font-size:10px;color:#94a3b8;font-weight:600;">'
             + (isSat ? 'שבת שלום' : 'יום מנוחה')
             + '</div></td>';
         } else if (task){
-          /* יום משימה */
           html += '<td style="height:'+ ROW_H +';background:'+ navy +';'
-            + 'border-radius:7px;padding:9px 8px 7px;vertical-align:top;'
+            + 'border-radius:0 0 7px 7px;padding:9px 8px 7px;vertical-align:top;'
             + 'box-sizing:border-box;">'
             + '<div style="'+ ff +'font-size:9.5px;font-weight:800;color:'+ gold
             + ';line-height:1.38;word-break:break-word;">'
             + task.label +'</div>'
             + '</td>';
         } else {
-          /* תא ריק (לא אמור לקרות עם ה-data הנוכחי) */
           html += '<td style="height:'+ ROW_H +';background:'+ light
-            + ';border-radius:7px;"></td>';
+            + ';border-radius:0 0 7px 7px;"></td>';
         }
       });
 
@@ -212,20 +208,19 @@
       + 'font-weight:900;color:'+ navy +';border-top:1px solid #e2e8f0;padding-top:17px;">'
       + 'פירוט המשימות השבועיות</div>';
 
-    /* ── כרטיסי פירוט — כל 20 משימות ── */
+    /* ── כרטיסי פירוט ── */
     var taskIdx = 0;
     WEEKS.forEach(function(week, wi){
-      /* כותרת שבוע בתוך הפירוט */
       html +=
         '<div style="'+ ff +'font-size:12px;font-weight:900;color:'+ gold
-        + ';letter-spacing:.8px;text-transform:uppercase;margin:'
+        + ';letter-spacing:.8px;margin:'
         + (wi === 0 ? '0' : '16px') +' 0 8px;padding-bottom:4px;'
         + 'border-bottom:1px solid rgba(249,185,21,.3);">'
         + week.label +'</div>';
 
       week.tasks.forEach(function(task, di){
         if (!task) return;
-        var bg = (taskIdx % 2 === 0) ? '#f8fafc' : '#ffffff';
+        var bg = (taskIdx % 2 === 0) ? lighter : '#ffffff';
         taskIdx++;
 
         html +=
@@ -253,10 +248,8 @@
       + '<div style="'+ ff +'font-size:12px;color:#64748b;line-height:1.6;">'
       + '5 משימות בשבוע = 20 פעולות שיווקיות לחודש.</div>'
       + '</div>'
-
       + '<div style="'+ ff +'text-align:center;margin-top:14px;font-size:11px;'
       + 'color:#94a3b8;font-weight:500;">'+ BRAND +'</div>'
-
       + '</div>'; /* /wrapper */
 
     return html;

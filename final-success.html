@@ -152,6 +152,8 @@
     .d3{animation-delay:.50s}
     .d4{animation-delay:.70s}
     .d5{animation-delay:.90s}
+    .d6{animation-delay:1.10s}
+    .d7{animation-delay:1.28s}
 
     @media(max-width:500px){
       .hero-title{font-size:27px}
@@ -196,7 +198,7 @@
     </div>
     <div class="delivery-item">
       <div class="delivery-icon">🎁</div>
-      <div class="delivery-text"><strong>בונוסים בלעדיים</strong> — מדריך 15 שיטות להשגת המלצות + תבניות WhatsApp מוכנות לשימוש</div>
+      <div class="delivery-text"><strong>בונוסים בלעדיים</strong> — מדריך 30 שיטות + תוכנית עבודה שבועית + בנק 20 הודעות וואטסאפ מוכנות לשליחה</div>
     </div>
   </div>
 
@@ -234,8 +236,22 @@
     </button>
   </div>
 
+  <!-- ── Messages download ── -->
+  <div class="support-card fade d6" style="border-color:rgba(37,211,102,.28);">
+    <div class="support-title" style="font-size:18px;">💬 בנק הודעות הווטסאפ מוכן</div>
+    <div class="support-sub">20 נוסחים מנצחים לבקשת המלצה — מחולקים לקטגוריות, מוכנים להעתקה ושליחה</div>
+    <button id="messagesDownloadBtn" onclick="downloadMessages()"
+      style="background:linear-gradient(135deg,#25d366,#128c3e);color:#fff;
+             border:none;border-radius:14px;padding:17px 32px;
+             font-family:Heebo,sans-serif;font-size:18px;font-weight:900;
+             cursor:pointer;box-shadow:0 10px 32px rgba(37,211,102,.42);
+             transition:all .22s;width:100%;">
+      💬 הורד את בנק הודעות הווטסאפ
+    </button>
+  </div>
+
   <!-- ── Support ── -->
-  <div class="support-card fade d6">
+  <div class="support-card fade d7">
     <div class="support-title">לא קיבלת את המייל? יש לך שאלה נוספת?<br>אנחנו כאן בשבילך! 💪</div>
     <div class="support-sub">
       שלחו לנו הודעה ישירה בוואטסאפ ונחזור אליכם בהקדם האפשרי
@@ -250,6 +266,7 @@
 
 <script src="/pdf-guide.js"></script>
 <script src="/pdf-calendar.js"></script>
+<script src="/pdf-messages.js"></script>
 
 <!-- ══ Confetti ══ -->
 <script>
