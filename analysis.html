@@ -83,10 +83,12 @@
        MAIN PAGE
     ══════════════════════════════════ */
     #mainPage{
-      min-height:100vh;max-width:640px;margin:0 auto;
+      min-height:100vh;max-width:900px;margin:0 auto;
       padding:28px 16px 80px;
       display:none;flex-direction:column;gap:20px;
     }
+    /* inner content constraint for single-col sections */
+    .narrow{max-width:640px;margin-left:auto;margin-right:auto;width:100%}
 
     .back-link{
       display:inline-flex;align-items:center;gap:6px;
@@ -232,8 +234,8 @@
     .pkg-title{font-size:26px;font-weight:900;color:#fff;line-height:1.3;max-width:240px}
     .pkg-price{display:flex;flex-direction:column;align-items:flex-start}
     .price-old{
-      font-size:15px;color:rgba(250,248,244,.3);font-weight:700;
-      text-decoration:line-through;margin-bottom:2px;
+      font-size:20px;color:rgba(255,255,255,.55);font-weight:700;
+      text-decoration:line-through;margin-bottom:4px;
     }
     .price-row{display:flex;align-items:baseline;gap:3px}
     .price-currency{font-size:24px;font-weight:900;color:var(--orange)}
@@ -254,14 +256,14 @@
     }
     .pkg-icon.bonus{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.25)}
     .pkg-bonus-sep{
-      display:flex;align-items:center;gap:12px;padding:10px 0 6px;
+      display:flex;align-items:center;gap:14px;padding:14px 0 8px;
     }
     .pkg-bonus-sep::before,.pkg-bonus-sep::after{
-      content:'';flex:1;height:1px;background:rgba(34,211,238,.2);
+      content:'';flex:1;height:1.5px;background:rgba(34,211,238,.25);
     }
     .bonus-label{
-      font-size:12px;font-weight:900;color:var(--turquoise);
-      letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;
+      font-size:18px;font-weight:900;color:var(--turquoise);
+      letter-spacing:.3px;white-space:nowrap;
     }
 
     /* CTA */
@@ -411,6 +413,23 @@
     }
     .submit-btn:hover{transform:translateY(-2px);box-shadow:0 14px 46px rgba(249,185,21,.52)}
 
+    /* Competitors heading — centered, authoritative */
+    .comp-heading{text-align:center;margin-bottom:18px}
+    .comp-title{font-size:32px}
+    .comp-sub{font-size:20px;font-weight:600;margin-bottom:0}
+
+    /* Desktop 2-column build layout */
+    .build-cols{display:flex;gap:28px;align-items:flex-start}
+    .build-col-form{flex:1;min-width:0;display:flex;flex-direction:column;gap:20px}
+    .build-col-preview{
+      width:320px;flex-shrink:0;
+      position:sticky;top:24px;
+    }
+    @media(max-width:740px){
+      .build-cols{flex-direction:column}
+      .build-col-preview{width:100%;position:static}
+    }
+
     /* Animations */
     @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
     .fade{animation:fadeUp .44s ease both}
@@ -455,10 +474,12 @@
 <!-- ════ MAIN PAGE ════ -->
 <div id="mainPage">
 
+  <div class="narrow">
   <a class="back-link" href="/" onclick="history.length>1?(history.back(),false):true">← חזרה לדף הבית</a>
+  </div>
 
   <!-- Business header -->
-  <div class="biz-header fade">
+  <div class="biz-header fade narrow">
     <div class="biz-tag">📊 ניתוח עסקי מפורט</div>
     <div class="biz-name" id="bizName">—</div>
     <div class="biz-meta">
@@ -471,7 +492,7 @@
   </div>
 
   <!-- Missing fields -->
-  <div id="missingSection" style="display:none">
+  <div id="missingSection" style="display:none" class="narrow">
     <div class="sec-label">ממצאים קריטיים</div>
     <div class="sec-title">🔎 חסרים שדות קריטיים בפרופיל</div>
     <div class="sec-sub">גוגל מעניש עסקים עם פרופיל חלקי - הם יורדים בדירוג</div>
@@ -485,15 +506,17 @@
   </div>
 
   <!-- All good -->
-  <div id="allGoodSection" style="display:none" class="fade d1">
+  <div id="allGoodSection" style="display:none" class="fade d1 narrow">
     <div class="good-card">✅ פרופיל הגוגל שלך מלא ומעודכן - המשיכו לשמור על זה!</div>
   </div>
 
   <!-- Competitors -->
-  <div id="compSection" style="display:none">
-    <div class="sec-label">השוואת מתחרים</div>
-    <div class="sec-title">🏆 מתחרים מובילים באזורכם</div>
-    <div class="sec-sub">מי מוביל בגוגל ומי נשאר מאחור?</div>
+  <div id="compSection" style="display:none" class="narrow">
+    <div class="comp-heading">
+      <div class="sec-label">השוואת מתחרים</div>
+      <div class="sec-title comp-title">🏆 מתחרים מובילים באזורכם</div>
+      <div class="sec-sub comp-sub">מי מוביל בגוגל ומי נשאר מאחור?</div>
+    </div>
     <div class="comp-card fade d2">
       <table class="comp-table">
         <thead><tr><th>שם העסק</th><th>דירוג</th><th>ביקורות</th></tr></thead>
@@ -503,19 +526,19 @@
   </div>
 
   <!-- AI insight -->
-  <div class="ai-card fade d3">
+  <div class="ai-card fade d3 narrow">
     <div class="ai-badge">🤖 תובנת בינה מלאכותית</div>
     <div class="ai-main" id="aiMainText">במצב הנוכחי, מודלי AI לא ימליצו עליך כבחירה ראשונה</div>
     <div class="ai-sub">ChatGPT, Gemini ו-Perplexity מדרגים עסקים לפי אמינות דיגיטלית: דירוג גוגל, כמות ביקורות ועדכניות הפרופיל. כדי להופיע כהמלצה הראשונה שמודלי AI נותנים - נדרשת אופטימיזציה אקטיבית ומתמשכת.</div>
   </div>
 
   <!-- Divider -->
-  <div class="styled-divider fade d4">
+  <div class="styled-divider fade d4 narrow">
     <span class="divider-text">הפתרון שלנו</span>
   </div>
 
   <!-- Package -->
-  <div class="package-card fade d5">
+  <div class="package-card fade d5 narrow">
     <div class="pkg-top">
       <div class="pkg-title">מה תקבלו בחבילה המקצועית?</div>
       <div class="pkg-price">
@@ -556,7 +579,7 @@
   </div>
 
   <!-- CTA -->
-  <div class="cta-section fade d6">
+  <div class="cta-section fade d6 narrow">
     <button class="mega-btn" id="mainCTA" onclick="handleCTA()">כן, אני רוצה להשתלט על המקום הראשון!</button>
     <div class="cta-trust">
       <span>✓ תוצאות מובטחות או החזר כספי</span>
@@ -566,67 +589,75 @@
 
   <!-- ════ BUILD SECTION ════ -->
   <div id="buildSection">
-    <div class="build-heading">
+    <div class="build-heading narrow">
       <div class="build-tag">שלב אחרון</div>
       <div class="build-title">בואו נבנה את הכרטיס שלכם</div>
       <div class="build-sub">מלאו את הפרטים ובחרו את הסגנון - הכרטיס יהיה מוכן בשעה הקרובה</div>
     </div>
 
-    <!-- Form -->
-    <div class="build-form">
-      <div class="form-group">
-        <label class="form-label">שם מלא</label>
-        <input class="form-input" id="fieldName" type="text" placeholder="ישראל ישראלי" autocomplete="name">
-      </div>
-      <div class="form-group">
-        <label class="form-label">טלפון</label>
-        <input class="form-input" id="fieldPhone" type="tel" placeholder="050-000-0000" autocomplete="tel">
-      </div>
-      <div class="form-group">
-        <label class="form-label">כתובת מייל</label>
-        <input class="form-input" id="fieldEmail" type="email" placeholder="you@email.com" autocomplete="email" style="direction:ltr;text-align:right">
-      </div>
+    <!-- 2-column layout: form + live preview -->
+    <div class="build-cols">
 
-      <!-- Logo upload -->
-      <div class="form-group">
-        <label class="form-label">לוגו העסק (אופציונלי)</label>
-        <div class="logo-upload-area" id="logoArea">
-          <input type="file" accept="image/*" id="logoInput" onchange="handleLogoUpload(this)">
-          <div class="logo-upload-icon" id="logoIcon">🖼️</div>
-          <img class="logo-preview-img" id="logoPreviewImg" alt="לוגו">
-          <div class="logo-upload-text" id="logoText">לחצו להעלאת לוגו</div>
-        </div>
-      </div>
+      <!-- LEFT: Form + submit -->
+      <div class="build-col-form">
+        <div class="build-form">
+          <div class="form-group">
+            <label class="form-label">שם מלא</label>
+            <input class="form-input" id="fieldName" type="text" placeholder="ישראל ישראלי" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">טלפון</label>
+            <input class="form-input" id="fieldPhone" type="tel" placeholder="050-000-0000" autocomplete="tel">
+          </div>
+          <div class="form-group">
+            <label class="form-label">כתובת מייל</label>
+            <input class="form-input" id="fieldEmail" type="email" placeholder="you@email.com" autocomplete="email" style="direction:ltr;text-align:right">
+          </div>
 
-      <!-- Color picker -->
-      <div class="form-group">
-        <label class="form-label">צבע הכרטיס</label>
-        <div class="color-picker-row">
-          <div class="color-swatches" id="swatchRow"></div>
-          <div class="color-custom-wrap">
-            <input type="color" id="customColor" value="#0a192f" oninput="setColor(this.value,null)">
-            <span class="color-custom-label">צבע מותאם</span>
+          <!-- Logo upload -->
+          <div class="form-group">
+            <label class="form-label">העלאת לוגו העסק או תמונת פרופיל</label>
+            <div class="logo-upload-area" id="logoArea">
+              <input type="file" accept="image/*" id="logoInput" onchange="handleLogoUpload(this)">
+              <div class="logo-upload-icon" id="logoIcon">🖼️</div>
+              <img class="logo-preview-img" id="logoPreviewImg" alt="לוגו">
+              <div class="logo-upload-text" id="logoText">לחצו לבחירת קובץ תמונה</div>
+            </div>
+          </div>
+
+          <!-- Color picker -->
+          <div class="form-group">
+            <label class="form-label">צבע הכרטיס</label>
+            <div class="color-picker-row">
+              <div class="color-swatches" id="swatchRow"></div>
+              <div class="color-custom-wrap">
+                <input type="color" id="customColor" value="#0a192f" oninput="setColor(this.value,null)">
+                <span class="color-custom-label">צבע מותאם</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Live preview -->
-    <div class="preview-wrap">
-      <div class="preview-label">תצוגה מקדימה של הכרטיס</div>
-      <div class="card-preview" id="cardPreview">
-        <div class="card-preview-logo" id="previewLogoWrap">
-          <img id="previewLogoImg" alt="לוגו">
-          <span id="previewLogoEmoji">🏢</span>
+        <button class="submit-btn" onclick="handleSubmit()">שלחו - ואנחנו נבנה את הכרטיס!</button>
+      </div><!-- /build-col-form -->
+
+      <!-- RIGHT: Live preview (sticky on desktop) -->
+      <div class="build-col-preview">
+        <div class="preview-wrap">
+          <div class="preview-label">תצוגה מקדימה חיה של הכרטיס</div>
+          <div class="card-preview" id="cardPreview">
+            <div class="card-preview-logo" id="previewLogoWrap">
+              <img id="previewLogoImg" alt="לוגו">
+              <span id="previewLogoEmoji">🏢</span>
+            </div>
+            <div class="card-preview-name" id="previewBizName">שם העסק שלכם</div>
+            <div class="card-preview-stars">★★★★★</div>
+            <div class="card-preview-btn">השאירו לנו המלצה בגוגל</div>
+          </div>
         </div>
-        <div class="card-preview-name" id="previewBizName">שם העסק שלכם</div>
-        <div class="card-preview-stars">★★★★★</div>
-        <div class="card-preview-btn">השאירו לנו המלצה בגוגל</div>
-      </div>
-    </div>
+      </div><!-- /build-col-preview -->
 
-    <!-- Submit -->
-    <button class="submit-btn" onclick="handleSubmit()">שלחו - ואנחנו נבנה את הכרטיס!</button>
+    </div><!-- /build-cols -->
   </div><!-- /buildSection -->
 
 </div><!-- /mainPage -->
