@@ -11,13 +11,12 @@
     :root{
       --navy:#0a192f;
       --navy-mid:#0f2744;
+      --navy-card:#112240;
       --orange:#f9b915;
       --orange-d:#e8a800;
       --turquoise:#22d3ee;
       --cream:#faf8f4;
-      --green:#4ade80;
-      --purple:#a78bfa;
-      --red:#f87171;
+      --gold-dim:rgba(249,185,21,.22);
       --r:14px;
       --r-lg:22px;
     }
@@ -26,278 +25,412 @@
       background:var(--navy);color:var(--cream);direction:rtl;
     }
 
-    /* ════════════════════════════════
+    /* ══════════════════════════════════
        LOADING SCREEN
-    ════════════════════════════════ */
+    ══════════════════════════════════ */
     #loadingScreen{
       min-height:100vh;display:flex;flex-direction:column;
       align-items:center;justify-content:center;
-      padding:48px 24px;gap:22px;
-      background:radial-gradient(ellipse at 50% 0%,rgba(34,211,238,.08) 0%,transparent 65%);
+      padding:48px 24px;gap:26px;
+      background:radial-gradient(ellipse at 50% 0%,rgba(34,211,238,.07) 0%,transparent 65%);
     }
     .load-logo{
       font-size:13px;font-weight:800;color:var(--turquoise);
-      letter-spacing:2px;text-transform:uppercase;opacity:.75;
+      letter-spacing:2.5px;text-transform:uppercase;opacity:.7;
     }
     .load-biz{
-      font-size:26px;font-weight:900;color:#fff;
-      text-align:center;max-width:340px;line-height:1.3;
-      min-height:36px;
+      font-size:30px;font-weight:900;color:#fff;
+      text-align:center;max-width:380px;line-height:1.25;min-height:40px;
     }
     .load-subtitle{
-      font-size:14.5px;color:rgba(250,248,244,.55);text-align:center;
+      font-size:16px;color:rgba(250,248,244,.5);text-align:center;font-weight:500;
     }
     .progress-track{
-      width:100%;max-width:360px;height:7px;
+      width:100%;max-width:400px;height:8px;
       background:rgba(250,248,244,.1);border-radius:100px;overflow:hidden;
     }
     .progress-fill{
       height:100%;width:0%;border-radius:100px;
       background:linear-gradient(90deg,var(--turquoise),var(--orange));
-      transition:width .18s ease;
+      transition:width .25s ease;
     }
     .load-msg{
-      font-size:14px;color:rgba(250,248,244,.65);text-align:center;
-      max-width:310px;line-height:1.55;min-height:46px;
-      transition:opacity .3s ease;
+      font-size:20px;font-weight:700;
+      color:rgba(250,248,244,.82);
+      text-align:center;max-width:400px;
+      line-height:1.55;min-height:66px;
+      transition:opacity .35s ease;
     }
     .load-steps{
-      display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
-      margin-top:4px;
+      display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:6px;
     }
     .load-step{
-      display:flex;align-items:center;gap:7px;
-      font-size:13px;color:rgba(250,248,244,.35);font-weight:600;
-      transition:color .4s ease;
+      display:flex;align-items:center;gap:8px;
+      font-size:14px;color:rgba(250,248,244,.3);font-weight:700;
+      transition:color .45s ease;
     }
     .load-step.active{color:var(--turquoise)}
-    .load-step.done  {color:var(--green)}
+    .load-step.done  {color:var(--orange)}
     .load-step-dot{
-      width:9px;height:9px;border-radius:50%;
-      background:rgba(250,248,244,.18);flex-shrink:0;
-      transition:background .4s ease;
+      width:10px;height:10px;border-radius:50%;
+      background:rgba(250,248,244,.15);flex-shrink:0;
+      transition:background .45s ease;
     }
     .load-step.active .load-step-dot{background:var(--turquoise)}
-    .load-step.done  .load-step-dot{background:var(--green)}
+    .load-step.done  .load-step-dot{background:var(--orange)}
 
-    /* ════════════════════════════════
+    /* ══════════════════════════════════
        MAIN PAGE
-    ════════════════════════════════ */
+    ══════════════════════════════════ */
     #mainPage{
-      min-height:100vh;max-width:620px;margin:0 auto;
-      padding:28px 16px 72px;
-      display:none;flex-direction:column;gap:18px;
+      min-height:100vh;max-width:640px;margin:0 auto;
+      padding:28px 16px 80px;
+      display:none;flex-direction:column;gap:20px;
     }
 
-    /* Back link */
     .back-link{
       display:inline-flex;align-items:center;gap:6px;
-      font-size:13px;color:rgba(250,248,244,.45);font-weight:600;
-      text-decoration:none;cursor:pointer;transition:color .2s;
-      width:fit-content;
+      font-size:14px;color:rgba(250,248,244,.4);font-weight:600;
+      text-decoration:none;cursor:pointer;transition:color .2s;width:fit-content;
     }
     .back-link:hover{color:var(--turquoise)}
 
     /* Business header */
     .biz-header{
       background:linear-gradient(135deg,rgba(34,211,238,.09),rgba(249,185,21,.06));
-      border:1.5px solid rgba(34,211,238,.28);
-      border-radius:var(--r-lg);padding:26px 22px 22px;
+      border:1.5px solid rgba(34,211,238,.25);
+      border-radius:var(--r-lg);padding:28px 24px 24px;
     }
     .biz-tag{
-      font-size:11px;font-weight:800;color:var(--turquoise);
-      letter-spacing:.9px;text-transform:uppercase;margin-bottom:10px;
-      display:flex;align-items:center;gap:6px;
+      font-size:12px;font-weight:800;color:var(--turquoise);
+      letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;
     }
-    .biz-name{font-size:26px;font-weight:900;color:#fff;line-height:1.25;margin-bottom:14px}
-    .biz-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-    .biz-rating-big{font-size:42px;font-weight:900;color:var(--orange);line-height:1}
-    .biz-meta-right{display:flex;flex-direction:column;gap:3px}
-    .biz-stars{font-size:20px;color:var(--orange);letter-spacing:1px}
-    .biz-reviews{font-size:14px;color:rgba(250,248,244,.6);font-weight:600}
+    .biz-name{font-size:32px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:16px}
+    .biz-meta{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+    .biz-rating-big{font-size:48px;font-weight:900;color:var(--orange);line-height:1}
+    .biz-meta-right{display:flex;flex-direction:column;gap:4px}
+    .biz-stars{font-size:22px;color:var(--orange);letter-spacing:1px}
+    .biz-reviews{font-size:16px;color:rgba(250,248,244,.6);font-weight:600}
 
-    /* Section label */
+    /* Section labels */
     .sec-label{
-      font-size:11px;font-weight:800;color:rgba(250,248,244,.45);
-      letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;
+      font-size:12px;font-weight:800;color:rgba(250,248,244,.4);
+      letter-spacing:.9px;text-transform:uppercase;margin-bottom:8px;
     }
-    .sec-title{font-size:19px;font-weight:900;color:#fff;line-height:1.3;margin-bottom:4px}
-    .sec-sub{font-size:13.5px;color:rgba(250,248,244,.55);font-weight:500;margin-bottom:12px}
+    .sec-title{font-size:24px;font-weight:900;color:#fff;line-height:1.3;margin-bottom:6px}
+    .sec-sub{font-size:16px;color:rgba(250,248,244,.55);font-weight:500;margin-bottom:14px;line-height:1.5}
 
     /* Missing fields */
     .warning-card{
-      background:rgba(248,113,113,.08);
-      border:1.5px solid rgba(248,113,113,.3);
-      border-radius:var(--r-lg);padding:22px 20px;
+      background:rgba(249,185,21,.07);
+      border:1.5px solid rgba(249,185,21,.3);
+      border-radius:var(--r-lg);padding:24px 22px;
     }
     .warning-header{
-      display:flex;align-items:center;gap:10px;
-      margin-bottom:16px;
+      display:flex;align-items:center;gap:12px;margin-bottom:18px;
     }
     .warning-icon{
-      width:40px;height:40px;border-radius:50%;
-      background:rgba(248,113,113,.15);border:1.5px solid rgba(248,113,113,.35);
-      display:flex;align-items:center;justify-content:center;
-      font-size:20px;flex-shrink:0;
+      width:44px;height:44px;border-radius:50%;flex-shrink:0;
+      background:rgba(249,185,21,.15);border:1.5px solid rgba(249,185,21,.35);
+      display:flex;align-items:center;justify-content:center;font-size:22px;
     }
-    .warning-title{font-size:15.5px;font-weight:800;color:#fca5a5;line-height:1.3}
-    .warning-list{display:flex;flex-direction:column;gap:10px}
+    .warning-title{font-size:18px;font-weight:800;color:var(--orange);line-height:1.3}
+    .warning-list{display:flex;flex-direction:column;gap:11px}
     .warning-item{
-      display:flex;align-items:center;gap:10px;
-      font-size:14.5px;color:rgba(250,248,244,.88);font-weight:600;
-      padding:10px 14px;background:rgba(248,113,113,.06);
-      border-radius:10px;border-right:3px solid rgba(248,113,113,.5);
+      display:flex;align-items:center;gap:12px;
+      font-size:17px;color:rgba(250,248,244,.88);font-weight:600;
+      padding:12px 16px;
+      background:rgba(249,185,21,.06);
+      border-radius:12px;
+      border-right:3px solid rgba(249,185,21,.5);
     }
-    .warning-dot{width:8px;height:8px;border-radius:50%;background:#f87171;flex-shrink:0}
+    .warning-dot{width:9px;height:9px;border-radius:50%;background:var(--orange);flex-shrink:0}
 
     /* All good */
     .good-card{
-      background:rgba(74,222,128,.08);
-      border:1.5px solid rgba(74,222,128,.28);
-      border-radius:var(--r-lg);padding:18px 20px;
+      background:rgba(34,211,238,.07);
+      border:1.5px solid rgba(34,211,238,.25);
+      border-radius:var(--r-lg);padding:20px 22px;
       display:flex;align-items:center;gap:12px;
-      font-size:15px;font-weight:700;color:#86efac;
-      line-height:1.4;
+      font-size:17px;font-weight:700;color:var(--turquoise);line-height:1.4;
     }
 
-    /* Competitors table */
+    /* Competitors */
     .comp-card{
-      background:rgba(250,248,244,.04);
+      background:var(--navy-card);
       border:1.5px solid rgba(250,248,244,.1);
       border-radius:var(--r-lg);overflow:hidden;
     }
     .comp-table{width:100%;border-collapse:collapse}
     .comp-table thead tr{background:rgba(250,248,244,.04)}
     .comp-table th{
-      font-size:11.5px;color:rgba(250,248,244,.45);font-weight:800;
+      font-size:12px;color:rgba(250,248,244,.4);font-weight:800;
       letter-spacing:.5px;text-transform:uppercase;
-      padding:13px 16px;text-align:right;border-bottom:1px solid rgba(250,248,244,.08);
+      padding:14px 18px;text-align:right;
+      border-bottom:1px solid rgba(250,248,244,.08);
     }
     .comp-table td{
-      padding:14px 16px;font-size:14px;color:rgba(250,248,244,.82);
-      border-top:1px solid rgba(250,248,244,.05);vertical-align:middle;
+      padding:16px 18px;font-size:16px;
+      color:rgba(250,248,244,.82);
+      border-top:1px solid rgba(250,248,244,.05);
+      vertical-align:middle;
     }
     .comp-table tr.you-row td{
-      background:rgba(249,185,21,.06);color:#fff;font-weight:700;
+      background:rgba(249,185,21,.07);color:#fff;font-weight:700;
     }
     .comp-name{font-weight:700;line-height:1.3}
     .you-tag{
       display:inline-block;background:var(--orange);color:#0a192f;
-      font-size:10px;font-weight:900;border-radius:100px;
-      padding:1px 8px;margin-left:6px;vertical-align:middle;
+      font-size:11px;font-weight:900;border-radius:100px;
+      padding:2px 9px;margin-left:7px;vertical-align:middle;
     }
     .r-badge{
       display:inline-flex;align-items:center;gap:4px;
-      padding:4px 11px;border-radius:100px;
-      font-size:13px;font-weight:800;white-space:nowrap;
+      padding:5px 13px;border-radius:100px;
+      font-size:14px;font-weight:800;white-space:nowrap;
     }
-    .r-badge.high{background:rgba(74,222,128,.15);color:#4ade80}
-    .r-badge.mid {background:rgba(249,185,21,.15);color:var(--orange)}
-    .r-badge.low {background:rgba(248,113,113,.15);color:#f87171}
+    .r-badge.high{background:rgba(249,185,21,.16);color:var(--orange)}
+    .r-badge.mid {background:rgba(249,185,21,.1); color:rgba(249,185,21,.8)}
+    .r-badge.low {background:rgba(250,248,244,.07);color:rgba(250,248,244,.5)}
 
     /* AI insight */
     .ai-card{
-      background:linear-gradient(135deg,rgba(139,92,246,.13),rgba(34,211,238,.06));
-      border:1.5px solid rgba(139,92,246,.3);
-      border-radius:var(--r-lg);padding:26px 22px;
-      display:flex;flex-direction:column;gap:12px;
+      background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(249,185,21,.05));
+      border:1.5px solid rgba(34,211,238,.22);
+      border-radius:var(--r-lg);padding:28px 24px;
+      display:flex;flex-direction:column;gap:14px;
     }
     .ai-badge{
-      display:inline-flex;align-items:center;gap:7px;
-      background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.38);
-      color:#c4b5fd;border-radius:100px;
-      padding:5px 16px;font-size:12px;font-weight:800;
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.3);
+      color:var(--turquoise);border-radius:100px;
+      padding:6px 18px;font-size:13px;font-weight:800;
       width:fit-content;letter-spacing:.3px;
     }
-    .ai-main{font-size:18px;font-weight:900;color:#fff;line-height:1.4}
-    .ai-sub{font-size:13.5px;color:rgba(250,248,244,.58);line-height:1.6;font-weight:500}
+    .ai-main{font-size:22px;font-weight:900;color:#fff;line-height:1.4}
+    .ai-sub{font-size:16px;color:rgba(250,248,244,.58);line-height:1.65;font-weight:500}
 
     /* Divider */
-    .styled-divider{
-      display:flex;align-items:center;gap:12px;margin:4px 0;
-    }
+    .styled-divider{display:flex;align-items:center;gap:14px;margin:6px 0}
     .styled-divider::before,.styled-divider::after{
       content:'';flex:1;height:1px;
-      background:linear-gradient(90deg,transparent,rgba(34,211,238,.3),transparent);
+      background:linear-gradient(90deg,transparent,rgba(249,185,21,.35),transparent);
     }
     .divider-text{
-      font-size:11px;color:var(--turquoise);font-weight:800;
-      letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;
+      font-size:12px;color:var(--orange);font-weight:900;
+      letter-spacing:1px;text-transform:uppercase;white-space:nowrap;
     }
 
-    /* Package card */
+    /* Package */
     .package-card{
-      background:linear-gradient(160deg,rgba(249,185,21,.1) 0%,rgba(249,185,21,.04) 50%,rgba(34,211,238,.05) 100%);
+      background:linear-gradient(160deg,rgba(249,185,21,.1) 0%,rgba(249,185,21,.04) 55%,rgba(34,211,238,.04) 100%);
       border:2px solid rgba(249,185,21,.38);
-      border-radius:var(--r-lg);padding:28px 22px 24px;
-      display:flex;flex-direction:column;gap:22px;
+      border-radius:var(--r-lg);padding:30px 24px 26px;
+      display:flex;flex-direction:column;gap:24px;
     }
-    .pkg-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
-    .pkg-title{font-size:21px;font-weight:900;color:#fff;line-height:1.3;max-width:230px}
+    .pkg-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+    .pkg-title{font-size:26px;font-weight:900;color:#fff;line-height:1.3;max-width:240px}
     .pkg-price{display:flex;flex-direction:column;align-items:flex-start}
     .price-old{
-      font-size:14px;color:rgba(250,248,244,.35);font-weight:600;
+      font-size:15px;color:rgba(250,248,244,.3);font-weight:700;
       text-decoration:line-through;margin-bottom:2px;
     }
     .price-row{display:flex;align-items:baseline;gap:3px}
-    .price-currency{font-size:22px;font-weight:900;color:var(--orange)}
-    .price-amount{font-size:46px;font-weight:900;color:var(--orange);line-height:1}
-    .price-note{font-size:12px;color:rgba(250,248,244,.45);font-weight:600;margin-top:3px}
-
+    .price-currency{font-size:24px;font-weight:900;color:var(--orange)}
+    .price-amount{font-size:52px;font-weight:900;color:var(--orange);line-height:1}
+    .price-note{font-size:13px;color:rgba(250,248,244,.4);font-weight:600;margin-top:4px}
     .pkg-list{list-style:none;display:flex;flex-direction:column;gap:2px}
     .pkg-item{
-      display:flex;align-items:flex-start;gap:13px;
-      padding:13px 0;border-bottom:1px solid rgba(250,248,244,.07);
-      font-size:15px;color:rgba(250,248,244,.9);line-height:1.55;
+      display:flex;align-items:flex-start;gap:14px;
+      padding:15px 0;border-bottom:1px solid rgba(250,248,244,.07);
+      font-size:17px;color:rgba(250,248,244,.9);line-height:1.55;
     }
     .pkg-item:last-child{border-bottom:none}
     .pkg-icon{
-      width:34px;height:34px;border-radius:10px;flex-shrink:0;
+      width:36px;height:36px;border-radius:11px;flex-shrink:0;
       display:flex;align-items:center;justify-content:center;
-      font-size:16px;margin-top:1px;
+      font-size:17px;margin-top:2px;
+      background:rgba(249,185,21,.14);border:1px solid rgba(249,185,21,.28);
     }
-    .pkg-icon.gold{background:rgba(249,185,21,.14);border:1px solid rgba(249,185,21,.28)}
-    .pkg-icon.green{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.25)}
+    .pkg-icon.bonus{background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.25)}
     .pkg-bonus-sep{
-      display:flex;align-items:center;gap:10px;
-      padding:8px 0 4px;
+      display:flex;align-items:center;gap:12px;padding:10px 0 6px;
     }
-    .pkg-bonus-sep::before,.pkg-bonus-sep::after{content:'';flex:1;height:1px;background:rgba(74,222,128,.2)}
-    .bonus-label{font-size:11px;font-weight:900;color:var(--green);letter-spacing:.7px;text-transform:uppercase;white-space:nowrap}
+    .pkg-bonus-sep::before,.pkg-bonus-sep::after{
+      content:'';flex:1;height:1px;background:rgba(34,211,238,.2);
+    }
+    .bonus-label{
+      font-size:12px;font-weight:900;color:var(--turquoise);
+      letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;
+    }
 
     /* CTA */
-    .cta-section{display:flex;flex-direction:column;gap:12px;align-items:center}
+    .cta-section{display:flex;flex-direction:column;gap:13px;align-items:center}
     .mega-btn{
-      width:100%;padding:22px 28px;
+      width:100%;padding:24px 28px;
       background:linear-gradient(135deg,var(--orange) 0%,var(--orange-d) 100%);
       color:#0a192f;border:none;border-radius:var(--r-lg);
-      font-size:20px;font-weight:900;cursor:pointer;
+      font-size:22px;font-weight:900;cursor:pointer;
       font-family:inherit;line-height:1.3;text-align:center;
-      box-shadow:0 10px 40px rgba(249,185,21,.42);
+      box-shadow:0 10px 44px rgba(249,185,21,.42);
       transition:all .22s;
     }
-    .mega-btn:hover{transform:translateY(-2px);box-shadow:0 18px 52px rgba(249,185,21,.55)}
+    .mega-btn:hover{transform:translateY(-2px);box-shadow:0 18px 54px rgba(249,185,21,.55)}
     .mega-btn:active{transform:translateY(0)}
     .cta-trust{
-      font-size:13px;color:rgba(250,248,244,.4);text-align:center;
-      display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
+      font-size:14px;color:rgba(250,248,244,.4);text-align:center;
+      display:flex;gap:18px;flex-wrap:wrap;justify-content:center;
     }
-    .cta-trust span{display:flex;align-items:center;gap:4px}
+    .cta-trust span{display:flex;align-items:center;gap:5px}
+
+    /* ══════════════════════════════════
+       BUILD SECTION (form + preview)
+    ══════════════════════════════════ */
+    #buildSection{
+      display:none;flex-direction:column;gap:22px;
+      border-top:1px solid rgba(249,185,21,.2);
+      padding-top:28px;margin-top:8px;
+    }
+    .build-heading{
+      text-align:center;
+    }
+    .build-tag{
+      font-size:12px;font-weight:900;color:var(--orange);
+      letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;
+    }
+    .build-title{font-size:28px;font-weight:900;color:#fff;line-height:1.3;margin-bottom:8px}
+    .build-sub{font-size:16px;color:rgba(250,248,244,.55);font-weight:500}
+
+    /* Form */
+    .build-form{
+      background:var(--navy-card);
+      border:1.5px solid rgba(250,248,244,.1);
+      border-radius:var(--r-lg);padding:28px 22px;
+      display:flex;flex-direction:column;gap:20px;
+    }
+    .form-group{display:flex;flex-direction:column;gap:8px}
+    .form-label{
+      font-size:15px;font-weight:800;color:rgba(250,248,244,.75);
+    }
+    .form-input{
+      width:100%;padding:14px 16px;
+      background:rgba(250,248,244,.06);
+      border:1.5px solid rgba(250,248,244,.15);
+      border-radius:var(--r);
+      font-family:inherit;font-size:16px;font-weight:600;
+      color:#fff;outline:none;
+      transition:border-color .2s;
+      direction:rtl;
+    }
+    .form-input::placeholder{color:rgba(250,248,244,.3)}
+    .form-input:focus{border-color:rgba(249,185,21,.55)}
+
+    /* Logo upload */
+    .logo-upload-area{
+      border:2px dashed rgba(250,248,244,.18);
+      border-radius:var(--r);padding:24px 16px;
+      text-align:center;cursor:pointer;
+      transition:border-color .2s;
+      position:relative;overflow:hidden;
+    }
+    .logo-upload-area:hover{border-color:rgba(249,185,21,.45)}
+    .logo-upload-area input[type=file]{
+      position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+    }
+    .logo-upload-icon{font-size:28px;margin-bottom:8px}
+    .logo-upload-text{font-size:15px;color:rgba(250,248,244,.5);font-weight:600}
+    .logo-preview-img{
+      max-height:64px;max-width:160px;
+      border-radius:10px;margin:0 auto;display:none;
+    }
+
+    /* Color picker */
+    .color-picker-row{
+      display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    }
+    .color-swatch-label{font-size:15px;font-weight:800;color:rgba(250,248,244,.75)}
+    .color-swatches{display:flex;gap:10px;flex-wrap:wrap}
+    .swatch{
+      width:32px;height:32px;border-radius:50%;cursor:pointer;
+      border:3px solid transparent;transition:border-color .18s,transform .18s;
+    }
+    .swatch.active{border-color:#fff;transform:scale(1.18)}
+    .color-custom-wrap{display:flex;align-items:center;gap:8px}
+    .color-custom-wrap input[type=color]{
+      width:36px;height:36px;border:none;border-radius:50%;
+      padding:0;cursor:pointer;background:transparent;
+    }
+    .color-custom-label{font-size:13px;color:rgba(250,248,244,.45);font-weight:600}
+
+    /* Card preview */
+    .preview-wrap{
+      background:rgba(250,248,244,.04);
+      border:1.5px solid rgba(249,185,21,.25);
+      border-radius:var(--r-lg);padding:22px 20px;
+    }
+    .preview-label{
+      font-size:12px;font-weight:800;color:rgba(250,248,244,.4);
+      letter-spacing:.8px;text-transform:uppercase;margin-bottom:16px;text-align:center;
+    }
+    .card-preview{
+      max-width:320px;margin:0 auto;
+      border-radius:20px;padding:28px 24px;
+      text-align:center;
+      box-shadow:0 16px 48px rgba(0,0,0,.35);
+      transition:background .3s;
+      background:var(--preview-color,#0a192f);
+    }
+    .card-preview-logo{
+      width:72px;height:72px;border-radius:50%;
+      background:rgba(255,255,255,.15);
+      margin:0 auto 14px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:28px;overflow:hidden;
+    }
+    .card-preview-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:none}
+    .card-preview-name{
+      font-size:18px;font-weight:900;color:#fff;margin-bottom:4px;line-height:1.3;
+    }
+    .card-preview-stars{font-size:22px;color:var(--orange);margin-bottom:12px}
+    .card-preview-btn{
+      display:block;padding:12px 20px;border-radius:12px;
+      background:var(--orange);color:#0a192f;
+      font-size:14px;font-weight:900;border:none;font-family:inherit;
+      cursor:default;text-align:center;
+    }
+
+    /* Submit button */
+    .submit-btn{
+      width:100%;padding:20px 24px;
+      background:linear-gradient(135deg,var(--orange),var(--orange-d));
+      color:#0a192f;border:none;border-radius:var(--r-lg);
+      font-size:20px;font-weight:900;cursor:pointer;
+      font-family:inherit;line-height:1.3;
+      box-shadow:0 8px 36px rgba(249,185,21,.38);
+      transition:all .22s;
+    }
+    .submit-btn:hover{transform:translateY(-2px);box-shadow:0 14px 46px rgba(249,185,21,.52)}
 
     /* Animations */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .fade{animation:fadeUp .42s ease both}
-    .d1{animation-delay:.08s}  .d2{animation-delay:.18s}
-    .d3{animation-delay:.30s}  .d4{animation-delay:.44s}
-    .d5{animation-delay:.58s}  .d6{animation-delay:.72s}
-    .d7{animation-delay:.88s}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    .fade{animation:fadeUp .44s ease both}
+    .d1{animation-delay:.08s} .d2{animation-delay:.2s}
+    .d3{animation-delay:.33s} .d4{animation-delay:.47s}
+    .d5{animation-delay:.62s} .d6{animation-delay:.78s}
+    .d7{animation-delay:.95s}
 
-    @media(max-width:480px){
-      .biz-name{font-size:22px}
-      .biz-rating-big{font-size:36px}
-      .price-amount{font-size:38px}
-      .mega-btn{font-size:18px;padding:20px}
+    /* Mobile */
+    @media(max-width:500px){
+      .biz-name{font-size:26px}
+      .biz-rating-big{font-size:40px}
+      .price-amount{font-size:42px}
+      .mega-btn{font-size:19px;padding:21px}
       .pkg-title{max-width:100%}
+      .sec-title{font-size:21px}
+      .ai-main{font-size:19px}
+      .build-title{font-size:24px}
+      .comp-table td,.comp-table th{padding:12px 12px}
+      .comp-table td{font-size:14px}
     }
   </style>
 </head>
@@ -307,7 +440,7 @@
 <div id="loadingScreen">
   <div class="load-logo">★ NextVoice AI</div>
   <div class="load-biz" id="loadBizName">מנתחים את העסק שלך</div>
-  <div class="load-subtitle">הסוכן הדיגיטלי שלנו עובד בשבילך...</div>
+  <div class="load-subtitle">הסוכן הדיגיטלי שלנו עובד בשבילך</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill"></div>
   </div>
@@ -321,6 +454,7 @@
 
 <!-- ════ MAIN PAGE ════ -->
 <div id="mainPage">
+
   <a class="back-link" href="/" onclick="history.length>1?(history.back(),false):true">← חזרה לדף הבית</a>
 
   <!-- Business header -->
@@ -338,9 +472,9 @@
 
   <!-- Missing fields -->
   <div id="missingSection" style="display:none">
-    <div class="sec-label">ממצאים</div>
-    <div class="sec-title">🔎 חסרים שדות קריטיים בפרופיל שלך</div>
-    <div class="sec-sub">גוגל מעניש עסקים עם פרופיל חלקי — הם יורדים בדירוג</div>
+    <div class="sec-label">ממצאים קריטיים</div>
+    <div class="sec-title">🔎 חסרים שדות קריטיים בפרופיל</div>
+    <div class="sec-sub">גוגל מעניש עסקים עם פרופיל חלקי - הם יורדים בדירוג</div>
     <div class="warning-card fade d1">
       <div class="warning-header">
         <div class="warning-icon">⚠️</div>
@@ -352,7 +486,7 @@
 
   <!-- All good -->
   <div id="allGoodSection" style="display:none" class="fade d1">
-    <div class="good-card">✅ פרופיל הגוגל שלך מלא ומעודכן — המשיכו לשמור על זה!</div>
+    <div class="good-card">✅ פרופיל הגוגל שלך מלא ומעודכן - המשיכו לשמור על זה!</div>
   </div>
 
   <!-- Competitors -->
@@ -362,13 +496,7 @@
     <div class="sec-sub">מי מוביל בגוגל ומי נשאר מאחור?</div>
     <div class="comp-card fade d2">
       <table class="comp-table">
-        <thead>
-          <tr>
-            <th>שם העסק</th>
-            <th>דירוג</th>
-            <th>ביקורות</th>
-          </tr>
-        </thead>
+        <thead><tr><th>שם העסק</th><th>דירוג</th><th>ביקורות</th></tr></thead>
         <tbody id="compBody"></tbody>
       </table>
     </div>
@@ -378,7 +506,7 @@
   <div class="ai-card fade d3">
     <div class="ai-badge">🤖 תובנת בינה מלאכותית</div>
     <div class="ai-main" id="aiMainText">במצב הנוכחי, מודלי AI לא ימליצו עליך כבחירה ראשונה</div>
-    <div class="ai-sub">ChatGPT, Gemini ו-Perplexity מדרגים עסקים לפי אמינות דיגיטלית: דירוג גוגל, כמות ביקורות ועדכניות הפרופיל. כדי להופיע כהמלצה הראשונה שמודלי AI נותנים — נדרשת אופטימיזציה אקטיבית ומתמשכת.</div>
+    <div class="ai-sub">ChatGPT, Gemini ו-Perplexity מדרגים עסקים לפי אמינות דיגיטלית: דירוג גוגל, כמות ביקורות ועדכניות הפרופיל. כדי להופיע כהמלצה הראשונה שמודלי AI נותנים - נדרשת אופטימיזציה אקטיבית ומתמשכת.</div>
   </div>
 
   <!-- Divider -->
@@ -396,32 +524,32 @@
           <span class="price-currency">₪</span>
           <span class="price-amount">397</span>
         </div>
-        <div class="price-note">תשלום חד פעמי · ללא חוזה</div>
+        <div class="price-note">תשלום חד פעמי</div>
       </div>
     </div>
 
     <ul class="pkg-list">
       <li class="pkg-item">
-        <div class="pkg-icon gold">📇</div>
-        <span><strong>כרטיס המלצות חכם</strong> עם מערכת סינון ביקורות — שולח לקוחות מרוצים לגוגל ומסנן ביקורות שליליות</span>
+        <div class="pkg-icon">📇</div>
+        <span><strong>כרטיס המלצות חכם</strong> עם מערכת סינון ביקורות - שולח לקוחות מרוצים לגוגל ומסנן ביקורות שליליות</span>
       </li>
       <li class="pkg-item">
-        <div class="pkg-icon gold">📄</div>
-        <span><strong>ערכת PDF ממותגת עם QR</strong> להדפסה ושיתוף — מוכנה לתלייה בעסק ולשליחה בווטסאפ</span>
+        <div class="pkg-icon">📄</div>
+        <span><strong>ערכת PDF ממותגת עם QR</strong> להדפסה ושיתוף - מוכנה לתלייה בעסק ולשליחה בווטסאפ</span>
       </li>
       <li class="pkg-item">
-        <div class="pkg-icon gold">📊</div>
-        <span><strong>דוח אופטימיזציה מלא</strong> וניתוח "מילים חמות" שהמתחרים שלך משתמשים בהם — ותוכל להשתמש בהם גם</span>
+        <div class="pkg-icon">📊</div>
+        <span><strong>דוח אופטימיזציה מלא</strong> וניתוח "מילים חמות" שהמתחרים שלך משתמשים בהם - ותוכל להשתמש בהם גם</span>
       </li>
 
       <li class="pkg-bonus-sep"><span class="bonus-label">🎁 בונוסים בלעדיים</span></li>
 
       <li class="pkg-item">
-        <div class="pkg-icon green">📘</div>
-        <span><strong>המדריך המעשי</strong> ל-15 שיטות להשגת המלצות בקלות ובמהירות — כולל תסריטים מוכנים לשיחות עם לקוחות</span>
+        <div class="pkg-icon bonus">📘</div>
+        <span><strong>המדריך המעשי</strong> ל-15 שיטות להשגת המלצות בקלות ובמהירות - כולל תסריטים מוכנים לשיחות עם לקוחות</span>
       </li>
       <li class="pkg-item">
-        <div class="pkg-icon green">💬</div>
+        <div class="pkg-icon bonus">💬</div>
         <span><strong>תבניות WhatsApp מוכנות</strong> ומדריך מקצועי לניהול ביקורות שליליות בלי לפגוע במוניטין</span>
       </li>
     </ul>
@@ -429,82 +557,143 @@
 
   <!-- CTA -->
   <div class="cta-section fade d6">
-    <button class="mega-btn" onclick="handleCTA()">כן, אני רוצה להשתלט על המקום הראשון!</button>
+    <button class="mega-btn" id="mainCTA" onclick="handleCTA()">כן, אני רוצה להשתלט על המקום הראשון!</button>
     <div class="cta-trust">
-      <span>✓ ללא התחייבות חוזית</span>
       <span>✓ תוצאות מובטחות או החזר כספי</span>
-      <span>✓ מוכן תוך 48 שעות</span>
+      <span>✓ מוכן בשעה הקרובה</span>
     </div>
   </div>
-</div>
+
+  <!-- ════ BUILD SECTION ════ -->
+  <div id="buildSection">
+    <div class="build-heading">
+      <div class="build-tag">שלב אחרון</div>
+      <div class="build-title">בואו נבנה את הכרטיס שלכם</div>
+      <div class="build-sub">מלאו את הפרטים ובחרו את הסגנון - הכרטיס יהיה מוכן בשעה הקרובה</div>
+    </div>
+
+    <!-- Form -->
+    <div class="build-form">
+      <div class="form-group">
+        <label class="form-label">שם מלא</label>
+        <input class="form-input" id="fieldName" type="text" placeholder="ישראל ישראלי" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">טלפון</label>
+        <input class="form-input" id="fieldPhone" type="tel" placeholder="050-000-0000" autocomplete="tel">
+      </div>
+      <div class="form-group">
+        <label class="form-label">כתובת מייל</label>
+        <input class="form-input" id="fieldEmail" type="email" placeholder="you@email.com" autocomplete="email" style="direction:ltr;text-align:right">
+      </div>
+
+      <!-- Logo upload -->
+      <div class="form-group">
+        <label class="form-label">לוגו העסק (אופציונלי)</label>
+        <div class="logo-upload-area" id="logoArea">
+          <input type="file" accept="image/*" id="logoInput" onchange="handleLogoUpload(this)">
+          <div class="logo-upload-icon" id="logoIcon">🖼️</div>
+          <img class="logo-preview-img" id="logoPreviewImg" alt="לוגו">
+          <div class="logo-upload-text" id="logoText">לחצו להעלאת לוגו</div>
+        </div>
+      </div>
+
+      <!-- Color picker -->
+      <div class="form-group">
+        <label class="form-label">צבע הכרטיס</label>
+        <div class="color-picker-row">
+          <div class="color-swatches" id="swatchRow"></div>
+          <div class="color-custom-wrap">
+            <input type="color" id="customColor" value="#0a192f" oninput="setColor(this.value,null)">
+            <span class="color-custom-label">צבע מותאם</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live preview -->
+    <div class="preview-wrap">
+      <div class="preview-label">תצוגה מקדימה של הכרטיס</div>
+      <div class="card-preview" id="cardPreview">
+        <div class="card-preview-logo" id="previewLogoWrap">
+          <img id="previewLogoImg" alt="לוגו">
+          <span id="previewLogoEmoji">🏢</span>
+        </div>
+        <div class="card-preview-name" id="previewBizName">שם העסק שלכם</div>
+        <div class="card-preview-stars">★★★★★</div>
+        <div class="card-preview-btn">השאירו לנו המלצה בגוגל</div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <button class="submit-btn" onclick="handleSubmit()">שלחו - ואנחנו נבנה את הכרטיס!</button>
+  </div><!-- /buildSection -->
+
+</div><!-- /mainPage -->
 
 <script>
 (function(){
   'use strict';
 
   /* ── URL params ── */
-  var params    = new URLSearchParams(window.location.search);
-  var placeId   = params.get('id')   || '';
-  var bizNameP  = decodeURIComponent(params.get('name') || '');
+  var params   = new URLSearchParams(window.location.search);
+  var placeId  = params.get('id')   || '';
+  var bizNameP = '';
+  try { bizNameP = decodeURIComponent(params.get('name') || ''); } catch(e){}
 
   if (bizNameP) {
     document.getElementById('loadBizName').textContent = bizNameP;
+    document.getElementById('previewBizName').textContent = bizNameP;
   }
 
-  /* ── Loading messages & steps ── */
-  var DURATION = 5000;
+  /* ── Loading ── */
+  var DURATION = 15000;
+  var MSG_INTERVAL = 4200;
   var MESSAGES = [
     'הסוכן הדיגיטלי שלנו מנתח כרגע את המתחרים בסביבתכם...',
     'סורק דירוגים מעודכנים ב-Google Business Profile...',
     'בודק התאמה למנועי בינה מלאכותית (ChatGPT, Gemini)...'
   ];
   var STEPS = [
-    { id:'lstep1', at:0    },
-    { id:'lstep2', at:1800 },
-    { id:'lstep3', at:3600 }
+    { id:'lstep1', at:0     },
+    { id:'lstep2', at:5000  },
+    { id:'lstep3', at:10000 }
   ];
 
-  var msgEl  = document.getElementById('loadMsg');
-  var fillEl = document.getElementById('progressFill');
-  var msgIdx = 0;
+  var msgEl   = document.getElementById('loadMsg');
+  var fillEl  = document.getElementById('progressFill');
+  var msgIdx  = 0;
   var startTs = Date.now();
 
   msgEl.textContent = MESSAGES[0];
 
-  /* progress bar + step activation */
   var progressTimer = setInterval(function(){
     var elapsed = Date.now() - startTs;
     fillEl.style.width = Math.min(96, (elapsed / DURATION) * 100) + '%';
-
     STEPS.forEach(function(s, i){
       var el = document.getElementById(s.id);
       if (elapsed >= s.at) {
         if (i > 0) {
-          var prevEl = document.getElementById(STEPS[i-1].id);
-          prevEl.classList.remove('active');
-          prevEl.classList.add('done');
+          var pEl = document.getElementById(STEPS[i-1].id);
+          pEl.classList.remove('active'); pEl.classList.add('done');
         }
         if (!el.classList.contains('done')) el.classList.add('active');
       }
     });
-
     if (elapsed >= DURATION) clearInterval(progressTimer);
-  }, 50);
+  }, 60);
 
-  /* cycling messages */
   var msgTimer = setInterval(function(){
     msgIdx = (msgIdx + 1) % MESSAGES.length;
     msgEl.style.opacity = '0';
     setTimeout(function(){
       msgEl.textContent = MESSAGES[msgIdx];
       msgEl.style.opacity = '1';
-    }, 300);
-  }, 1650);
+    }, 350);
+  }, MSG_INTERVAL);
 
-  /* ── API fetch ── */
-  var apiData   = null;
-  var apiDone   = false;
-  var timerDone = false;
+  /* ── API ── */
+  var apiData = null, apiDone = false, timerDone = false;
 
   function tryReveal(){
     if (!apiDone || !timerDone) return;
@@ -512,14 +701,14 @@
     fillEl.style.width = '100%';
     STEPS.forEach(function(s){
       var el = document.getElementById(s.id);
-      el.classList.remove('active');
-      el.classList.add('done');
+      el.classList.remove('active'); el.classList.add('done');
     });
     setTimeout(function(){
       document.getElementById('loadingScreen').style.display = 'none';
       renderPage(apiData);
-      document.getElementById('mainPage').style.display = 'flex';
-    }, 420);
+      var mp = document.getElementById('mainPage');
+      mp.style.display = 'flex';
+    }, 450);
   }
 
   if (placeId) {
@@ -540,42 +729,34 @@
 
   /* ── Helpers ── */
   function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
   function starStr(r){
-    var full = Math.floor(r), half = (r - full) >= 0.5;
-    var s = ''; for(var i=0;i<full;i++) s+='★'; if(half) s+='½';
+    var s='', full=Math.floor(r);
+    for(var i=0;i<full;i++) s+='★';
+    if(r-full>=.5) s+='½';
     return s;
   }
-
-  function ratingCls(r){
-    return r >= 4.5 ? 'high' : r >= 3.5 ? 'mid' : 'low';
-  }
+  function rCls(r){ return r>=4.5?'high':r>=3.5?'mid':'low'; }
 
   /* ── Render ── */
   function renderPage(data){
     var name = (data && data.name) || bizNameP || 'העסק שלכם';
-
-    /* header */
     document.getElementById('bizName').textContent = name;
+    document.getElementById('previewBizName').textContent = name;
+
     var rating = (data && typeof data.rating === 'number') ? data.rating : null;
-    if (rating !== null){
-      document.getElementById('bizRating').textContent = rating.toFixed(1);
-      document.getElementById('bizStars').textContent  = starStr(rating);
-    } else {
-      document.getElementById('bizRating').textContent = '—';
-    }
-    var rc = (data && data.reviewCount) ? data.reviewCount : 0;
+    document.getElementById('bizRating').textContent = rating !== null ? rating.toFixed(1) : '-';
+    document.getElementById('bizStars').textContent  = rating !== null ? starStr(rating) : '';
+    var rc = (data && data.reviewCount) || 0;
     document.getElementById('bizReviews').textContent = rc.toLocaleString('he-IL') + ' ביקורות';
 
-    if (!data || data.status === 'ERROR' || data.status === 'NO_ID' || data.status === 'API_ERROR') return;
+    if (!data || data.status==='ERROR'||data.status==='NO_ID'||data.status==='API_ERROR') return;
 
     /* missing fields */
     var missing = data.missing || [];
     if (missing.length){
       document.getElementById('missingSection').style.display = 'block';
       document.getElementById('missingList').innerHTML = missing.map(function(m){
-        return '<div class="warning-item"><div class="warning-dot"></div>'
-          + esc(m) + ' — חסר בפרופיל שלך</div>';
+        return '<div class="warning-item"><div class="warning-dot"></div>'+esc(m)+' - חסר בפרופיל שלך</div>';
       }).join('');
     } else {
       document.getElementById('allGoodSection').style.display = 'block';
@@ -585,34 +766,104 @@
     var comps = data.competitors || [];
     if (comps.length){
       document.getElementById('compSection').style.display = 'block';
-      var myR = rating || 0;
+      var myR = rating||0;
       var rows = '<tr class="you-row">'
-        + '<td class="comp-name"><span class="you-tag">אתם</span>' + esc(name) + '</td>'
-        + '<td><span class="r-badge ' + ratingCls(myR) + '">★ ' + myR.toFixed(1) + '</span></td>'
-        + '<td>' + rc.toLocaleString('he-IL') + '</td></tr>';
-
+        +'<td class="comp-name"><span class="you-tag">אתם</span>'+esc(name)+'</td>'
+        +'<td><span class="r-badge '+rCls(myR)+'">★ '+myR.toFixed(1)+'</span></td>'
+        +'<td>'+rc.toLocaleString('he-IL')+'</td></tr>';
       comps.forEach(function(c){
         rows += '<tr>'
-          + '<td class="comp-name">' + esc(c.name) + '</td>'
-          + '<td><span class="r-badge ' + ratingCls(c.rating||0) + '">★ ' + (c.rating||0).toFixed(1) + '</span></td>'
-          + '<td>' + (c.reviewCount||0).toLocaleString('he-IL') + '</td></tr>';
+          +'<td class="comp-name">'+esc(c.name)+'</td>'
+          +'<td><span class="r-badge '+rCls(c.rating||0)+'">★ '+(c.rating||0).toFixed(1)+'</span></td>'
+          +'<td>'+(c.reviewCount||0).toLocaleString('he-IL')+'</td></tr>';
       });
       document.getElementById('compBody').innerHTML = rows;
     }
 
-    /* AI insight tweak for strong profiles */
+    /* AI tweak for already-strong profiles */
     if (rating !== null && rating >= 4.7 && rc >= 150){
       document.getElementById('aiMainText').textContent =
-        'אתם חזקים — אבל ללא אופטימיזציה מתמשכת מודלי AI עדיין יעדיפו את המתחרים שלכם';
+        'אתם חזקים - אבל ללא אופטימיזציה מתמשכת מודלי AI עדיין יעדיפו את המתחרים שלכם';
     }
   }
 
-  /* ── CTA ── */
+  /* ── CTA - scroll to build section ── */
   window.handleCTA = function(){
-    var base = '/?buy=1';
-    if (placeId) base += '&id=' + encodeURIComponent(placeId);
-    if (bizNameP) base += '&name=' + encodeURIComponent(bizNameP);
-    window.location.href = base;
+    var section = document.getElementById('buildSection');
+    section.style.display = 'flex';
+    setTimeout(function(){
+      section.scrollIntoView({ behavior:'smooth', block:'start' });
+    }, 80);
+    document.getElementById('mainCTA').textContent = 'ממלאים פרטים למטה...';
+    document.getElementById('mainCTA').style.opacity = '.6';
+    document.getElementById('mainCTA').style.cursor = 'default';
+    document.getElementById('mainCTA').onclick = function(){
+      section.scrollIntoView({ behavior:'smooth', block:'start' });
+    };
+    setTimeout(function(){
+      document.getElementById('fieldName').focus();
+    }, 700);
+  };
+
+  /* ── Color swatches ── */
+  var SWATCHES = ['#0a192f','#1e3a5f','#1a1a2e','#2d1b69','#1b4332','#4a1942'];
+  var activeColor = '#0a192f';
+
+  var swatchRow = document.getElementById('swatchRow');
+  SWATCHES.forEach(function(c, i){
+    var el = document.createElement('div');
+    el.className = 'swatch' + (i===0?' active':'');
+    el.style.background = c;
+    el.setAttribute('data-color', c);
+    el.onclick = function(){ setColor(c, el); };
+    swatchRow.appendChild(el);
+  });
+
+  window.setColor = function(color, swatchEl){
+    activeColor = color;
+    document.getElementById('cardPreview').style.background = color;
+    document.getElementById('customColor').value = color;
+    document.querySelectorAll('.swatch').forEach(function(s){ s.classList.remove('active'); });
+    if (swatchEl) swatchEl.classList.add('active');
+  };
+
+  /* ── Logo upload ── */
+  window.handleLogoUpload = function(input){
+    var file = input.files && input.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var src = e.target.result;
+      /* logo area preview */
+      document.getElementById('logoIcon').style.display = 'none';
+      document.getElementById('logoText').textContent = file.name;
+      var prevImgArea = document.getElementById('logoPreviewImg');
+      prevImgArea.src = src; prevImgArea.style.display = 'block';
+      /* card preview */
+      var img = document.getElementById('previewLogoImg');
+      img.src = src; img.style.display = 'block';
+      document.getElementById('previewLogoEmoji').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  };
+
+  /* ── Submit ── */
+  window.handleSubmit = function(){
+    var name  = document.getElementById('fieldName').value.trim();
+    var phone = document.getElementById('fieldPhone').value.trim();
+    var email = document.getElementById('fieldEmail').value.trim();
+    if (!name || !phone || !email){
+      alert('אנא מלאו שם, טלפון ומייל כדי להמשיך');
+      return;
+    }
+    var btn = document.querySelector('.submit-btn');
+    btn.textContent = 'שולח... ✓';
+    btn.disabled = true;
+    /* TODO: send to backend / Supabase */
+    setTimeout(function(){
+      btn.textContent = 'נשלח! ניצור קשר בשעה הקרובה 🎉';
+      btn.style.background = 'linear-gradient(135deg,#22d3ee,#0891b2)';
+    }, 1200);
   };
 })();
 </script>
