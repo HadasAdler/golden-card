@@ -1,21 +1,23 @@
 /**
- * pdf-guide.js — מגנרטור PDF למדריך 20+ המהלכים
+ * pdf-guide.js — מגנרטור PDF למדריך 36 המהלכים
  * משתמש ב-html2canvas + jsPDF לטיפול תקין בעברית RTL
+ * כל טיפ מוגן מקטיעה בין דפים
  */
 (function(){
   'use strict';
 
   var WA_NUM  = '052-4444468';
-  var WA_LINK = 'https://wa.me/972524444468';
+  var WA_LINK = 'wa.me/972524444468';
+  var SCALE   = 1.8;   // html2canvas render scale — גבוה יותר = חדות גבוהה יותר
 
   /* ═══════════════════════════════════════
-     תוכן המדריך — כל הטיפים
+     תוכן המדריך
   ═══════════════════════════════════════ */
   var TIPS = [
     {
       n:'01',
       title:'הודעה אוטומטית בוואטסאפ',
-      text:'בנוסף למיילים, ניתן להגדיר הודעה אוטומטית גם בוואטסאפ שנשלחת לאחר סיום שירות או אינטראקציה עם הלקוח. מכיוון שוואטסאפ הוא ערוץ אישי, מהיר ונגיש, אחוזי ההיענות כאן לרוב גבוהים יותר. ניסוח פשוט כמו "היה לנו כיף לשרת אותך, נשמח לשמוע איך היה" בצירוף קישור יכול לייצר זרם קבוע של המלצות.'
+      text:'ניתן להגדיר הודעה אוטומטית בוואטסאפ שנשלחת לאחר סיום שירות או אינטראקציה עם הלקוח. מכיוון שוואטסאפ הוא ערוץ אישי, מהיר ונגיש, אחוזי ההיענות כאן לרוב גבוהים יותר. ניסוח פשוט כמו "היה לנו כיף לשרת אותך, נשמח לשמוע איך היה" בצירוף קישור יכול לייצר זרם קבוע של המלצות.'
     },
     {
       n:'02',
@@ -25,7 +27,7 @@
     {
       n:'03',
       title:'שיתוף בקבוצות רלוונטיות',
-      text:'ניתן לשתף את הקישור גם בקבוצות רלוונטיות כמו קבוצות לקוחות, קהילות מקצועיות או קבוצות נטוורקינג. חשוב לעשות זאת בניסוח עדין ולא מכירתי, למשל: "מי שעבד איתי ויכול לפרגן במילה - אשמח מאוד." לעיתים דווקא בקבוצות מתקבלות המלצות איכותיות ומפורטות יותר.'
+      text:'ניתן לשתף את הקישור גם בקבוצות רלוונטיות כמו קבוצות לקוחות, קהילות מקצועיות או קבוצות נטוורקינג. חשוב לעשות זאת בניסוח עדין ולא מכירתי, למשל: "מי שעבד איתי ויכול לפרגן במילה — אשמח מאוד." לעיתים דווקא בקבוצות מתקבלות המלצות איכותיות ומפורטות יותר.'
     },
     {
       n:'04',
@@ -110,32 +112,32 @@
     {
       n:'20',
       title:'פנייה גם אחרי אינטראקציה קצרה',
-      text:'שליחת הודעה אישית לא חייבת להיות שמורה רק לסיום שירות מלא. גם אחרי אינטראקציה קצרה, שיחת ייעוץ או אפילו מענה על שאלה, אפשר לשלוח הודעה קצרה: "שמחתי לעזור, ואם זה היה לך מועיל - אשמח ממש למילה כאן" בצירוף קישור. הרבה בעלי עסקים מפספסים את הרגעים הקטנים האלה.'
+      text:'שליחת הודעה אישית לא חייבת להיות שמורה רק לסיום שירות מלא. גם אחרי שיחת ייעוץ קצרה או מענה על שאלה, אפשר לשלוח: "שמחתי לעזור, ואם זה היה לך מועיל — אשמח ממש למילה כאן" בצירוף קישור.'
     },
     {
       n:'21',
       title:'שליחת תזכורת עדינה לאחר יום-יומיים',
-      text:'כאשר שולחים בקשה להמלצה ולא מתקבלת תגובה, לא כדאי לוותר מיד. תזכורת עדינה לאחר יום-יומיים יכולה לעשות את כל ההבדל. הודעה קצרה כמו "מקפיצה בעדינות 🙏 אם הסתדרת לכתוב, זה ממש יעזור לי" מגדילה משמעותית את אחוזי ההיענות.'
+      text:'כאשר שולחים בקשה ולא מתקבלת תגובה, לא כדאי לוותר מיד. תזכורת עדינה לאחר יום-יומיים יכולה לעשות את כל ההבדל. הודעה כמו "מקפיצה בעדינות 🙏 אם הסתדרת לכתוב, זה ממש יעזור לי" מגדילה משמעותית את אחוזי ההיענות.'
     },
     {
       n:'22',
       title:'שליחת דוגמת ניסוח',
-      text:'אחת הסיבות המרכזיות לכך שלקוחות לא כותבים המלצות היא חוסר ודאות לגבי מה לכתוב. שלחו יחד עם הקישור גם התחלה של משפט או דוגמה: "אם תרצה, אפשר לכתוב משהו כמו ׳השירות היה מקצועי, זמין ועזר לי ב...׳". פעולה פשוטה זו מורידה חסמים בצורה דרמטית.'
+      text:'אחת הסיבות שלקוחות לא כותבים היא חוסר ודאות לגבי מה לכתוב. שלחו יחד עם הקישור גם התחלת משפט: "אם תרצה, אפשר לכתוב משהו כמו ׳השירות היה מקצועי, זמין ועזר לי ב...׳". פעולה פשוטה זו מורידה חסמים בצורה דרמטית.'
     },
     {
       n:'23',
       title:'הודעה קולית בוואטסאפ',
-      text:'בוואטסאפ, לעיתים עדיף לשלוח הודעה קולית קצרה במקום טקסט כתוב. הודעה קולית נתפסת כאישית יותר, חמה יותר, וקשה הרבה יותר להתעלם ממנה. בקשה להמלצה שנאמרת בקול נשמעת טבעית ואותנטית יותר.'
+      text:'בוואטסאפ, לעיתים עדיף לשלוח הודעה קולית קצרה במקום טקסט. הודעה קולית נתפסת כאישית יותר, חמה יותר, וקשה הרבה יותר להתעלם ממנה. בקשה להמלצה שנאמרת בקול נשמעת טבעית ואותנטית יותר.'
     },
     {
       n:'24',
       title:'זיהוי רגעי שיא רגשיים',
-      text:'לא רק בסיום השירות, אלא דווקא ברגע שבו הלקוח מרגיש הצלחה — כאשר נסגרה עסקה, הושגה תוצאה או התקבל ערך משמעותי. ברגעים כאלה הלקוח הרבה יותר פתוח לפרגן.'
+      text:'לא רק בסיום השירות — אלא דווקא ברגע שבו הלקוח מרגיש הצלחה: כאשר נסגרה עסקה, הושגה תוצאה או התקבל ערך משמעותי. ברגעים כאלה הלקוח הרבה יותר פתוח לפרגן.'
     },
     {
       n:'25',
       title:'שילוב הבקשה בתהליך קיים',
-      text:'שלבו את הבקשה בתוך תהליך קיים, במקום לייצר פעולה נפרדת. לאחר שליחת קובץ, סיכום פגישה או תוצר — הוסיפו שורה קצרה בסיום ההודעה: "ואם זה היה מועיל - אשמח למילה כאן". כך הבקשה נטמעת באופן טבעי.'
+      text:'שלבו את הבקשה בתוך תהליך קיים, במקום לייצר פעולה נפרדת. לאחר שליחת קובץ, סיכום פגישה או תוצר — הוסיפו שורה קצרה בסיום ההודעה: "ואם זה היה מועיל — אשמח למילה כאן". כך הבקשה נטמעת באופן טבעי.'
     },
     {
       n:'26',
@@ -145,17 +147,17 @@
     {
       n:'27',
       title:'שימוש בהומור',
-      text:'לעיתים שימוש בהומור יכול להפוך את הבקשה לנעימה וקלה יותר. משפט כמו "אם הייתי בסדר - זה המקום לפרגן 😄" מוריד התנגדות ומרגיש פחות רשמי או מחייב.'
+      text:'לעיתים שימוש בהומור יכול להפוך את הבקשה לנעימה וקלה יותר. משפט כמו "אם הייתי בסדר — זה המקום לפרגן 😄" מוריד התנגדות ומרגיש פחות רשמי או מחייב.'
     },
     {
       n:'28',
       title:'ניצול לקוחות מתלהבים במיוחד',
-      text:'ישנם לקוחות שמביעים התלהבות יוצאת דופן מהשירות. במקרים כאלה כדאי לנצל את המומנטום ולא להסתפק בבקשה אחת בלבד. ניתן לבקש מהם גם לכתוב המלצה וגם לשתף או להמליץ לאחרים.'
+      text:'ישנם לקוחות שמביעים התלהבות יוצאת דופן מהשירות. במקרים כאלה כדאי לנצל את המומנטום ולבקש מהם גם לכתוב המלצה וגם לשתף או להמליץ לאחרים.'
     },
     {
       n:'29',
       title:'יצירת "רגע טקסי" קבוע',
-      text:'אפשר ליצור בעסק סוג של "רגע טקסי" קבוע. למשל, לומר ללקוחות: "יש לנו מסורת קטנה — מי שמרוצה משאיר משפט בגוגל". כאשר זה מוצג כחלק טבעי מהתהליך, זה מרגיש פחות כמו בקשה ויותר כמו נורמה.'
+      text:'אפשר ליצור בעסק "רגע טקסי" קבוע. למשל: "יש לנו מסורת קטנה — מי שמרוצה משאיר משפט בגוגל". כאשר זה מוצג כחלק טבעי מהתהליך, זה מרגיש פחות כמו בקשה ויותר כמו נורמה.'
     },
     {
       n:'30',
@@ -165,7 +167,7 @@
     {
       n:'31',
       title:'שליחה עם הוכחה חברתית בזמן אמת',
-      text:'שליחת הקישור יחד עם צילום של המלצות קיימות מעניקה ללקוח ביטחון ומעודדת אותו להצטרף לאחרים שכבר כתבו.'
+      text:'שליחת הקישור יחד עם צילום מסך של המלצות קיימות מעניקה ללקוח ביטחון ומעודדת אותו להצטרף לאחרים שכבר כתבו.'
     },
     {
       n:'32',
@@ -175,84 +177,81 @@
     {
       n:'33',
       title:'הפיכת האיסוף ליעד משותף',
-      text:'ניתן להפוך את כל התהליך למשחק קטן או יעד משותף. למשל: "אני בדרך ל-50 המלצות החודש". כאשר אנשים מרגישים שהם עוזרים להגיע ליעד, הם נוטים יותר לשתף פעולה.'
+      text:'ניתן להפוך את התהליך למשחק קטן. למשל: "אני בדרך ל-50 המלצות החודש". כאשר אנשים מרגישים שהם עוזרים להגיע ליעד, הם נוטים יותר לשתף פעולה.'
     },
     {
       n:'34',
       title:'שילוב הבקשה בחשבונית',
-      text:'רגע התשלום הוא אחד הרגעים הטבעיים ביותר לסגירת מעגל עם הלקוח. הוסיפו בתחתית החשבונית שורה קצרה: "שמחנו לשרת אתכם, אשמח למילה טובה כאן" בצירוף קישור או קוד סריקה. הלקוח כבר בתהליך סגירה פורמלית — הסיכוי שיקרא ויגיב גבוה יחסית.'
+      text:'רגע התשלום הוא אחד הרגעים הטבעיים ביותר לסגירת מעגל עם הלקוח. הוסיפו בתחתית החשבונית שורה קצרה: "שמחנו לשרת אתכם, אשמח למילה טובה כאן" בצירוף קישור או קוד סריקה.'
     },
     {
       n:'35',
       title:'בקשה ברגע החידוש או הרכישה החוזרת',
-      text:'לקוח שחוזר הוא לקוח מרוצה. כאשר לקוח מחדש מנוי, מבצע הזמנה חוזרת או פונה לשירות נוסף, כתבו: "שמח שחזרת. אם זה המקום המתאים לך, אשמח מאוד למילה בגוגל." לקוחות חוזרים יש להם גם מה לומר וגם מוטיבציה לפרגן.'
+      text:'לקוח שחוזר הוא לקוח מרוצה. כאשר לקוח מחדש מנוי או מבצע הזמנה חוזרת, כתבו: "שמח שחזרת. אם זה המקום המתאים לך, אשמח מאוד למילה בגוגל."'
     },
     {
       n:'36',
       title:'ניצול הודעת אישור פגישה',
-      text:'הודעות אישור פגישה נפתחות בשיעורי קריאה גבוהים מאוד. נצלו זאת והוסיפו בסיום ההודעה: "ואם כבר עבדנו יחד בעבר — אשמח מאוד למילה טובה כאן." כך מנצלים תשתית קיימת ויוצרים חשיפה ללא עמל נוסף.'
+      text:'הודעות אישור פגישה נפתחות בשיעורי קריאה גבוהים מאוד. נצלו זאת והוסיפו בסיום: "ואם כבר עבדנו יחד בעבר — אשמח מאוד למילה טובה כאן." כך מנצלים תשתית קיימת ויוצרים חשיפה ללא עמל נוסף.'
     }
   ];
 
   /* ═══════════════════════════════════════
-     בניית תבנית ה-HTML שתצולם
+     בניית ה-HTML לצילום
   ═══════════════════════════════════════ */
   function buildTemplate() {
-    var navy   = '#0a192f';
-    var gold   = '#f9b915';
-    var slate  = '#374151';
-    var light  = '#f1f5f9';
-    var mutual = 'font-family:Heebo,Arial,sans-serif;';
+    var navy  = '#0a192f';
+    var gold  = '#f9b915';
+    var slate = '#374151';
+    var light = '#f1f5f9';
+    var ff    = 'font-family:Heebo,Arial,sans-serif;';
 
-    // Header
-    var html = '<div style="'+ mutual +'width:794px;background:#fff;direction:rtl;'
+    /* Header */
+    var html =
+      '<div style="'+ ff +'width:794px;background:#fff;direction:rtl;'
       + 'padding:52px 48px 44px;box-sizing:border-box;color:'+ navy +';">'
 
-      // Cover header
       + '<div style="text-align:center;margin-bottom:36px;padding-bottom:26px;'
       + 'border-bottom:3px solid '+ gold +';">'
-      + '<div style="font-size:11px;font-weight:800;color:'+ gold +';letter-spacing:1.5px;'
-      + 'text-transform:uppercase;margin-bottom:10px;">NEXTVOICE AI &nbsp;·&nbsp; המדריך המעשי</div>'
-      + '<div style="font-size:30px;font-weight:900;color:'+ navy +';line-height:1.3;">'
+      + '<div style="'+ ff +'font-size:13px;font-weight:800;color:'+ gold +';'
+      + 'letter-spacing:1px;margin-bottom:10px;">המדריך המעשי</div>'
+      + '<div style="'+ ff +'font-size:28px;font-weight:900;color:'+ navy +';line-height:1.3;">'
       + '36 המהלכים להזנקת<br>כמות ההמלצות שלכם בגוגל</div>'
-      + '<div style="font-size:14px;color:#64748b;margin-top:10px;font-weight:500;">'
+      + '<div style="'+ ff +'font-size:14px;color:#64748b;margin-top:10px;font-weight:500;">'
       + 'כל הטכניקות, הניסוחים והאסטרטגיות — במסמך אחד</div>'
       + '</div>';
 
-    // Tips
+    /* Tips — class="tip-card" is used for position measurement */
     TIPS.forEach(function(t, i){
-      // Alternate very subtle bg for readability
       var bg = (i % 2 === 0) ? light : '#ffffff';
-      html += '<div style="margin-bottom:14px;padding:15px 18px 13px;'
-        + 'background:'+ bg +';border-radius:10px;'
-        + 'border-right:4px solid '+ gold +';page-break-inside:avoid;">'
+      html +=
+        '<div class="tip-card" style="margin-bottom:14px;padding:15px 18px 13px;'
+        + 'background:'+ bg +';border-radius:10px;border-right:4px solid '+ gold +';">'
         + '<div style="display:flex;align-items:flex-start;gap:12px;">'
-        + '<div style="'+ mutual +'min-width:32px;height:32px;border-radius:50%;'
-        + 'background:'+ navy +';color:'+ gold +';'
-        + 'display:flex;align-items:center;justify-content:center;'
-        + 'font-size:13px;font-weight:900;flex-shrink:0;margin-top:1px;">'+ t.n +'</div>'
+        + '<div style="'+ ff +'min-width:32px;height:32px;border-radius:50%;'
+        + 'background:'+ navy +';color:'+ gold +';display:flex;align-items:center;'
+        + 'justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;margin-top:1px;">'
+        + t.n +'</div>'
         + '<div>'
-        + '<div style="'+ mutual +'font-size:16px;font-weight:800;color:'+ navy +';margin-bottom:5px;">'
+        + '<div style="'+ ff +'font-size:16px;font-weight:800;color:'+ navy +';margin-bottom:5px;">'
         + t.title +'</div>'
-        + '<div style="'+ mutual +'font-size:13px;color:'+ slate +';line-height:1.72;">'
+        + '<div style="'+ ff +'font-size:13px;color:'+ slate +';line-height:1.72;">'
         + t.text +'</div>'
-        + '</div>'
-        + '</div>'
-        + '</div>';
+        + '</div></div></div>';
     });
 
-    // Footer CTA
-    html += '<div style="margin-top:28px;padding:26px 28px;'
-      + 'background:'+ navy +';border-radius:14px;text-align:center;">'
-      + '<div style="'+ mutual +'font-size:18px;font-weight:900;color:'+ gold +';margin-bottom:8px;">'
-      + 'רוצים שנעשה את זה בשבילכם?</div>'
-      + '<div style="'+ mutual +'font-size:13px;color:rgba(250,248,244,.75);line-height:1.65;margin-bottom:14px;">'
-      + 'NextVoice AI מציעה חבילת ניהול המלצות שתציב אתכם בראש תוצאות גוגל<br>'
-      + 'ותהפוך אתכם להמלצה הראשונה שמודלי הבינה המלאכותית נותנים</div>'
-      + '<div style="'+ mutual +'font-size:15px;font-weight:800;color:'+ gold +';">'
-      + '💬 WhatsApp: '+ WA_NUM +'&nbsp;&nbsp;|&nbsp;&nbsp;'+ WA_LINK +'</div>'
+    /* Footer — clean CTA, no branding */
+    html +=
+      '<div style="margin-top:28px;padding:22px 26px;'
+      + 'background:'+ light +';border-radius:12px;border-top:3px solid '+ gold +';'
+      + 'text-align:center;">'
+      + '<div style="'+ ff +'font-size:16px;font-weight:900;color:'+ navy +';margin-bottom:8px;">'
+      + 'התחילו ליישם — ותראו תוצאות תוך שבוע!</div>'
+      + '<div style="'+ ff +'font-size:13px;color:#64748b;line-height:1.65;margin-bottom:10px;">'
+      + 'בחרו 3–5 שיטות שנראות לכם הכי קלות ליישום, ונסו אותן השבוע.</div>'
+      + '<div style="'+ ff +'font-size:14px;font-weight:700;color:'+ navy +';">'
+      + 'שאלות? נשמח לעזור &nbsp;·&nbsp; 💬 '+ WA_NUM +'</div>'
       + '</div>'
-
       + '</div>'; // /outer wrapper
 
     return html;
@@ -276,67 +275,104 @@
   function generatePDF(btn) {
     document.fonts.ready.then(function(){
 
-      // Create offscreen container
+      /* 1. הוסף את ה-template ל-DOM (מחוץ למסך) */
       var wrap = document.createElement('div');
       wrap.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-100;width:794px;';
       wrap.innerHTML = buildTemplate();
       document.body.appendChild(wrap);
 
+      /* 2. מדוד את מיקום כל כרטיס-טיפ לפני הצילום */
+      var cards = wrap.querySelectorAll('.tip-card');
+      var wrapTop = wrap.getBoundingClientRect().top;
+      var cardRects = [];
+      Array.prototype.forEach.call(cards, function(card){
+        var r = card.getBoundingClientRect();
+        cardRects.push({
+          top:    r.top    - wrapTop,
+          bottom: r.bottom - wrapTop
+        });
+      });
+
+      /* 3. צלם את ה-template עם html2canvas */
       window.html2canvas(wrap.firstElementChild, {
-        scale: 1.8,
-        useCORS: true,
+        scale:           SCALE,
+        useCORS:         true,
         backgroundColor: '#ffffff',
-        logging: false,
-        allowTaint: true
+        logging:         false,
+        allowTaint:      true
       }).then(function(canvas){
         document.body.removeChild(wrap);
 
-        var jsPDF = window.jspdf.jsPDF;
-        var pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+        var jsPDF   = window.jspdf.jsPDF;
+        var pdf     = new jsPDF({ orientation:'portrait', unit:'pt', format:'a4' });
+        var pageW   = pdf.internal.pageSize.getWidth();   // 595.28 pt
+        var pageH   = pdf.internal.pageSize.getHeight();  // 841.89 pt
+        var imgW    = canvas.width;
+        var imgH    = canvas.height;
+        var ratio   = pageW / imgW;                       // canvas px → pt
 
-        var pageW = pdf.internal.pageSize.getWidth();   // 595.28 pt
-        var pageH = pdf.internal.pageSize.getHeight();  // 841.89 pt
+        /* המרת מיקומי כרטיסים ל-pixels של ה-canvas */
+        var cardsPx = cardRects.map(function(r){
+          return { top: r.top * SCALE, bottom: r.bottom * SCALE };
+        });
 
-        var imgW   = canvas.width;
-        var imgH   = canvas.height;
-        var ratio  = pageW / imgW;           // scale factor canvas→pt
-        var scaledH = imgH * ratio;          // total rendered height in pt
-        var pages  = Math.ceil(scaledH / pageH);
+        /* 4. חשב גבולות דפים — הימנע מקטיעת כרטיסים */
+        var pageHPx = pageH / ratio;  // גובה דף ב-canvas pixels
+        var slices  = [];             // [{start, end}] ב-canvas pixels
+        var cur     = 0;
 
-        for (var p = 0; p < pages; p++) {
-          if (p > 0) pdf.addPage();
+        while (cur < imgH) {
+          var ideal = cur + pageHPx;
+          if (ideal >= imgH) { slices.push({ s: cur, e: imgH }); break; }
 
-          // Source slice in canvas pixels
-          var srcY = Math.round(p * pageH / ratio);
-          var srcH = Math.min(Math.round(pageH / ratio), imgH - srcY);
-          if (srcH <= 0) break;
+          /* בדוק האם הגבול החותך עובר דרך כרטיס */
+          var cutAt = ideal;
+          for (var i = 0; i < cardsPx.length; i++) {
+            var c = cardsPx[i];
+            if (c.top < ideal && c.bottom > ideal) {
+              /* הזז את הגבול למעלה, לפני תחילת הכרטיס */
+              cutAt = c.top - 4;
+              break;
+            }
+          }
+          /* הגנה: אם הכרטיס גדול מדף שלם, קצץ בלית ברירה */
+          if (cutAt <= cur) cutAt = ideal;
 
-          // Draw slice to a temp canvas
-          var slice = document.createElement('canvas');
-          slice.width  = imgW;
-          slice.height = srcH;
-          var sCtx = slice.getContext('2d');
+          slices.push({ s: cur, e: cutAt });
+          cur = cutAt;
+        }
+
+        /* 5. רנדר כל פרוסה כ-JPEG והוסף לפי עמוד */
+        slices.forEach(function(sl, idx){
+          if (idx > 0) pdf.addPage();
+
+          var srcH = Math.round(sl.e - sl.s);
+          if (srcH <= 0) return;
+
+          var sliceCanvas = document.createElement('canvas');
+          sliceCanvas.width  = imgW;
+          sliceCanvas.height = srcH;
+          var sCtx = sliceCanvas.getContext('2d');
           sCtx.fillStyle = '#ffffff';
           sCtx.fillRect(0, 0, imgW, srcH);
-          sCtx.drawImage(canvas, 0, srcY, imgW, srcH, 0, 0, imgW, srcH);
+          sCtx.drawImage(canvas, 0, Math.round(sl.s), imgW, srcH, 0, 0, imgW, srcH);
 
-          var imgData = slice.toDataURL('image/jpeg', 0.93);
-          var drawH   = srcH * ratio;
-          pdf.addImage(imgData, 'JPEG', 0, 0, pageW, drawH);
-        }
+          var imgData = sliceCanvas.toDataURL('image/jpeg', 0.93);
+          pdf.addImage(imgData, 'JPEG', 0, 0, pageW, srcH * ratio);
+        });
 
         pdf.save('מדריך-36-שיטות-המלצות-גוגל.pdf');
 
-        if (btn) {
+        if (btn){
           btn.textContent = '✅ הורד בהצלחה!';
           btn.disabled = false;
-          setTimeout(function(){ btn.textContent = '📥 הורד מדריך לדוגמה'; }, 3000);
+          setTimeout(function(){ btn.textContent = '📥 הורד את המדריך המלא'; }, 3000);
         }
 
       }).catch(function(err){
         console.error('[pdf-guide]', err);
         if (btn){ btn.textContent = '❌ שגיאה — נסו שנית'; btn.disabled = false; }
-        document.body.removeChild(wrap);
+        if (document.body.contains(wrap)) document.body.removeChild(wrap);
       });
     });
   }
@@ -344,7 +380,7 @@
   /* ═══════════════════════════════════════
      נקודת כניסה ציבורית
   ═══════════════════════════════════════ */
-  window.downloadGuide = function() {
+  window.downloadGuide = function(){
     var btn = document.getElementById('guideDownloadBtn');
     if (btn){ btn.textContent = '⏳ מכין קובץ PDF...'; btn.disabled = true; }
 
