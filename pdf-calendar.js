@@ -1,6 +1,7 @@
 /**
- * pdf-calendar.js — לוח משימות חודשי PDF
- * html2canvas + jsPDF | RTL עברית | Smart page-break
+ * pdf-calendar.js — תוכנית עבודה שבועית PDF
+ * 4 שבועות × 7 ימים | ימי א'-ה' פעילים | RTL עברית
+ * html2canvas + jsPDF | Smart page-break
  */
 (function(){
   'use strict';
@@ -8,70 +9,95 @@
   var SCALE = 1.8;
   var BRAND = 'המלצות לקידום פרופיל העסק בגוגל | נבנה ע"י הדס אדלר';
 
+  /* כותרות עמודות ימי השבוע */
+  var DAY_LABELS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+
   /* ═══════════════════════════════════════
-     20 המשימות החודשיות
+     4 שבועות × 7 ימים
+     tasks[0-4] = א-ה פעיל | tasks[5-6] = null (שישי/שבת)
   ═══════════════════════════════════════ */
-  var TASKS = [
-    { day: 1,  label:'פוסט פתיחת חודש',
-      desc:'שתפו הצלחה מהחודש שעבר עם קישור להמלצות.' },
-    { day: 2,  label:'בדיקת נוכחות',
-      desc:'ודאו שקישור הכרטיס מופיע ב"ביו" באינסטגרם ובטיקטוק.' },
-    { day: 4,  label:'סטורי מאחורי הקלעים',
-      desc:'תמונה מהעבודה עם מדבקת קישור להמלצה.' },
-    { day: 6,  label:'סידור חתימת מייל',
-      desc:'ודאו שמתחת לחתימה במייל מופיע משפט הזמנה וקישור.' },
-    { day: 8,  label:'פנייה אישית',
-      desc:'בחרו לקוח מרוצה במיוחד ושלחו לו הודעת וואטסאפ אישית.' },
-    { day: 10, label:'סבב משפחה וחברים',
-      desc:'הודעה בקבוצה המשפחתית לבקשת פרגון.' },
-    { day: 11, label:'תחזוקת תגובות',
-      desc:'ענו לכל ההמלצות האחרונות שקיבלתם בפרופיל הגוגל.' },
-    { day: 13, label:'הוכחה חברתית',
-      desc:'צילום מסך של מחמאה בוואטסאפ לסטורי עם קישור.' },
-    { day: 15, label:'משימת דלפק',
-      desc:'ודאו שדף ה-QR המודפס נמצא במקום בולט ונקי (לעסקים פיזיים).' },
-    { day: 16, label:'דיוור לקוחות',
-      desc:'שלחו מייל קצר לרשימת התפוצה: "הדעה שלכם חשובה לנו".' },
-    { day: 18, label:'וואטסאפ סטטוס',
-      desc:'העלו תמונה של לקוח מרוצה לסטטוס עם הקישור.' },
-    { day: 20, label:'גיוס קולגות',
-      desc:'פנו לקולגה להחלפת המלצות מקצועיות הדדיות.' },
-    { day: 21, label:'קידום אישי',
-      desc:'שלחו הודעה לחברים בוואטסאפ שאתם מקדמים את העסק ותשמחו לדירוג 5 כוכבים.' },
-    { day: 23, label:'לקוח עבר',
-      desc:'הודעת "מה שלומך" ללקוח מלפני 3 חודשים עם הקישור.' },
-    { day: 25, label:'פוסט סיכום',
-      desc:'העלו פוסט עם 3 המלצות חזקות שקיבלתם החודש.' },
-    { day: 26, label:'סטטוס חוזר',
-      desc:'פוסט/סטורי נוסף ברשתות עם בקשה פשוטה לפרגון.' },
-    { day: 27, label:'פנייה פנים אל פנים',
-      desc:'בקשו המלצה לפחות מלקוח אחד בסיום שירות היום.' },
-    { day: 28, label:'סטורי הדרכה',
-      desc:'צילום מסך של הכרטיס עם הסבר קצר כמה קל להמליץ.' },
-    { day: 30, label:'תודה לקהילה',
-      desc:'פוסט תודה לכל מי שפרגן החודש עם קישור למי שפספס.' },
-    { day: 31, label:'תכנון קדימה',
-      desc:'בחרו 3 לקוחות לפנייה אישית בשבוע הבא.' }
+  var WEEKS = [
+    {
+      label:'שבוע 1',
+      tasks:[
+        { label:'פוסט פתיחת חודש',
+          desc:'שתפו הצלחה מהחודש שעבר עם קישור להמלצות.' },
+        { label:'בדיקת נוכחות בביו',
+          desc:'ודאו שקישור הכרטיס מופיע ב"ביו" באינסטגרם ובטיקטוק.' },
+        { label:'סטורי מאחורי הקלעים',
+          desc:'תמונה מהעבודה עם מדבקת קישור להמלצה.' },
+        { label:'סידור חתימת מייל',
+          desc:'ודאו שמתחת לחתימה במייל מופיע משפט הזמנה וקישור.' },
+        { label:'פנייה אישית בוואטסאפ',
+          desc:'בחרו לקוח מרוצה במיוחד ושלחו לו הודעת וואטסאפ אישית.' },
+        null, null
+      ]
+    },
+    {
+      label:'שבוע 2',
+      tasks:[
+        { label:'הודעה בקבוצה משפחתית',
+          desc:'הודעה בקבוצה המשפחתית לבקשת פרגון.' },
+        { label:'תחזוקת תגובות בגוגל',
+          desc:'ענו לכל ההמלצות האחרונות שקיבלתם בפרופיל הגוגל.' },
+        { label:'הוכחה חברתית בסטורי',
+          desc:'צילום מסך של מחמאה בוואטסאפ לסטורי עם קישור.' },
+        { label:'משימת דלפק / QR',
+          desc:'ודאו שדף ה-QR המודפס נמצא במקום בולט ונקי (לעסקים פיזיים).' },
+        { label:'דיוור לרשימת תפוצה',
+          desc:'שלחו מייל קצר לרשימת התפוצה: "הדעה שלכם חשובה לנו".' },
+        null, null
+      ]
+    },
+    {
+      label:'שבוע 3',
+      tasks:[
+        { label:'תמונה לסטטוס וואטסאפ',
+          desc:'העלו תמונה של לקוח מרוצה לסטטוס עם הקישור.' },
+        { label:'גיוס קולגות',
+          desc:'פנו לקולגה להחלפת המלצות מקצועיות הדדיות.' },
+        { label:'קידום אישי לחברים',
+          desc:'שלחו הודעה לחברים בוואטסאפ שאתם מקדמים את העסק ותשמחו לדירוג 5 כוכבים.' },
+        { label:'פנייה ללקוח עבר',
+          desc:'הודעת "מה שלומך" ללקוח מלפני 3 חודשים עם הקישור.' },
+        { label:'פוסט 3 המלצות חזקות',
+          desc:'העלו פוסט עם 3 המלצות חזקות שקיבלתם החודש.' },
+        null, null
+      ]
+    },
+    {
+      label:'שבוע 4',
+      tasks:[
+        { label:'פוסט / סטורי חוזר',
+          desc:'העלו פוסט/סטורי נוסף ברשתות עם בקשה פשוטה לפרגון.' },
+        { label:'פנייה פנים אל פנים',
+          desc:'בקשו המלצה לפחות מלקוח אחד בסיום שירות היום.' },
+        { label:'סטורי הדרכה',
+          desc:'צילום מסך של הכרטיס עם הסבר קצר כמה קל להמליץ.' },
+        { label:'פוסט תודה לקהילה',
+          desc:'פוסט תודה לכל מי שפרגן החודש עם קישור למי שפספס.' },
+        { label:'תכנון לשבוע הבא',
+          desc:'בחרו 3 לקוחות לפנייה אישית בשבוע הבא.' },
+        null, null
+      ]
+    }
   ];
 
   /* ═══════════════════════════════════════
      בניית ה-HTML לצילום
   ═══════════════════════════════════════ */
-  function buildTemplate() {
-    var navy  = '#0a192f';
-    var gold  = '#f9b915';
-    var light = '#f1f5f9';
-    var slate = '#374151';
-    var ff    = 'font-family:Heebo,Arial,sans-serif;';
+  function buildTemplate(){
+    var navy     = '#0a192f';
+    var gold     = '#f9b915';
+    var light    = '#f1f5f9';
+    var slate    = '#374151';
+    var restBg   = '#e8edf3'; /* שישי/שבת */
+    var ff       = 'font-family:Heebo,Arial,sans-serif;';
 
-    /* מפה: day → task */
-    var taskMap = {};
-    TASKS.forEach(function(t){ taskMap[t.day] = t; });
-
-    /* ── עטיפה ראשית ── */
+    /* ── עטיפה ── */
     var html =
       '<div style="'+ ff +'width:794px;background:#fff;direction:rtl;'
-      + 'padding:38px 40px 40px;box-sizing:border-box;color:'+ navy +';">';
+      + 'padding:38px 36px 40px;box-sizing:border-box;color:'+ navy +';">';
 
     /* ── כותרת ── */
     html +=
@@ -80,62 +106,83 @@
       + '<div style="'+ ff +'font-size:11px;font-weight:800;color:'+ gold
       + ';letter-spacing:1.2px;margin-bottom:8px;">המדריך המעשי</div>'
       + '<div style="'+ ff +'font-size:22px;font-weight:900;color:'+ navy
-      + ';line-height:1.35;">לוח המשימות החודשי לקידום<br>וחיזוק הנוכחות בגוגל</div>'
+      + ';line-height:1.35;">תוכנית עבודה שבועית לחיזוק<br>הנוכחות והדירוג בגוגל</div>'
       + '<div style="'+ ff +'font-size:12px;color:#64748b;margin-top:7px;font-weight:500;">'
-      + 'בצעו משימה אחת ביום המסומן — ותראו שיפור משמעותי בדירוג ובמוניטין</div>'
+      + 'משימה אחת בכל יום עבודה — 20 פעולות לחודש שישמרו אתכם קדימה</div>'
       + '</div>';
 
-    /* ── לוח שנה Grid (table) ──
-       שורות של 7 ימים: 1-7, 8-14, 15-21, 22-28, 29-31
-       תאי משימה = רקע נייבי + מספר זהוב + תווית לבנה
-       תאים ריקים = רקע בהיר + מספר אפור
+    /* ── טבלת לוח שבועי ──
+       8 עמודות: תווית שבוע + 7 ימי שבוע (א-ז)
+       כל תא-משימה: רקע נייבי + כותרת זהב + טקסט לבן
+       שישי/שבת: עמוד מנוחה (אפור)
     */
-    html +=
-      '<table style="width:100%;border-collapse:separate;border-spacing:3px;'
-      + 'margin-bottom:16px;">';
 
-    var rows = [];
-    var cur  = [];
-    for (var d = 1; d <= 31; d++) {
-      cur.push(d);
-      if (cur.length === 7) { rows.push(cur); cur = []; }
-    }
-    if (cur.length) {
-      while (cur.length < 7) cur.push(null); // pad last row
-      rows.push(cur);
-    }
+    /* גובה כותרת עמודות */
+    var HDR_H  = '34px';
+    /* גובה שורת שבוע */
+    var ROW_H  = '90px';
+    /* רוחב תווית שבוע */
+    var WK_W   = '46px';
 
-    rows.forEach(function(row){
+    html += '<table style="width:100%;border-collapse:separate;border-spacing:3px;'
+      + 'margin-bottom:18px;">';
+
+    /* שורת כותרת */
+    html += '<tr>';
+    /* תא ריק מעל תווית השבוע */
+    html += '<th style="width:'+ WK_W +';height:'+ HDR_H +';background:'+ light +';'
+      + 'border-radius:6px;"></th>';
+    /* ימי השבוע */
+    DAY_LABELS.forEach(function(day, idx){
+      var isFri = idx === 5, isSat = idx === 6, isRest = isFri || isSat;
+      var bg    = isRest ? restBg : navy;
+      var color = isRest ? '#94a3b8' : gold;
+      html += '<th style="height:'+ HDR_H +';background:'+ bg +';border-radius:6px;'
+        + ff +'font-size:12px;font-weight:900;color:'+ color +';text-align:center;">'
+        + day +'</th>';
+    });
+    html += '</tr>';
+
+    /* שורות שבועות */
+    WEEKS.forEach(function(week){
       html += '<tr>';
-      row.forEach(function(day){
-        if (day === null) {
-          /* תא ריק */
-          html += '<td style="width:14.28%;height:78px;background:#f8fafc;'
-            + 'border-radius:7px;"></td>';
-        } else if (taskMap[day]) {
+
+      /* תווית שבוע */
+      html += '<td style="width:'+ WK_W +';height:'+ ROW_H +';background:'+ navy +';'
+        + 'border-radius:7px;text-align:center;vertical-align:middle;'
+        + 'padding:4px 3px;">'
+        + '<div style="'+ ff +'font-size:10px;font-weight:900;color:'+ gold
+        + ';writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);">'
+        + week.label +'</div>'
+        + '</td>';
+
+      /* 7 ימים */
+      week.tasks.forEach(function(task, idx){
+        var isFri = idx === 5, isSat = idx === 6, isRest = isFri || isSat;
+
+        if (isRest){
+          /* שישי/שבת — מנוחה */
+          html += '<td style="height:'+ ROW_H +';background:'+ restBg +';'
+            + 'border-radius:7px;text-align:center;vertical-align:middle;">'
+            + '<div style="'+ ff +'font-size:10px;color:#94a3b8;font-weight:600;">'
+            + (isSat ? 'שבת שלום' : 'יום מנוחה')
+            + '</div></td>';
+        } else if (task){
           /* יום משימה */
-          var t = taskMap[day];
-          html +=
-            '<td style="width:14.28%;height:78px;background:'+ navy +';'
-            + 'border-radius:7px;padding:7px 7px 5px;vertical-align:top;'
+          html += '<td style="height:'+ ROW_H +';background:'+ navy +';'
+            + 'border-radius:7px;padding:9px 8px 7px;vertical-align:top;'
             + 'box-sizing:border-box;">'
-            + '<div style="'+ ff +'font-size:16px;font-weight:900;color:'+ gold
-            + ';line-height:1;">'+ day +'</div>'
-            + '<div style="'+ ff +'font-size:9px;font-weight:700;color:#fff;'
-            + 'line-height:1.42;margin-top:5px;word-break:break-word;">'
-            + t.label +'</div>'
+            + '<div style="'+ ff +'font-size:9.5px;font-weight:800;color:'+ gold
+            + ';line-height:1.38;word-break:break-word;">'
+            + task.label +'</div>'
             + '</td>';
         } else {
-          /* יום רגיל */
-          html +=
-            '<td style="width:14.28%;height:78px;background:'+ light +';'
-            + 'border-radius:7px;padding:7px 7px 5px;vertical-align:top;'
-            + 'box-sizing:border-box;">'
-            + '<div style="'+ ff +'font-size:16px;font-weight:700;color:#94a3b8;">'
-            + day +'</div>'
-            + '</td>';
+          /* תא ריק (לא אמור לקרות עם ה-data הנוכחי) */
+          html += '<td style="height:'+ ROW_H +';background:'+ light
+            + ';border-radius:7px;"></td>';
         }
       });
+
       html += '</tr>';
     });
 
@@ -143,45 +190,58 @@
 
     /* ── מקרא ── */
     html +=
-      '<div style="display:flex;gap:18px;align-items:center;margin-bottom:22px;'
-      + 'padding:9px 14px;background:'+ light +';border-radius:8px;">'
+      '<div style="display:flex;gap:16px;align-items:center;margin-bottom:22px;'
+      + 'padding:8px 14px;background:'+ light +';border-radius:8px;flex-wrap:wrap;">'
       + '<div style="display:flex;align-items:center;gap:7px;">'
-      + '<div style="width:13px;height:13px;background:'+ navy
+      + '<div style="width:12px;height:12px;background:'+ navy
       + ';border-radius:3px;flex-shrink:0;"></div>'
-      + '<span style="'+ ff +'font-size:11px;color:#475569;font-weight:700;">יום עם משימה</span>'
+      + '<span style="'+ ff +'font-size:11px;color:#475569;font-weight:700;">משימה פעילה</span>'
       + '</div>'
       + '<div style="display:flex;align-items:center;gap:7px;">'
-      + '<div style="width:13px;height:13px;background:#e2e8f0;'
-      + 'border-radius:3px;flex-shrink:0;"></div>'
-      + '<span style="'+ ff +'font-size:11px;color:#475569;font-weight:700;">יום חופשי</span>'
+      + '<div style="width:12px;height:12px;background:'+ restBg
+      + ';border:1px solid #cbd5e1;border-radius:3px;flex-shrink:0;"></div>'
+      + '<span style="'+ ff +'font-size:11px;color:#475569;font-weight:700;">יום מנוחה</span>'
       + '</div>'
-      + '<div style="'+ ff +'font-size:11px;color:#94a3b8;margin-right:auto;">'
-      + '✓ סמנו כל משימה לאחר ביצוע</div>'
+      + '<span style="'+ ff +'font-size:11px;color:#94a3b8;margin-right:auto;">'
+      + '✓ סמנו כל משימה לאחר ביצוע</span>'
       + '</div>';
 
-    /* ── כותרת פירוט משימות ── */
+    /* ── כותרת פירוט ── */
     html +=
       '<div style="'+ ff +'text-align:center;margin:4px 0 16px;font-size:14px;'
       + 'font-weight:900;color:'+ navy +';border-top:1px solid #e2e8f0;padding-top:17px;">'
-      + 'פירוט המשימות החודשיות</div>';
+      + 'פירוט המשימות השבועיות</div>';
 
-    /* ── כרטיסי פירוט ── */
-    TASKS.forEach(function(t, i){
-      var bg = (i % 2 === 0) ? '#f8fafc' : '#ffffff';
+    /* ── כרטיסי פירוט — כל 20 משימות ── */
+    var taskIdx = 0;
+    WEEKS.forEach(function(week, wi){
+      /* כותרת שבוע בתוך הפירוט */
       html +=
-        '<div class="tip-card" style="margin-bottom:10px;padding:12px 16px 11px;'
-        + 'background:'+ bg +';border-radius:9px;border-right:4px solid '+ gold +';">'
-        + '<div style="display:flex;align-items:flex-start;gap:12px;">'
-        + '<div style="'+ ff +'min-width:34px;height:34px;border-radius:50%;'
-        + 'background:'+ navy +';color:'+ gold +';display:flex;align-items:center;'
-        + 'justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;'
-        + 'line-height:1;">'+ t.day +'</div>'
-        + '<div>'
-        + '<div style="'+ ff +'font-size:14px;font-weight:800;color:'+ navy
-        + ';margin-bottom:4px;">'+ t.label +'</div>'
-        + '<div style="'+ ff +'font-size:13px;color:'+ slate +';line-height:1.7;">'
-        + t.desc +'</div>'
-        + '</div></div></div>';
+        '<div style="'+ ff +'font-size:12px;font-weight:900;color:'+ gold
+        + ';letter-spacing:.8px;text-transform:uppercase;margin:'
+        + (wi === 0 ? '0' : '16px') +' 0 8px;padding-bottom:4px;'
+        + 'border-bottom:1px solid rgba(249,185,21,.3);">'
+        + week.label +'</div>';
+
+      week.tasks.forEach(function(task, di){
+        if (!task) return;
+        var bg = (taskIdx % 2 === 0) ? '#f8fafc' : '#ffffff';
+        taskIdx++;
+
+        html +=
+          '<div class="tip-card" style="margin-bottom:9px;padding:11px 15px 10px;'
+          + 'background:'+ bg +';border-radius:9px;border-right:4px solid '+ gold +';">'
+          + '<div style="display:flex;align-items:flex-start;gap:11px;">'
+          + '<div style="'+ ff +'min-width:62px;font-size:11px;font-weight:800;'
+          + 'color:#64748b;margin-top:1px;white-space:nowrap;">'
+          + DAY_LABELS[di] +'</div>'
+          + '<div>'
+          + '<div style="'+ ff +'font-size:14px;font-weight:800;color:'+ navy
+          + ';margin-bottom:3px;">'+ task.label +'</div>'
+          + '<div style="'+ ff +'font-size:12.5px;color:'+ slate +';line-height:1.68;">'
+          + task.desc +'</div>'
+          + '</div></div></div>';
+      });
     });
 
     /* ── Footer ── */
@@ -191,10 +251,9 @@
       + '<div style="'+ ff +'font-size:15px;font-weight:900;color:'+ navy
       + ';margin-bottom:5px;">בצעו את המשימות בעקביות — וצפו בדירוג שלכם עולה!</div>'
       + '<div style="'+ ff +'font-size:12px;color:#64748b;line-height:1.6;">'
-      + 'עקביות חודשית היא הסוד האמיתי להצלחה בגוגל.</div>'
+      + '5 משימות בשבוע = 20 פעולות שיווקיות לחודש.</div>'
       + '</div>'
 
-      /* קרדיט */
       + '<div style="'+ ff +'text-align:center;margin-top:14px;font-size:11px;'
       + 'color:#94a3b8;font-weight:500;">'+ BRAND +'</div>'
 
@@ -215,18 +274,16 @@
   }
 
   /* ═══════════════════════════════════════
-     יצירת ה-PDF עם Smart page-break
+     Smart page-break + PDF
   ═══════════════════════════════════════ */
   function generatePDF(btn){
     document.fonts.ready.then(function(){
 
-      /* 1. הוסף template ל-DOM */
       var wrap = document.createElement('div');
       wrap.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-100;width:794px;';
       wrap.innerHTML = buildTemplate();
       document.body.appendChild(wrap);
 
-      /* 2. מדוד מיקום כרטיסי פירוט */
       var cards    = wrap.querySelectorAll('.tip-card');
       var wrapTop  = wrap.getBoundingClientRect().top;
       var cardRects = [];
@@ -235,7 +292,6 @@
         cardRects.push({ top: r.top - wrapTop, bottom: r.bottom - wrapTop });
       });
 
-      /* 3. html2canvas */
       window.html2canvas(wrap.firstElementChild, {
         scale: SCALE, useCORS: true,
         backgroundColor: '#ffffff', logging: false, allowTaint: true
@@ -254,7 +310,6 @@
           return { top: r.top * SCALE, bottom: r.bottom * SCALE };
         });
 
-        /* 4. Smart page-break */
         var pageHPx = pageH / ratio;
         var slices  = [];
         var cur     = 0;
@@ -265,38 +320,31 @@
           var cutAt = ideal;
           for (var i = 0; i < cardsPx.length; i++){
             var c = cardsPx[i];
-            if (c.top < ideal && c.bottom > ideal){
-              cutAt = c.top - 6;
-              break;
-            }
+            if (c.top < ideal && c.bottom > ideal){ cutAt = c.top - 6; break; }
           }
           if (cutAt <= cur) cutAt = ideal;
           slices.push({ s:cur, e:cutAt });
           cur = cutAt;
         }
 
-        /* 5. רנדר לדפי PDF */
         slices.forEach(function(sl, idx){
           if (idx > 0) pdf.addPage();
           var srcH = Math.round(sl.e - sl.s);
           if (srcH <= 0) return;
-
           var slice = document.createElement('canvas');
-          slice.width  = imgW;
-          slice.height = srcH;
+          slice.width = imgW; slice.height = srcH;
           var sCtx = slice.getContext('2d');
-          sCtx.fillStyle = '#ffffff';
-          sCtx.fillRect(0, 0, imgW, srcH);
+          sCtx.fillStyle = '#ffffff'; sCtx.fillRect(0,0,imgW,srcH);
           sCtx.drawImage(canvas, 0, Math.round(sl.s), imgW, srcH, 0, 0, imgW, srcH);
           pdf.addImage(slice.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, pageW, srcH * ratio);
         });
 
-        pdf.save('לוח-משימות-חודשי-גוגל.pdf');
+        pdf.save('תוכנית-עבודה-שבועית-גוגל.pdf');
 
         if (btn){
           btn.textContent = '✅ הורד בהצלחה!';
           btn.disabled = false;
-          setTimeout(function(){ btn.textContent = '📅 הורד את לוח המשימות'; }, 3000);
+          setTimeout(function(){ btn.textContent = '📅 הורד את תוכנית העבודה השבועית'; }, 3000);
         }
 
       }).catch(function(err){
@@ -313,7 +361,6 @@
   window.downloadCalendar = function(){
     var btn = document.getElementById('calendarDownloadBtn');
     if (btn){ btn.textContent = '⏳ מכין קובץ PDF...'; btn.disabled = true; }
-
     loadScript(
       'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
       function(){
