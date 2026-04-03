@@ -35,8 +35,8 @@
       background:radial-gradient(ellipse at 50% 0%,rgba(34,211,238,.07) 0%,transparent 65%);
     }
     .load-logo{
-      font-size:13px;font-weight:800;color:var(--turquoise);
-      letter-spacing:2.5px;text-transform:uppercase;opacity:.7;
+      font-size:24px;font-weight:900;color:var(--turquoise);
+      letter-spacing:1px;
     }
     .load-biz{
       font-size:30px;font-weight:900;color:#fff;
@@ -219,8 +219,8 @@
       background:linear-gradient(90deg,transparent,rgba(249,185,21,.35),transparent);
     }
     .divider-text{
-      font-size:12px;color:var(--orange);font-weight:900;
-      letter-spacing:1px;text-transform:uppercase;white-space:nowrap;
+      font-size:18px;color:var(--orange);font-weight:900;
+      letter-spacing:.5px;white-space:nowrap;
     }
 
     /* Package */
@@ -417,7 +417,8 @@
 
     /* Competitors heading — centered, authoritative */
     .comp-heading{text-align:center;margin-bottom:18px}
-    .comp-title{font-size:32px}
+    .comp-sec-label{font-size:16px;font-weight:900;color:var(--orange);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px}
+    .comp-title{font-size:36px}
     .comp-sub{font-size:20px;font-weight:600;margin-bottom:0}
 
     /* Desktop 2-column build layout */
@@ -493,6 +494,13 @@
     </div>
   </div>
 
+  <!-- Review/rating warning -->
+  <div id="reviewWarning" style="display:none" class="narrow fade d1">
+    <div style="background:rgba(249,185,21,.1);border:1.5px solid rgba(249,185,21,.35);border-radius:var(--r-lg);padding:18px 20px;font-size:17px;font-weight:700;color:var(--orange);line-height:1.55">
+      ⚠️ חשוב לדעת: העסק שלך זקוק למסה גדולה יותר של המלצות איכותיות כדי לשפר את הדירוג המקומי ולמשוך לקוחות חדשים.
+    </div>
+  </div>
+
   <!-- Missing fields -->
   <div id="missingSection" style="display:none" class="narrow">
     <div class="sec-label" style="font-size:15px;color:#fff;font-weight:900;letter-spacing:.5px;margin-bottom:10px">נתונים קריטיים בפרופיל</div>
@@ -515,7 +523,7 @@
   <!-- Competitors -->
   <div id="compSection" style="display:none" class="narrow">
     <div class="comp-heading">
-      <div class="sec-label">השוואת מתחרים</div>
+      <div class="comp-sec-label">השוואת מתחרים</div>
       <div class="sec-title comp-title">🏆 מתחרים מובילים באזורכם</div>
       <div class="sec-sub comp-sub">מי מוביל בגוגל ומי נשאר מאחור?</div>
     </div>
@@ -542,7 +550,7 @@
   <!-- Package -->
   <div class="package-card fade d5 narrow">
     <div class="pkg-top">
-      <div class="pkg-title">מה תקבלו בחבילה המקצועית?</div>
+      <div class="pkg-title">חבילת פרימיום לקידום העסק שלך בפרופיל העסק בגוגל הכוללת:</div>
       <div class="pkg-price">
         <div class="price-old">₪797</div>
         <div class="price-row">
@@ -629,7 +637,7 @@
 
           <!-- Color picker -->
           <div class="form-group">
-            <label class="form-label">צבע הכרטיס</label>
+            <label class="form-label">בחרו את צבע הכרטיס שלכם:</label>
             <div class="color-picker-row">
               <div class="color-swatches" id="swatchRow"></div>
               <div class="color-custom-wrap">
@@ -640,9 +648,19 @@
           </div>
         </div>
 
-        <button class="submit-btn" onclick="handleSubmit()">שלחו - ואנחנו נבנה את הכרטיס!</button>
-        <div style="font-size:13px;color:rgba(250,248,244,.45);line-height:1.65;text-align:center;padding:4px 8px">
-          לאחר השליחה תועברו לדף תשלום מאובטח, ומיד לאחר מכן תקבלו למייל את החבילה המלאה (דוח אופטימיזציה, ערכת QR, כרטיס חכם ומדריכי הבונוס).
+        <button class="submit-btn" onclick="handleSubmit()">שלחו - ואנו נבנה לכם את ערכת הפרימיום לקידום העסק שלכם</button>
+
+        <!-- Feature list below submit -->
+        <div style="background:rgba(249,185,21,.06);border:1.5px solid rgba(249,185,21,.2);border-radius:var(--r-lg);padding:20px 18px;display:flex;flex-direction:column;gap:11px">
+          <div style="font-size:14px;font-weight:900;color:var(--orange);margin-bottom:4px;letter-spacing:.3px">✅ מה כלול בחבילה שתקבלו:</div>
+          <div style="font-size:14px;color:rgba(250,248,244,.8);font-weight:600;line-height:1.55;display:flex;align-items:flex-start;gap:9px"><span style="color:var(--orange);flex-shrink:0">📇</span>כרטיס המלצות חכם עם מערכת סינון ביקורות - שולח לקוחות מרוצים לגוגל ומסנן ביקורות שליליות</div>
+          <div style="font-size:14px;color:rgba(250,248,244,.8);font-weight:600;line-height:1.55;display:flex;align-items:flex-start;gap:9px"><span style="color:var(--orange);flex-shrink:0">📄</span>ערכת PDF ממותגת עם QR קוד להדפסה ושיתוף - מוכנה לתלייה בעסק ולשליחה בווטסאפ</div>
+          <div style="font-size:14px;color:rgba(250,248,244,.8);font-weight:600;line-height:1.55;display:flex;align-items:flex-start;gap:9px"><span style="color:var(--orange);flex-shrink:0">📊</span>דוח אופטימיזציה מלא וניתוח "מילים חמות" שהמתחרים שלך משתמשים בהם</div>
+          <div style="font-size:14px;color:rgba(250,248,244,.8);font-weight:600;line-height:1.55;display:flex;align-items:flex-start;gap:9px"><span style="color:var(--turquoise);flex-shrink:0">🎁</span>המדריך המעשי ל-15 שיטות להשגת המלצות בקלות ובמהירות - כולל תסריטים מוכנים</div>
+          <div style="font-size:14px;color:rgba(250,248,244,.8);font-weight:600;line-height:1.55;display:flex;align-items:flex-start;gap:9px"><span style="color:var(--turquoise);flex-shrink:0">💬</span>תבניות WhatsApp מוכנות ומדריך לניהול ביקורות שליליות בלי לפגוע במוניטין</div>
+          <div style="margin-top:6px;padding-top:12px;border-top:1px solid rgba(250,248,244,.08);font-size:13px;color:rgba(250,248,244,.4);line-height:1.6;text-align:center">
+            🔒 לאחר השליחה תועברו לדף תשלום מאובטח. ומיד לאחר התשלום תקבלו למייל את החבילה המלאה.
+          </div>
         </div>
       </div><!-- /build-col-form -->
 
@@ -785,6 +803,10 @@
     var rc = (data && data.reviewCount) || 0;
     document.getElementById('bizReviews').textContent = rc.toLocaleString('he-IL') + ' ביקורות';
 
+    if (rc < 200 || (rating !== null && rating < 4.0)) {
+      document.getElementById('reviewWarning').style.display = 'block';
+    }
+
     if (!data || data.status==='ERROR'||data.status==='NO_ID'||data.status==='API_ERROR') return;
 
     /* missing fields */
@@ -842,7 +864,7 @@
   };
 
   /* ── Color swatches ── */
-  var SWATCHES = ['#0a192f','#1e3a5f','#1a1a2e','#2d1b69','#1b4332','#4a1942'];
+  var SWATCHES = ['#0a192f','#1e3a5f','#1a1a2e','#2d1b69','#1b4332','#4a1942','#dc2626','#f97316'];
   var activeColor = '#0a192f';
 
   var swatchRow = document.getElementById('swatchRow');
