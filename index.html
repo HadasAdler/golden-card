@@ -160,23 +160,64 @@ body{
 }
 .hero-badge::before{content:'★';font-size:18px}
 .hero-h1{
-  font-size:clamp(32px,7vw,48px);font-weight:800;
-  text-align:center;line-height:1.22;
+  font-size:clamp(28px,6vw,52px);font-weight:900;
+  text-align:center;line-height:1.18;
   color:#fff;
-  max-width:640px;margin-bottom:20px;
+  max-width:720px;margin-bottom:24px;
 }
 .hero-h1 em{
   font-style:normal;
-  background:none;
   -webkit-text-fill-color:var(--orange);
   color:var(--orange);
 }
 .hero-sub{
-  font-size:18px;color:rgba(250,248,244,.85);
-  text-align:center;max-width:520px;margin-bottom:44px;
+  font-size:clamp(16px,2.5vw,20px);color:rgba(250,248,244,.88);
+  text-align:center;max-width:600px;margin-bottom:36px;
   line-height:1.85;
 }
 .hero-sub strong{color:var(--turquoise);font-weight:700}
+
+/* Social proof counter */
+.social-proof{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(34,211,238,.08);border:1.5px solid rgba(34,211,238,.22);
+  border-radius:100px;padding:10px 22px;
+  margin-bottom:32px;animation:fadeUp .6s ease both;animation-delay:.3s;
+}
+.sp-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--turquoise);flex-shrink:0;
+  box-shadow:0 0 8px rgba(34,211,238,.7);
+  animation:pulse 2s ease-in-out infinite;
+}
+.sp-text{font-size:14px;color:rgba(250,248,244,.9);line-height:1.4}
+.sp-num{font-weight:900;color:var(--turquoise);font-size:15px}
+
+/* Scan description */
+.scan-desc{
+  font-size:13.5px;color:rgba(250,248,244,.6);
+  text-align:center;max-width:480px;margin-top:12px;line-height:1.6;
+}
+.scan-desc strong{color:rgba(250,248,244,.85);font-weight:600}
+
+/* Biz extra scan info */
+.biz-scan-info{
+  width:100%;max-width:560px;
+  background:rgba(34,211,238,.06);
+  border:1px solid rgba(34,211,238,.18);
+  border-radius:var(--r);padding:14px 18px;
+  display:flex;flex-direction:column;gap:8px;
+  margin-bottom:12px;animation:fadeUp .3s ease both;
+}
+.bsi-row{
+  display:flex;align-items:center;gap:10px;
+  font-size:13.5px;color:rgba(250,248,244,.85);line-height:1.4;
+}
+.bsi-icon{font-size:15px;flex-shrink:0;width:20px;text-align:center}
+.bsi-open{color:#4ade80;font-weight:700}
+.bsi-closed{color:#f87171;font-weight:700}
+.bsi-link{color:var(--turquoise);text-decoration:none;word-break:break-all}
+.bsi-link:hover{text-decoration:underline}
 
 /* Search */
 .search-wrap{width:100%;max-width:560px;position:relative;margin-bottom:16px;z-index:9998}
@@ -421,16 +462,17 @@ body{
 }
 .report-promise-list li::before{content:attr(data-icon);font-size:20px;flex-shrink:0;margin-top:1px}
 
-.analysis-cta-wrap{padding:14px 16px 20px}
+.analysis-cta-wrap{padding:20px 16px 24px}
 .analysis-cta-btn{
-  width:100%;padding:16px;
-  background:var(--orange);color:#0a192f;
-  border:none;border-radius:var(--r-lg);
-  font-size:15.5px;font-weight:700;cursor:pointer;
-  font-family:inherit;
-  box-shadow:var(--sh-o);transition:all .22s;
+  width:100%;padding:20px 24px;
+  background:linear-gradient(135deg,var(--orange) 0%,#e8a800 100%);
+  color:#0a192f;border:none;border-radius:var(--r-lg);
+  font-size:18px;font-weight:900;cursor:pointer;
+  font-family:inherit;line-height:1.3;
+  box-shadow:0 8px 32px rgba(249,185,21,.4);transition:all .22s;
+  animation:ring 2.5s ease-in-out infinite;
 }
-.analysis-cta-btn:hover{transform:translateY(-1px);box-shadow:0 10px 30px rgba(249,185,21,.42)}
+.analysis-cta-btn:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(249,185,21,.55)}
 
 /* Insight cards */
 .insight-row{
@@ -1449,17 +1491,23 @@ body{
 <!-- ══ STEP 1 — HERO ══ -->
 <section class="sec hero-sec on" id="s1">
   <button class="top-share-btn" onclick="doShareSite()" title="שתף את האתר"><span>🔗</span> שתף</button>
-  <div class="anim"><div class="hero-badge">כרטיס המלצות לגוגל</div></div>
+  <div class="anim"><div class="hero-badge">אבחון עסקי חינמי - Google Business</div></div>
   <h1 class="hero-h1 anim anim-d1">
-    חפשו את העסק שלכם<br>
-    וקבלו <em>אבחון שיווקי בחינם</em><br>
-    תוך 30 שניות
+    פרופיל העסק שלכם לא מופיע<br>
+    בשלושת התוצאות הראשונות בגוגל?<br>
+    <em>אתם מפסידים לקוחות בכל יום.</em>
   </h1>
   <p class="hero-sub anim anim-d2">
-    גלו איפה אתם עומדים ביחס למתחרים שלכם<br>
-    ב<strong>״פרופיל העסק בגוגל״</strong><br>
-    <span style="font-size:13px;color:var(--cream);opacity:.9;font-weight:500">— כך העסק שלכם מופיע במפות ובחיפוש של גוגל —</span>
+    פרופיל עסק מושקע והמלצות עדכניות ומרובות הם המפתח לעלייה בדירוג בגוגל
+    ולהופעה בתוצאות החיפוש של בינה מלאכותית, כמו <strong>ChatGPT</strong> ו-<strong>Gemini</strong>.<br>
+    בואו לבדוק היכן אתם ממוקמים ביחס למתחרים שלכם.
   </p>
+
+  <!-- Social proof counter -->
+  <div class="social-proof anim anim-d2">
+    <div class="sp-dot"></div>
+    <div class="sp-text">הצטרפו ל-<span class="sp-num" id="spCount">1,452</span> בעלי עסקים שכבר בדקו את המיקום שלהם בגוגל</div>
+  </div>
 
   <div class="search-wrap anim anim-d3">
     <div class="search-input-row">
@@ -1468,6 +1516,7 @@ body{
       <button class="search-go-btn" id="searchGoBtn" onclick="doSearch()">חפש עסק</button>
     </div>
     <div class="sdrop" id="sdrop"></div>
+    <p class="scan-desc">הסריקה המיידית כוללת: <strong>בדיקת דירוג העסק</strong>, <strong>השוואה מהירה למתחרים באזור</strong> וזיהוי חסמים ראשוניים.</p>
   </div>
   <div class="biz-card" id="bizCard" style="display:none">
     <div class="biz-card-pin">📍</div>
@@ -1484,8 +1533,14 @@ body{
       <span>בודק נתוני עסק...</span>
     </div>
     <div class="analysis-result" id="analysisResult" style="display:none">
-      <div class="analysis-header">📊 אבחון ראשוני - <span id="analysisName"></span></div>
+      <div class="analysis-header">📊 סריקת עסק מעמיקה - <span id="analysisName"></span></div>
       <div class="analysis-items" id="analysisItems"></div>
+      <!-- מידע נוסף שנסרק מגוגל -->
+      <div class="biz-scan-info" id="bizScanInfo" style="display:none">
+        <div class="bsi-row" id="bsiHours"></div>
+        <div class="bsi-row" id="bsiPhone"></div>
+        <div class="bsi-row" id="bsiWeb"></div>
+      </div>
       <div class="report-promise">
         <div class="report-promise-title">הכנו עבורך דוח מקיף <span style="color:var(--orange);font-weight:900">בחינם</span> הכולל:</div>
         <ul class="report-promise-list">
@@ -1503,7 +1558,7 @@ body{
         </div>
       </div>
       <div class="analysis-cta-wrap">
-        <button class="analysis-cta-btn" onclick="openModal()">שלח לי את הדו״ח המלא למייל ←</button>
+        <button class="analysis-cta-btn" onclick="openModal()">רוצים לדעת איך לעקוף את המתחרים שלכם? לחצו כאן ←</button>
       </div>
     </div>
   </div>
@@ -2169,6 +2224,36 @@ var biz   = null;
 var lead  = {};
 var brand = { color: '#0b1d3a', logo: null, url: '' };
 var analysisText = '';
+
+// ── Social Proof Counter ──
+(function(){
+  var BASE = 1452;
+  var KEY  = '_gcVisitors';
+  var stored = parseInt(localStorage.getItem(KEY) || '0', 10);
+  if (stored < BASE) stored = BASE;
+  // הוסף 1-3 ביקורים רנדומליים לכל טעינת דף
+  stored += Math.floor(Math.random() * 3) + 1;
+  localStorage.setItem(KEY, stored);
+
+  function fmt(n) {
+    return n.toLocaleString('he-IL');
+  }
+  function updateCounter(val) {
+    var el = document.getElementById('spCount');
+    if (el) el.textContent = fmt(val);
+  }
+  window.addEventListener('DOMContentLoaded', function() {
+    updateCounter(stored);
+    // עלייה רנדומלית כל 4-9 שניות
+    function tick() {
+      stored++;
+      localStorage.setItem(KEY, stored);
+      updateCounter(stored);
+      setTimeout(tick, 4000 + Math.random() * 5000);
+    }
+    setTimeout(tick, 5000 + Math.random() * 4000);
+  });
+})();
 var allLeads     = [];
 var adminAuthed  = false;
 var adminClickCount = 0;
@@ -2457,6 +2542,9 @@ function openAnalysis() {
       biz.count           = data.reviewCount || 0;
       biz.lastReview      = data.lastReviewTime || null;
       biz.lastReviewTs    = data.lastReviewTimestamp || null;
+      biz.phone           = data.phone || null;
+      biz.website         = data.website || null;
+      biz.openNow         = data.openNow;
 
       var rating   = biz.rating;
       var reviews  = biz.count;
@@ -2505,6 +2593,33 @@ function openAnalysis() {
       var rankCard = document.getElementById('localRankCard');
       if (rankCard) {
         rankCard.style.display = (rating < 4.3 || reviews < 30) ? 'flex' : 'none';
+      }
+
+      // מידע נוסף מסריקת גוגל - שעות, טלפון, אתר
+      var scanBox = document.getElementById('bizScanInfo');
+      var rowHours = document.getElementById('bsiHours');
+      var rowPhone = document.getElementById('bsiPhone');
+      var rowWeb   = document.getElementById('bsiWeb');
+      if (scanBox) {
+        var hasInfo = false;
+        if (rowHours && biz.openNow !== null && biz.openNow !== undefined) {
+          rowHours.innerHTML = '<span class="bsi-icon">🕐</span>'
+            + (biz.openNow
+              ? '<span class="bsi-open">פתוח כעת</span>'
+              : '<span class="bsi-closed">סגור כעת</span>');
+          hasInfo = true;
+        }
+        if (rowPhone && biz.phone) {
+          rowPhone.innerHTML = '<span class="bsi-icon">📞</span><span>'+escHtml(biz.phone)+'</span>';
+          hasInfo = true;
+        }
+        if (rowWeb && biz.website) {
+          var shortUrl = biz.website.replace(/^https?:\/\/(www\.)?/,'').split('/')[0];
+          rowWeb.innerHTML = '<span class="bsi-icon">🌐</span>'
+            +'<a class="bsi-link" href="'+escHtml(biz.website)+'" target="_blank" rel="noopener">'+escHtml(shortUrl)+'</a>';
+          hasInfo = true;
+        }
+        scanBox.style.display = hasInfo ? 'flex' : 'none';
       }
 
       // עדכן analysisText לשיתוף

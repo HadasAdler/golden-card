@@ -26,7 +26,7 @@ module.exports = async function handler(req, res) {
     const url = new URL('https://maps.googleapis.com/maps/api/place/details/json');
     url.searchParams.set('place_id', placeId.trim());
     // reviews מחזיר עד 5 הביקורות האחרונות עם relative_time_description
-    url.searchParams.set('fields', 'rating,user_ratings_total,name,reviews');
+    url.searchParams.set('fields', 'rating,user_ratings_total,name,reviews,opening_hours,formatted_phone_number,website');
     url.searchParams.set('language', 'he');
     url.searchParams.set('key', key);
 
@@ -59,7 +59,10 @@ module.exports = async function handler(req, res) {
       reviewCount:     typeof result.user_ratings_total === 'number' ? result.user_ratings_total : null,
       name:            result.name || null,
       lastReviewTime:      lastReviewTime,
-      lastReviewTimestamp: lastReview ? (lastReview.time || null) : null
+      lastReviewTimestamp: lastReview ? (lastReview.time || null) : null,
+      phone:           result.formatted_phone_number || null,
+      website:         result.website || null,
+      openNow:         result.opening_hours ? (result.opening_hours.open_now ?? null) : null
     });
 
   } catch (err) {
