@@ -1511,6 +1511,19 @@ body{
 </head>
 <body>
 
+<!-- ══ TEST: GUIDE DOWNLOAD BUTTON (temporary) ══ -->
+<div style="position:fixed;bottom:22px;left:22px;z-index:9999;">
+  <button id="guideDownloadBtn" onclick="downloadGuide()"
+    style="background:linear-gradient(135deg,#f9b915,#e8a800);color:#0a192f;
+           border:none;border-radius:14px;padding:13px 22px;
+           font-family:Heebo,sans-serif;font-size:15px;font-weight:900;
+           cursor:pointer;box-shadow:0 8px 28px rgba(249,185,21,.5);
+           direction:rtl;display:flex;align-items:center;gap:8px;
+           transition:all .22s;">
+    📥 הורד מדריך לדוגמה
+  </button>
+</div>
+
 <!-- STEPPER -->
 <div class="stepper" id="stepper">
   <div class="step-track">
@@ -3303,5 +3316,6 @@ function closeLegal(id) {
   });
 });
 </script>
+<script src="/pdf-guide.js"></script>
 </body>
 </html>
