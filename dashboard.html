@@ -290,8 +290,8 @@ html,body{
 
 /* ─── INSTRUCTIONS CARD ─── */
 .instr-card{
-  background:rgba(34,211,238,.06);
-  border:1.5px solid rgba(34,211,238,.3);
+  background:rgba(249,185,21,.07);
+  border:1.5px solid rgba(249,185,21,.35);
   border-radius:14px;
   padding:20px 22px;
   margin-bottom:20px;
@@ -299,7 +299,7 @@ html,body{
 .instr-card-title{
   font-size:15px;
   font-weight:700;
-  color:var(--turquoise);
+  color:var(--gold);
   margin-bottom:14px;
 }
 .instr-list{
@@ -318,7 +318,7 @@ html,body{
 }
 .instr-list li::before{
   content:'✦';
-  color:var(--turquoise);
+  color:var(--gold);
   font-size:10px;
   margin-top:4px;
   flex-shrink:0;
@@ -480,26 +480,26 @@ html,body{
 .col-week{
   background:var(--navy);
   color:var(--gold);
-  font-size:12px;
-  font-weight:700;
-  width:60px;
-  padding:10px 4px;
+  font-size:13px;
+  font-weight:800;
+  width:66px;
+  padding:12px 5px;
   white-space:nowrap;
 }
 .col-day-header{
-  background:#e8f0f7;
-  color:var(--navy);
-  font-size:12px;
-  font-weight:700;
-  padding:10px 6px;
+  background:#dde6f0;
+  color:#0a192f;
+  font-size:13px;
+  font-weight:800;
+  padding:12px 8px;
 }
 .cal-task{
   background:var(--navy);
   color:var(--gold);
-  font-size:9.5px;
+  font-size:11.5px;
   font-weight:700;
-  padding:10px 6px;
-  line-height:1.4;
+  padding:12px 8px;
+  line-height:1.45;
 }
 .btn-download-cal{
   display:inline-flex;
@@ -524,57 +524,59 @@ html,body{
 
 /* ─── GUIDE TAB ─── */
 .tip-card{
-  background:var(--navy-card);
-  border-radius:12px;
-  padding:18px 20px;
+  background:#16304f;
+  border-radius:14px;
+  padding:20px 22px;
   border-right:4px solid var(--gold);
-  margin-bottom:12px;
+  border:1.5px solid rgba(249,185,21,.22);
+  border-right:4px solid var(--gold);
+  margin-bottom:14px;
   display:flex;
   align-items:flex-start;
-  gap:14px;
+  gap:16px;
 }
 .tip-num{
-  width:34px;
-  height:34px;
+  width:40px;
+  height:40px;
   border-radius:50%;
   background:var(--gold);
   color:var(--navy);
-  font-size:14px;
-  font-weight:800;
+  font-size:16px;
+  font-weight:900;
   display:flex;
   align-items:center;
   justify-content:center;
   flex-shrink:0;
 }
 .tip-title{
-  font-size:15px;
-  font-weight:700;
-  color:var(--cream);
-  line-height:1.4;
-  padding-top:4px;
+  font-size:17px;
+  font-weight:800;
+  color:#fff;
+  line-height:1.35;
+  padding-top:2px;
 }
 .tip-desc{
-  font-size:13px;
-  color:rgba(250,248,244,.6);
-  line-height:1.65;
-  margin-top:5px;
+  font-size:15px;
+  color:rgba(250,248,244,.72);
+  line-height:1.7;
+  margin-top:7px;
   font-weight:400;
 }
 .detail-row{
-  display:flex;gap:12px;padding:12px 16px;
-  background:rgba(17,34,64,.6);border-radius:10px;
-  margin-bottom:8px;border:1px solid rgba(249,185,21,.1);
+  display:flex;gap:14px;padding:15px 18px;
+  background:#16304f;border-radius:12px;
+  margin-bottom:10px;border:1px solid rgba(249,185,21,.18);
 }
 .detail-day{
-  min-width:56px;font-size:11px;font-weight:800;
+  min-width:60px;font-size:13px;font-weight:800;
   color:var(--gold);padding-top:3px;flex-shrink:0;
 }
-.detail-task-title{font-size:14px;font-weight:700;color:var(--cream);margin-bottom:3px;}
-.detail-task-desc{font-size:12.5px;color:rgba(250,248,244,.55);line-height:1.6;}
+.detail-task-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;}
+.detail-task-desc{font-size:14px;color:rgba(250,248,244,.65);line-height:1.65;}
 .detail-week-header{
-  font-size:13px;font-weight:900;color:var(--gold);
-  letter-spacing:.7px;margin:20px 0 10px;
-  padding-bottom:6px;border-bottom:1px solid rgba(249,185,21,.22);
+  font-size:15px;font-weight:900;color:var(--gold);
+  letter-spacing:.7px;margin:24px 0 12px;
+  padding-bottom:8px;border-bottom:2px solid rgba(249,185,21,.3);
 }
 .btn-download-guide{
   display:inline-flex;
@@ -712,60 +714,35 @@ html,body{
 
     <!-- ── TAB 1: הקישור שלי ── -->
     <div class="tab-panel active" id="tab-0">
-      <div class="page-title">הקישור האישי שלך לביקורות</div>
-      <div class="page-sub" id="tab1-sub">קישור הביקורת הגוגל שלך מוכן לשימוש מיידי</div>
+      <div class="page-title">כרטיס ההמלצות החכם שלך</div>
+      <div class="page-sub">הכרטיס מסנן ביקורות שליליות ומוביל לקוחות מרוצים ישירות לגוגל</div>
 
-      <!-- Link box (shown when link exists) -->
+      <!-- Smart card (always shown — pending state until card is ready) -->
       <div id="link-display-section">
-        <div class="link-box-wrap">
-          <div class="link-box-label">הקישור שלך לביקורות גוגל</div>
-          <div class="link-box-url truncate" id="linkDisplayEl">טוען...</div>
-          <button class="btn-copy-link" id="copyLinkBtn" onclick="copyReviewLink()">
-            📋 העתק קישור
-          </button>
-        </div>
 
-        <!-- Smart card link -->
-        <div class="link-box-wrap" style="border-color:var(--turquoise);margin-bottom:0;">
-          <div class="link-box-label" style="color:var(--turquoise);">כרטיס ההמלצות החכם שלך</div>
-          <div class="link-box-url truncate" style="border-color:rgba(34,211,238,.25);color:rgba(250,248,244,.55);font-family:'Heebo',sans-serif;font-style:italic;">
-            הכרטיס האישי שלך נבנה ומשלוח אליך בקרוב...
+        <!-- Card status banner -->
+        <div style="background:rgba(249,185,21,.1);border:2px solid rgba(249,185,21,.45);
+                    border-radius:16px;padding:28px 24px 22px;margin-bottom:20px;text-align:center;">
+          <div style="font-size:40px;margin-bottom:14px;">🎴</div>
+          <div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:8px;">הכרטיס שלך בהכנה</div>
+          <div style="font-size:15px;color:rgba(250,248,244,.65);line-height:1.65;margin-bottom:20px;">
+            הצוות שלנו מכין עבורך כרטיס המלצות חכם, ממותג ואישי.<br>
+            הוא יישלח אליך למייל תוך 24 שעות ממועד ההצטרפות.
           </div>
-          <div style="text-align:center;font-size:12px;color:rgba(250,248,244,.35);padding:2px 0 0;">
-            ⏳ הכרטיס יישלח למייל שלך תוך 24 שעות ממועד ההצטרפות
-          </div>
-        </div>
-
-        <div class="instr-card" style="margin-top:16px;">
-          <div class="instr-card-title">כיצד להשתמש בקישורים?</div>
-          <ul class="instr-list">
-            <li>קישור הגוגל — שתפו עם כל לקוח מרוצה בסיום שירות</li>
-            <li>כרטיס ההמלצות החכם — מסנן ביקורות שליליות ומוביל מרוצים לגוגל</li>
-            <li>שלחו בווטסאפ ישירות מדף הנוסחים עם הקישור בפנים</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Manual input (shown when no link) -->
-      <div id="manual-input-section" style="display:none;">
-        <div class="manual-input-card">
-          <p>לא מצאנו את הקישור שלך אוטומטית. הדביקו כאן את קישור הביקורת בגוגל שלכם:</p>
-          <div class="manual-input-row">
-            <input
-              type="url"
-              class="manual-input-field"
-              id="manualLinkInput"
-              placeholder="https://search.google.com/local/writereview?placeid=..."
-            >
-            <button class="btn-save-link" onclick="saveManualLink()">שמור</button>
+          <div style="display:inline-flex;align-items:center;gap:8px;
+                      background:rgba(249,185,21,.15);border:1px solid rgba(249,185,21,.4);
+                      border-radius:10px;padding:10px 20px;
+                      font-size:14px;font-weight:700;color:var(--gold);">
+            ⏳ ממתין לכרטיס האישי שלך...
           </div>
         </div>
+
         <div class="instr-card">
-          <div class="instr-card-title">איפה למצוא את הקישור?</div>
+          <div class="instr-card-title">🌟 כיצד עובד כרטיס ההמלצות החכם?</div>
           <ul class="instr-list">
-            <li>היכנסו ל־Google Business Profile שלכם</li>
-            <li>חפשו את "קבל קישור לביקורת" בלוח הבקרה</li>
-            <li>העתיקו את הקישור המלא והדביקו כאן</li>
+            <li>לקוח מרוצה לוחץ על הכרטיס — מועבר ישירות לכתיבת ביקורת בגוגל</li>
+            <li>לקוח פחות מרוצה — מועבר לטופס פנימי שמגיע ישירות אליך</li>
+            <li>שתפו את הכרטיס בווטסאפ, הדביקו בחתימת מייל ומקמו בעסק</li>
           </ul>
         </div>
       </div>
@@ -935,49 +912,10 @@ if (bizName) {
 }
 
 // ═══════════════════════════════════════
-//  TAB 1 — LINK SETUP
+//  TAB 1 — CARD STATUS (static display)
 // ═══════════════════════════════════════
 function initLinkTab() {
-  var displaySection = document.getElementById('link-display-section');
-  var manualSection  = document.getElementById('manual-input-section');
-  var linkEl         = document.getElementById('linkDisplayEl');
-
-  if (reviewLink) {
-    displaySection.style.display = 'block';
-    manualSection.style.display  = 'none';
-    linkEl.textContent = reviewLink;
-  } else {
-    displaySection.style.display = 'none';
-    manualSection.style.display  = 'block';
-  }
-}
-
-function saveManualLink() {
-  var val = document.getElementById('manualLinkInput').value.trim();
-  if (!val) return;
-  reviewLink = val;
-  // Save to localStorage for persistence
-  try {
-    var b = JSON.parse(localStorage.getItem('rl_brand') || '{}');
-    b.url = val;
-    localStorage.setItem('rl_brand', JSON.stringify(b));
-  } catch(e){}
-  // Re-render
-  initLinkTab();
-  buildMessages();
-}
-
-function copyReviewLink() {
-  if (!reviewLink) return;
-  var btn = document.getElementById('copyLinkBtn');
-  copyText(reviewLink, function() {
-    btn.textContent = '✅ הועתק!';
-    btn.classList.add('copied');
-    setTimeout(function() {
-      btn.innerHTML = '📋 העתק קישור';
-      btn.classList.remove('copied');
-    }, 2000);
-  });
+  /* Tab 1 is now a static "card in preparation" view — no dynamic link needed */
 }
 
 // ═══════════════════════════════════════
