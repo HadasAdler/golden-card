@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>מרכז השליטה | NextVoice AI</title>
+<title>ממשק ניהול - פרופיל עסק בגוגל</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -551,7 +551,30 @@ html,body{
   font-weight:700;
   color:var(--cream);
   line-height:1.4;
-  padding-top:6px;
+  padding-top:4px;
+}
+.tip-desc{
+  font-size:13px;
+  color:rgba(250,248,244,.6);
+  line-height:1.65;
+  margin-top:5px;
+  font-weight:400;
+}
+.detail-row{
+  display:flex;gap:12px;padding:12px 16px;
+  background:rgba(17,34,64,.6);border-radius:10px;
+  margin-bottom:8px;border:1px solid rgba(249,185,21,.1);
+}
+.detail-day{
+  min-width:56px;font-size:11px;font-weight:800;
+  color:var(--gold);padding-top:3px;flex-shrink:0;
+}
+.detail-task-title{font-size:14px;font-weight:700;color:var(--cream);margin-bottom:3px;}
+.detail-task-desc{font-size:12.5px;color:rgba(250,248,244,.55);line-height:1.6;}
+.detail-week-header{
+  font-size:13px;font-weight:900;color:var(--gold);
+  letter-spacing:.7px;margin:20px 0 10px;
+  padding-bottom:6px;border-bottom:1px solid rgba(249,185,21,.22);
 }
 .btn-download-guide{
   display:inline-flex;
@@ -630,8 +653,8 @@ html,body{
   <!-- ══════ SIDEBAR ══════ -->
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <div class="sidebar-brand-name">NextVoice AI</div>
-      <div class="sidebar-brand-sub">מרכז שליטה לביקורות גוגל</div>
+      <div class="sidebar-brand-name">פרופיל העסק בגוגל</div>
+      <div class="sidebar-brand-sub">ממשק ניהול אישי</div>
     </div>
     <div class="sidebar-greeting">
       <div class="sidebar-greeting-label">שלום,</div>
@@ -702,12 +725,23 @@ html,body{
           </button>
         </div>
 
-        <div class="instr-card">
-          <div class="instr-card-title">כיצד להשתמש בקישור?</div>
+        <!-- Smart card link -->
+        <div class="link-box-wrap" style="border-color:var(--turquoise);margin-bottom:0;">
+          <div class="link-box-label" style="color:var(--turquoise);">כרטיס ההמלצות החכם שלך</div>
+          <div class="link-box-url truncate" style="border-color:rgba(34,211,238,.25);color:rgba(250,248,244,.55);font-family:'Heebo',sans-serif;font-style:italic;">
+            הכרטיס האישי שלך נבנה ומשלוח אליך בקרוב...
+          </div>
+          <div style="text-align:center;font-size:12px;color:rgba(250,248,244,.35);padding:2px 0 0;">
+            ⏳ הכרטיס יישלח למייל שלך תוך 24 שעות ממועד ההצטרפות
+          </div>
+        </div>
+
+        <div class="instr-card" style="margin-top:16px;">
+          <div class="instr-card-title">כיצד להשתמש בקישורים?</div>
           <ul class="instr-list">
-            <li>שתפו עם כל לקוח מרוצה בסיום שירות</li>
-            <li>הדביקו בחתימת המייל שלכם</li>
-            <li>שלחו בווטסאפ ישירות מדף הנוסחים</li>
+            <li>קישור הגוגל — שתפו עם כל לקוח מרוצה בסיום שירות</li>
+            <li>כרטיס ההמלצות החכם — מסנן ביקורות שליליות ומוביל מרוצים לגוגל</li>
+            <li>שלחו בווטסאפ ישירות מדף הנוסחים עם הקישור בפנים</li>
           </ul>
         </div>
       </div>
@@ -813,7 +847,41 @@ html,body{
         📥 הורד PDF מעוצב
       </button>
 
-      <div class="page-footer" style="margin-top:32px;">
+      <!-- ── פירוט מלא ── -->
+      <div style="margin-top:32px;">
+        <div style="font-size:18px;font-weight:800;color:var(--cream);margin-bottom:4px;">פירוט המשימות השבועיות</div>
+        <div style="font-size:13px;color:rgba(250,248,244,.45);margin-bottom:16px;">לחצו על כל שבוע לצפייה בפרטים</div>
+
+        <div class="detail-week-header">שבוע 1</div>
+        <div class="detail-row"><div class="detail-day">ראשון</div><div><div class="detail-task-title">פוסט פתיחת חודש</div><div class="detail-task-desc">שתפו הצלחה מהחודש שעבר עם קישור להמלצות.</div></div></div>
+        <div class="detail-row"><div class="detail-day">שני</div><div><div class="detail-task-title">בדיקת נוכחות בביו</div><div class="detail-task-desc">ודאו שקישור הכרטיס מופיע ב"ביו" באינסטגרם ובטיקטוק.</div></div></div>
+        <div class="detail-row"><div class="detail-day">שלישי</div><div><div class="detail-task-title">סטורי מאחורי הקלעים</div><div class="detail-task-desc">תמונה מהעבודה עם מדבקת קישור להמלצה.</div></div></div>
+        <div class="detail-row"><div class="detail-day">רביעי</div><div><div class="detail-task-title">סידור חתימת מייל</div><div class="detail-task-desc">ודאו שמתחת לחתימה במייל מופיע משפט הזמנה וקישור.</div></div></div>
+        <div class="detail-row"><div class="detail-day">חמישי</div><div><div class="detail-task-title">פנייה אישית בוואטסאפ</div><div class="detail-task-desc">בחרו לקוח מרוצה במיוחד ושלחו לו הודעת וואטסאפ אישית.</div></div></div>
+
+        <div class="detail-week-header">שבוע 2</div>
+        <div class="detail-row"><div class="detail-day">ראשון</div><div><div class="detail-task-title">הודעה בקבוצה משפחתית</div><div class="detail-task-desc">הודעה בקבוצה המשפחתית לבקשת פרגון.</div></div></div>
+        <div class="detail-row"><div class="detail-day">שני</div><div><div class="detail-task-title">תחזוקת תגובות בגוגל</div><div class="detail-task-desc">ענו לכל ההמלצות האחרונות שקיבלתם בפרופיל הגוגל.</div></div></div>
+        <div class="detail-row"><div class="detail-day">שלישי</div><div><div class="detail-task-title">הוכחה חברתית בסטורי</div><div class="detail-task-desc">צילום מסך של מחמאה בוואטסאפ לסטורי עם קישור.</div></div></div>
+        <div class="detail-row"><div class="detail-day">רביעי</div><div><div class="detail-task-title">משימת דלפק / QR</div><div class="detail-task-desc">ודאו שדף ה-QR המודפס נמצא במקום בולט ונקי (לעסקים פיזיים).</div></div></div>
+        <div class="detail-row"><div class="detail-day">חמישי</div><div><div class="detail-task-title">דיוור לרשימת תפוצה</div><div class="detail-task-desc">שלחו מייל קצר לרשימת התפוצה: "הדעה שלכם חשובה לנו".</div></div></div>
+
+        <div class="detail-week-header">שבוע 3</div>
+        <div class="detail-row"><div class="detail-day">ראשון</div><div><div class="detail-task-title">תמונה לסטטוס וואטסאפ</div><div class="detail-task-desc">העלו תמונה של לקוח מרוצה לסטטוס עם הקישור.</div></div></div>
+        <div class="detail-row"><div class="detail-day">שני</div><div><div class="detail-task-title">גיוס קולגות</div><div class="detail-task-desc">פנו לקולגה להחלפת המלצות מקצועיות הדדיות.</div></div></div>
+        <div class="detail-row"><div class="detail-day">שלישי</div><div><div class="detail-task-title">קידום אישי לחברים</div><div class="detail-task-desc">שלחו הודעה לחברים בוואטסאפ שאתם מקדמים את העסק ותשמחו לדירוג 5 כוכבים.</div></div></div>
+        <div class="detail-row"><div class="detail-day">רביעי</div><div><div class="detail-task-title">פנייה ללקוח עבר</div><div class="detail-task-desc">הודעת "מה שלומך" ללקוח מלפני 3 חודשים עם הקישור.</div></div></div>
+        <div class="detail-row"><div class="detail-day">חמישי</div><div><div class="detail-task-title">פוסט 3 המלצות חזקות</div><div class="detail-task-desc">העלו פוסט עם 3 המלצות חזקות שקיבלתם החודש.</div></div></div>
+
+        <div class="detail-week-header">שבוע 4</div>
+        <div class="detail-row"><div class="detail-day">ראשון</div><div><div class="detail-task-title">פוסט / סטורי חוזר</div><div class="detail-task-desc">העלו פוסט/סטורי נוסף ברשתות עם בקשה פשוטה לפרגון.</div></div></div>
+        <div class="detail-row"><div class="detail-day">שני</div><div><div class="detail-task-title">פנייה פנים אל פנים</div><div class="detail-task-desc">בקשו המלצה לפחות מלקוח אחד בסיום שירות היום.</div></div></div>
+        <div class="detail-row"><div class="detail-day">שלישי</div><div><div class="detail-task-title">סטורי הדרכה</div><div class="detail-task-desc">צילום מסך של הכרטיס עם הסבר קצר כמה קל להמליץ.</div></div></div>
+        <div class="detail-row"><div class="detail-day">רביעי</div><div><div class="detail-task-title">פוסט תודה לקהילה</div><div class="detail-task-desc">פוסט תודה לכל מי שפרגן החודש עם קישור למי שפספס.</div></div></div>
+        <div class="detail-row"><div class="detail-day">חמישי</div><div><div class="detail-task-title">תכנון לשבוע הבא</div><div class="detail-task-desc">בחרו 3 לקוחות לפנייה אישית בשבוע הבא.</div></div></div>
+      </div>
+
+      <div class="page-footer" style="margin-top:36px;">
         המלצות לקידום פרופיל העסק בגוגל | נבנה ע״י הדס אדלר
       </div>
     </div>
@@ -823,30 +891,9 @@ html,body{
       <div class="page-title">מדריך 30 הדרכים להזנקת המלצות</div>
       <div class="page-sub">30 שיטות מוכחות עם ניסוחים מוכנים</div>
 
-      <div id="tips-preview">
-        <div class="tip-card">
-          <div class="tip-num">1</div>
-          <div class="tip-title">הגדרת הודעה אוטומטית בוואטסאפ</div>
-        </div>
-        <div class="tip-card">
-          <div class="tip-num">2</div>
-          <div class="tip-title">חתימת מייל חכמה עם קישור</div>
-        </div>
-        <div class="tip-card">
-          <div class="tip-num">3</div>
-          <div class="tip-title">דף תודה אחרי רכישה</div>
-        </div>
-        <div class="tip-card">
-          <div class="tip-num">4</div>
-          <div class="tip-title">SMS לאחר שירות</div>
-        </div>
-        <div class="tip-card">
-          <div class="tip-num">5</div>
-          <div class="tip-title">ביקורת בסיום פגישה</div>
-        </div>
+      <div id="tips-container">
+        <!-- Populated by JS — all 30 tips -->
       </div>
-
-      <div class="more-hint">... ועוד 25 שיטות נוספות במדריך המלא</div>
 
       <button class="btn-download-guide" onclick="triggerGuideDownload()">
         📥 הורד את המדריך המלא (PDF)
@@ -1167,10 +1214,61 @@ function triggerGuideDownload() {
 }
 
 // ═══════════════════════════════════════
+//  TAB 4 — 30 TIPS
+// ═══════════════════════════════════════
+var TIPS = [
+  { n:'01', title:'כתיבת פוסטים ייעודיים לבקשת המלצות', text:'פרסמו מדי פעם פוסטים ייעודיים שבהם אתם משתפים המלצה שקיבלתם ומזמינים לקוחות נוספים לכתוב גם. כאשר הבקשה מופיעה באופן פתוח ופומבי, היא מרגישה טבעית יותר ומעודדת אחרים להצטרף.' },
+  { n:'02', title:'שיתוף בקבוצות רלוונטיות', text:'ניתן לשתף את הקישור גם בקבוצות רלוונטיות כמו קבוצות לקוחות, קהילות מקצועיות או קבוצות נטוורקינג. חשוב לעשות זאת בניסוח עדין ולא מכירתי, למשל: "מי שעבד איתי ויכול לפרגן במילה — אשמח מאוד."' },
+  { n:'03', title:'פנייה לחברים ומשפחה', text:'מעבר לבניית בסיס התחלתי, גם בהמשך ניתן לפנות לחברים, בני משפחה ועמיתים שמכירים אתכם מקצועית ולבקש מהם המלצה. פעמים רבות אנשים רוצים לפרגן, אך פשוט לא חושבים על זה עד שמבקשים מהם.' },
+  { n:'04', title:'יצירת הרגל קבוע לבקשת המלצות', text:'אחת הטעויות הנפוצות היא לבקש המלצות באופן אקראי. הגדירו לעצמכם הרגל קבוע, למשל לפנות לשניים עד שלושה לקוחות ביום. עקביות היא מה שיוצר לאורך זמן כמות משמעותית של המלצות.' },
+  { n:'05', title:'קישור בתיאור הפרופיל ברשתות החברתיות', text:'תיאור הפרופיל הוא אחד המקומות הבודדים שבהם ניתן להוסיף קישור קבוע. הוסיפו קישור לכרטיס ההמלצות עם ניסוח ברור כמו: "כאן ממליצים עלינו", בביו שלכם בפייסבוק, באינסטגרם ובטיקטוק.' },
+  { n:'06', title:'הודעת "הכנה למחויבות"', text:'אל תשלחו קישור להמלצה משום מקום. התחילו בהודעה קצרה: "היה לי לעונג לעבוד איתך. אני בתהליך שדרוג הנוכחות הדיגיטלית שלי, ואשמח אם תוכל לכתוב לי מילה." הגישה הזו מייצרת מחויבות מראש.' },
+  { n:'07', title:'חתימה קבועה בדואר האלקטרוני', text:'הדואר האלקטרוני הוא כלי עבודה יומיומי שפוגש לקוחות באופן קבוע. מומלץ להוסיף חתימה קבועה המזמינה להשאיר המלצה: "נהניתם מהשירות? נשמח לפרגון שלכם כאן" בצירוף קישור.' },
+  { n:'08', title:'ניצול הודעת תודה בוואטסאפ', text:'כאשר לקוח שולח הודעת תודה, זהו רגע אידיאלי לבקשת המלצה. צלמו את ההודעה, שלחו אותה בחזרה וכתבו: "זה כל כך שימח אותי, אכפת לך להעתיק את המילים האלו גם לכאן?" בצירוף קישור.' },
+  { n:'09', title:'הצבת קוד סריקה פיזי בנקודת המפגש', text:'בעסקים פיזיים, הרגע שבו הלקוח ממתין או משלם הוא רגע פנוי שבו הוא כבר עם הטלפון ביד. הדפיסו קוד סריקה והציבו אותו על הדלפק, ליד הקופה או באזור ההמתנה.' },
+  { n:'10', title:'שיטת "הסיום החם" פנים אל פנים', text:'בקשה אישית היא אחת הדרכים האפקטיביות ביותר. בסיום שירות, כאשר הלקוח מרוצה, שאלו: "נהנית מהשירות?" לאחר תשובה חיובית: "מעולה, זה ממש יעזור לי אם תוכל להקדיש כמה שניות לפרגן לי בגוגל."' },
+  { n:'11', title:'הצגת המלצות קיימות כמעודדת פעולה', text:'לקוחות נוטים לפעול כאשר הם רואים שאחרים כבר עשו זאת. שתפו המלצה שקיבלתם והוסיפו משפט כמו: "אם גם לכם יש מילה טובה, אשמח לשמוע כאן." זה יוצר אפקט של הוכחה חברתית.' },
+  { n:'12', title:'גיוס המעגל הראשון', text:'כדי לבנות בסיס ראשוני של המלצות, פנו לאנשים שמכירים אתכם מקצועית. שלחו הודעה אישית ובקשו מהם לכתוב מילה על החוויה שלהם אתכם. זה יוצר אמינות ראשונית לפרופיל.' },
+  { n:'13', title:'שימוש בסטורי ברשתות', text:'הסטורי מאפשר הנעה לפעולה מהירה. העלו פעם בשבוע תוכן רלוונטי, הוסיפו קישור וכתבו: "אשמח לפרגון שלכם כאן." זו דרך פשוטה להזכיר ללקוחות להשאיר המלצה.' },
+  { n:'14', title:'ניצול רגע פתיחת המוצר', text:'אם אתם מוכרים מוצרים פיזיים, רגע פתיחת האריזה הוא רגע רגשי. הוסיפו גלויה עם קוד סריקה וכיתוב: "תתחדשו! נשמח לשמוע איך היה." זה מחבר בין החוויה לבין הפעולה.' },
+  { n:'15', title:'תגובה לכל המלצה', text:'בכל פעם שאתם מקבלים המלצה, הגיבו עליה תוך זמן קצר. זה גם משפר נראות בגוגל וגם משדר ללקוחות שאתם קשובים ומעריכים אותם.' },
+  { n:'16', title:'פנייה ללקוחות עבר', text:'לקוחות מהעבר הם מקור מצוין להמלצות. שלחו הודעה בסגנון: "רציתי לבדוק שהכל בסדר ולשמוע איך הייתה החוויה שלך איתנו." לעיתים זה מספיק כדי לקבל המלצה.' },
+  { n:'17', title:'סיום הרצאה או פגישה דיגיטלית', text:'בסיום הרצאה או זום, הציגו שקופית עם קוד סריקה וקריאה לפעולה: "נהניתם מהערך שקיבלתם? אשמח למילה טובה כאן." זה רגע שבו הקהל כבר מחובר וקשוב.' },
+  { n:'18', title:'בקשת "מחמאה מתועדת"', text:'כאשר לקוח מחמיא לכם, אל תסתפקו בתודה. אפשר לומר: "זה ממש חשוב לי, אשלח לך קישור כדי שתוכל לכתוב את זה גם בגוגל." כך הופכים מחמאה רגעית לנכס דיגיטלי קבוע.' },
+  { n:'19', title:'פנייה גם אחרי אינטראקציה קצרה', text:'שליחת הודעה אישית לא חייבת להיות שמורה רק לסיום שירות מלא. גם אחרי שיחת ייעוץ קצרה אפשר לשלוח: "שמחתי לעזור, ואם זה היה לך מועיל — אשמח ממש למילה כאן." הרבה בעלי עסקים מפספסים את הרגעים הקטנים האלה.' },
+  { n:'20', title:'שליחת תזכורת עדינה', text:'כאשר שולחים בקשה להמלצה ולא מתקבלת תגובה, תזכורת עדינה לאחר יום-יומיים יכולה לעשות את כל ההבדל. הודעה קצרה כמו "מקפיצה בעדינות 🙏 אם הסתדרת לכתוב, זה ממש יעזור לי" מגדילה משמעותית את אחוזי ההיענות.' },
+  { n:'21', title:'שליחת דוגמת ניסוח', text:'אחת הסיבות שלקוחות לא כותבים המלצות היא חוסר ודאות לגבי מה לכתוב. שלחו יחד עם הקישור גם התחלת משפט: "אם תרצה, אפשר לכתוב משהו כמו ׳השירות היה מקצועי, זמין ועזר לי ב...׳".' },
+  { n:'22', title:'הודעה קולית בוואטסאפ', text:'בוואטסאפ, לעיתים עדיף לשלוח הודעה קולית קצרה. הודעה קולית נתפסת כאישית יותר, חמה יותר, וקשה הרבה יותר להתעלם ממנה. בקשה להמלצה שנאמרת בקול נשמעת טבעית ואותנטית יותר.' },
+  { n:'23', title:'זיהוי רגעי שיא רגשיים', text:'חשוב לזהות את רגעי השיא הרגשיים של הלקוח — לא רק בסיום השירות, אלא דווקא ברגע שבו הלקוח מרגיש הצלחה: כאשר נסגרה עסקה, הושגה תוצאה או התקבל ערך משמעותי.' },
+  { n:'24', title:'שילוב הבקשה בתהליך קיים', text:'שלבו את הבקשה בתוך תהליך קיים, במקום לייצר פעולה נפרדת. לאחר שליחת קובץ, סיכום פגישה או תוצר — הוסיפו שורה קצרה בסיום ההודעה: "ואם זה היה מועיל — אשמח למילה כאן".' },
+  { n:'25', title:'ניסוח "הקישור האישי שלי" ושימוש בהומור', text:'כאשר שולחים קישור עם ניסוח כמו "זה הקישור האישי שלי להמלצות", נוצרת תחושת שייכות ומחויבות גבוהה יותר. בנוסף, שימוש בהומור כמו "אם הייתי בסדר — זה המקום לפרגן 😄" מוריד התנגדות.' },
+  { n:'26', title:'יצירת "רגע טקסי" קבוע', text:'אפשר ליצור בעסק סוג של "רגע טקסי" קבוע. למשל, לומר ללקוחות: "יש לנו מסורת קטנה — מי שמרוצה משאיר משפט בגוגל". כאשר זה מוצג כחלק טבעי מהתהליך, הוא מרגיש פחות כמו בקשה.' },
+  { n:'27', title:'שליחה עם הוכחה חברתית בזמן אמת', text:'שליחת הקישור יחד עם צילום מסך של המלצות קיימות מעניקה ללקוח ביטחון ומעודדת אותו להצטרף לאחרים שכבר כתבו.' },
+  { n:'28', title:'שימוש בסקר ראשוני', text:'שאלו את הלקוח "מאחד עד עשר, כמה היית מרוצה?", ולאחר מכן פנו רק למי שענה ציון גבוה ובקשו ממנו המלצה. כך מתמקדים בלקוחות עם סיכוי גבוה יותר לכתוב ביקורת חיובית.' },
+  { n:'29', title:'הפיכת האיסוף ליעד משותף', text:'ניתן להפוך את כל התהליך למשחק קטן או יעד משותף. למשל: "אני בדרך ל-50 המלצות החודש". כאשר אנשים מרגישים שהם עוזרים להגיע ליעד, הם נוטים יותר לשתף פעולה.' },
+  { n:'30', title:'בקשת המלצה ברגע החידוש או הרכישה החוזרת', text:'לקוח שחוזר הוא לקוח מרוצה, ולכן זהו רגע מצוין לבקשת המלצה. כאשר לקוח מחדש מנוי או מבצע הזמנה חוזרת, ניתן לכתוב: "שמח שחזרת. אם זה המקום המתאים לך, אשמח מאוד למילה בגוגל."' }
+];
+
+function buildTips() {
+  var container = document.getElementById('tips-container');
+  if (!container) return;
+  var html = '';
+  TIPS.forEach(function(tip) {
+    html += '<div class="tip-card">';
+    html += '<div class="tip-num">' + parseInt(tip.n, 10) + '</div>';
+    html += '<div><div class="tip-title">' + escHtml(tip.title) + '</div>';
+    html += '<div class="tip-desc">' + escHtml(tip.text) + '</div></div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════
 initLinkTab();
 buildMessages();
+buildTips();
 
 // Ensure first tab is visually active on load
 switchTab(0);
