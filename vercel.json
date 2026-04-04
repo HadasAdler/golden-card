@@ -1,12 +1,21 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/ReviewCard",
+      "has": [{ "type": "query", "key": "card", "value": "(?<slug>.+)" }],
+      "destination": "/:slug",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/analysis",      "destination": "/analysis.html"      },
     { "source": "/success",       "destination": "/success.html"       },
     { "source": "/final-success", "destination": "/final-success.html" },
     { "source": "/dashboard",     "destination": "/dashboard.html"     },
     { "source": "/success-setup", "destination": "/success-setup.html" },
+    { "source": "/ReviewCard",    "destination": "/ReviewCard.html"    },
     { "source": "/card",          "destination": "/card.html"          },
     { "source": "/:slug",         "destination": "/card.html"          },
     { "source": "/((?!api/).*)",  "destination": "/index.html"         }

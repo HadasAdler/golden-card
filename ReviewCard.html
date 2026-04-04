@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Review Me — מעביר...</title>
+<style>
+  body{
+    font-family:'Segoe UI',sans-serif;background:#0a192f;color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    min-height:100vh;margin:0;text-align:center;
+  }
+  .wrap{padding:32px;}
+  .spinner{
+    width:44px;height:44px;border-radius:50%;
+    border:3px solid rgba(249,185,21,.25);border-top-color:#f9b915;
+    animation:spin .9s linear infinite;margin:0 auto 20px;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  p{color:rgba(255,255,255,.6);font-size:15px;margin:8px 0 0;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="spinner"></div>
+  <p>מעביר לכרטיס שלכם...</p>
+</div>
+<script>
+(function(){
+  /* Read ?card=slug from query string and redirect to /slug */
+  var params = new URLSearchParams(window.location.search);
+  var slug   = (params.get('card') || '').trim();
+  if (slug) {
+    window.location.replace('https://review-me.org/' + encodeURIComponent(slug));
+  } else {
+    /* No card param — send to home */
+    window.location.replace('https://review-me.org/');
+  }
+})();
+</script>
+</body>
+</html>
