@@ -236,15 +236,47 @@ html,body{
 
   if (!_sb){ showError(); return; }
 
-  var cardUrl = BASE_URL + '/' + slug;
-  _sb.from('leads').select('biz_name,review_url,brand_color,logo_url')
-    .eq('card_url', cardUrl)
-    .maybeSingle()
+  /*
+   * Multi-format lookup — old customers may have card_url stored as:
+   *   (A) https://review-me.org/irit-nave          ← new clean format
+   *   (B) https://review-me.org/ReviewCard?card=x  ← legacy format in DB
+   *   (C) NULL / empty                             ← older records, no card_url
+   *
+   * Strategy: try (A)+(B) in one OR query, then fall back to name/slug search.
+   */
+  var newUrl = BASE_URL + '/' + slug;
+  var oldUrl = BASE_URL + '/ReviewCard?card=' + slug;
+
+  function tryFindBySlug() {
+    /* Last resort: search card_url ends with /slug using ilike */
+    _sb.from('leads')
+      .select('biz_name,review_url,brand_color,logo_url')
+      .ilike('card_url', '%/' + slug)
+      .limit(1)
+      .then(function(res){
+        if (!res.error && res.data && res.data.length > 0){
+          showCard(res.data[0]);
+        } else {
+          showError();
+        }
+      })
+      .catch(function(){ showError(); });
+  }
+
+  /* Primary query: exact match on new OR old card_url format */
+  _sb.from('leads')
+    .select('biz_name,review_url,brand_color,logo_url')
+    .or('card_url.eq.' + newUrl + ',card_url.eq.' + oldUrl)
+    .limit(1)
     .then(function(res){
-      if (res.error || !res.data){ showError(); return; }
-      showCard(res.data);
+      if (!res.error && res.data && res.data.length > 0){
+        showCard(res.data[0]);
+      } else {
+        /* fallback: ilike search */
+        tryFindBySlug();
+      }
     })
-    .catch(function(){ showError(); });
+    .catch(function(){ tryFindBySlug(); });
 
   function esc(s){
     return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
