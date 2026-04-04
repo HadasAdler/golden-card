@@ -22,182 +22,249 @@ html,body{
   min-height:100%;font-family:'Heebo',sans-serif;direction:rtl;
   color:var(--cream);
   background:
-    radial-gradient(ellipse at 20% 0%,rgba(249,185,21,.13) 0%,transparent 55%),
-    radial-gradient(ellipse at 90% 95%,rgba(34,211,238,.12) 0%,transparent 55%),
+    radial-gradient(ellipse at 15% 0%,rgba(249,185,21,.15) 0%,transparent 50%),
+    radial-gradient(ellipse at 85% 100%,rgba(34,211,238,.12) 0%,transparent 50%),
     var(--navy);
   background-attachment:fixed;
 }
-body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
+body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;overflow-x:hidden;}
+
+/* ── Confetti ── */
+.confetti-piece{
+  position:fixed;top:-10px;pointer-events:none;z-index:999;
+  animation:confettiFall linear forwards;
+  border-radius:2px;
+}
+@keyframes confettiFall{
+  0%  {transform:translateY(0) rotate(0deg) scaleX(1);opacity:1}
+  80% {opacity:.9}
+  100%{transform:translateY(105vh) rotate(720deg) scaleX(-1);opacity:0}
+}
 
 /* ── Header ── */
 .hdr{
-  width:100%;padding:18px 28px;
+  width:100%;padding:16px 28px;
   display:flex;justify-content:center;align-items:center;
-  border-bottom:1px solid rgba(250,248,244,.06);
-  background:rgba(10,25,47,.7);backdrop-filter:blur(8px);
-  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid rgba(249,185,21,.15);
+  background:rgba(10,25,47,.85);backdrop-filter:blur(10px);
+  position:sticky;top:0;z-index:200;
 }
 .hdr-logo{
   font-size:20px;font-weight:900;
-  background:linear-gradient(135deg,var(--gold),var(--turquoise));
+  background:linear-gradient(135deg,var(--gold) 30%,var(--turquoise));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
+  background-clip:text;letter-spacing:.5px;
 }
 
-/* ── Page container ── */
-.page{width:100%;max-width:640px;padding:36px 20px 0;}
+/* ── Page ── */
+.page{width:100%;max-width:660px;padding:32px 20px 0;}
 
-/* ── Success banner ── */
+/* ── Success Banner ── */
 .success-banner{
-  background:linear-gradient(135deg,rgba(34,197,94,.14),rgba(34,197,94,.07));
-  border:2px solid rgba(34,197,94,.4);
-  border-radius:20px;padding:30px 28px;text-align:center;margin-bottom:28px;
+  background:linear-gradient(135deg,rgba(249,185,21,.12),rgba(249,185,21,.06));
+  border:2px solid rgba(249,185,21,.45);
+  border-radius:22px;padding:34px 28px 28px;
+  text-align:center;margin-bottom:28px;position:relative;overflow:hidden;
 }
-.success-icon{font-size:52px;margin-bottom:14px;}
-.success-title{font-size:26px;font-weight:900;color:#4ade80;margin-bottom:10px;}
-.success-sub{font-size:15px;color:rgba(250,248,244,.75);line-height:1.7;}
+.success-banner::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% -10%,rgba(249,185,21,.18),transparent 65%);
+  pointer-events:none;
+}
+.success-icon{font-size:56px;margin-bottom:16px;display:block;position:relative;}
+.success-title{
+  font-size:32px;font-weight:900;color:var(--gold);
+  margin-bottom:14px;line-height:1.2;position:relative;
+}
+.success-tagline{
+  font-size:18px;font-weight:700;color:#fff;
+  line-height:1.6;position:relative;
+}
 
 /* ── Setup card ── */
 .setup-card{
   background:var(--navy-card);
-  border:1.5px solid rgba(249,185,21,.18);
-  border-radius:22px;padding:34px 30px;
-  display:flex;flex-direction:column;gap:28px;
+  border:1.5px solid rgba(249,185,21,.2);
+  border-radius:24px;padding:36px 32px;
+  display:flex;flex-direction:column;gap:30px;
 }
-.setup-title{font-size:22px;font-weight:900;color:#fff;margin-bottom:4px;}
-.setup-sub{font-size:14px;color:rgba(250,248,244,.5);line-height:1.65;}
+.card-header-title{font-size:20px;font-weight:900;color:#fff;margin-bottom:6px;}
+.card-header-sub{font-size:14px;color:#fff;line-height:1.65;font-weight:500;}
 
-/* ── Section block ── */
-.sec-block{display:flex;flex-direction:column;gap:10px;}
+/* ── Divider ── */
+.divider{border:none;border-top:1px solid rgba(250,248,244,.08);}
+
+/* ── Section label ── */
 .sec-label{
-  font-size:13px;font-weight:800;color:var(--gold);
-  letter-spacing:.05em;display:flex;align-items:center;gap:8px;
+  font-size:16px;font-weight:900;color:var(--gold);
+  display:flex;align-items:center;gap:8px;margin-bottom:6px;
 }
-.sec-desc{font-size:12px;color:rgba(250,248,244,.42);line-height:1.55;}
+.sec-desc{font-size:13px;color:#fff;line-height:1.6;font-weight:500;margin-bottom:2px;}
 
 /* ── Business search ── */
 .biz-search-row{
   display:flex;align-items:stretch;
   background:rgba(250,248,244,.06);
-  border:1.5px solid rgba(250,248,244,.12);
+  border:1.5px solid rgba(250,248,244,.14);
   border-radius:12px;overflow:hidden;transition:border-color .2s;
 }
-.biz-search-row:focus-within{border-color:rgba(249,185,21,.45);}
+.biz-search-row:focus-within{border-color:rgba(249,185,21,.5);}
 .biz-search-icon{
   padding:0 14px;font-size:18px;
-  display:flex;align-items:center;color:rgba(250,248,244,.35);
+  display:flex;align-items:center;color:rgba(250,248,244,.4);
 }
 .biz-search-inp{
   flex:1;background:transparent;border:none;outline:none;
   color:#fff;font-family:'Heebo',sans-serif;font-size:15px;padding:14px 0;
 }
-.biz-search-inp::placeholder{color:rgba(250,248,244,.3);}
+.biz-search-inp::placeholder{color:rgba(250,248,244,.35);}
 .biz-search-btn{
   padding:0 20px;background:var(--gold);border:none;cursor:pointer;
-  font-family:'Heebo',sans-serif;font-weight:800;font-size:14px;color:#0a192f;
+  font-family:'Heebo',sans-serif;font-weight:900;font-size:14px;color:#0a192f;
   transition:background .2s;white-space:nowrap;
 }
 .biz-search-btn:hover{background:var(--gold-d);}
-
-/* Business dropdown */
 .biz-drop{
   display:none;background:#fff;border-radius:12px;
-  box-shadow:0 8px 32px rgba(0,0,0,.2);overflow:hidden;
-  border:1px solid #e8edf2;
+  box-shadow:0 8px 32px rgba(0,0,0,.22);overflow:hidden;border:1px solid #e8edf2;
+  margin-top:6px;
 }
 .biz-drop.open{display:block;animation:slideDown .18s ease;}
-@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .biz-item{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 16px;cursor:pointer;
+  display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;
   border-bottom:1px solid #f0f4f8;transition:background .12s;
 }
 .biz-item:last-child{border-bottom:none;}
-.biz-item:hover{background:#f4f8fb;}
+.biz-item:hover{background:#f0f7ff;}
 .biz-item-icon{font-size:20px;flex-shrink:0;}
 .biz-item-main{font-size:14px;font-weight:700;color:#1a2e4a;}
 .biz-item-sub{font-size:12px;color:#6b7c96;margin-top:2px;}
 .biz-drop-info{padding:12px 16px;font-size:13px;color:#6b7c96;}
-
-/* Chosen business */
 .biz-chosen{
   display:none;align-items:center;gap:14px;
-  background:rgba(34,211,238,.08);
-  border:1.5px solid rgba(34,211,238,.28);
+  background:rgba(34,211,238,.08);border:1.5px solid rgba(34,211,238,.3);
   border-radius:12px;padding:14px 18px;
 }
 .biz-chosen-icon{font-size:24px;flex-shrink:0;}
 .biz-chosen-info{flex:1;}
 .biz-chosen-name{font-size:15px;font-weight:800;color:var(--turquoise);}
-.biz-chosen-addr{font-size:12px;color:rgba(250,248,244,.5);margin-top:3px;}
+.biz-chosen-addr{font-size:12px;color:rgba(250,248,244,.6);margin-top:3px;}
 .biz-change-btn{
-  background:none;border:1px solid rgba(250,248,244,.2);
-  border-radius:8px;padding:6px 12px;cursor:pointer;
-  color:rgba(250,248,244,.5);font-family:'Heebo',sans-serif;
-  font-size:12px;font-weight:700;transition:all .15s;white-space:nowrap;
+  background:none;border:1px solid rgba(250,248,244,.2);border-radius:8px;
+  padding:6px 12px;cursor:pointer;color:rgba(250,248,244,.6);
+  font-family:'Heebo',sans-serif;font-size:12px;font-weight:700;
+  transition:all .15s;white-space:nowrap;
 }
 .biz-change-btn:hover{border-color:var(--gold);color:var(--gold);}
 
-/* ── Color swatches ── */
-.swatches-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-.swatch{
-  width:38px;height:38px;border-radius:50%;cursor:pointer;
-  border:3px solid transparent;transition:transform .15s,border-color .15s,box-shadow .15s;
-  flex-shrink:0;
+/* ── Step 2: Card details ── */
+.step2-layout{display:flex;gap:24px;align-items:flex-start;}
+.step2-form{flex:1;display:flex;flex-direction:column;gap:14px;}
+.field-group{display:flex;flex-direction:column;gap:6px;}
+.field-label{font-size:13px;font-weight:800;color:rgba(250,248,244,.8);}
+.field-input{
+  width:100%;padding:12px 14px;
+  background:rgba(250,248,244,.06);
+  border:1.5px solid rgba(250,248,244,.12);
+  border-radius:10px;
+  color:#fff;font-family:'Heebo',sans-serif;font-size:14px;
+  outline:none;transition:border-color .2s;
+  direction:rtl;
 }
-.swatch:hover{transform:scale(1.12);}
-.swatch.active{border-color:#fff;box-shadow:0 0 0 2px rgba(249,185,21,.6);transform:scale(1.12);}
+.field-input::placeholder{color:rgba(250,248,244,.3);}
+.field-input:focus{border-color:rgba(249,185,21,.5);}
+.field-input[type=email]{direction:ltr;text-align:right;}
+
+/* Card preview */
+.card-preview-wrap{flex-shrink:0;width:200px;}
+.card-preview-label{font-size:11px;font-weight:700;color:rgba(250,248,244,.45);text-align:center;margin-bottom:8px;letter-spacing:.06em;}
+.card-preview{
+  border-radius:18px;padding:22px 18px 18px;
+  text-align:center;transition:background .35s;
+  background:var(--preview-color,#0b1d3a);
+  box-shadow:0 12px 40px rgba(0,0,0,.4);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.card-prev-logo{
+  width:56px;height:56px;border-radius:50%;
+  background:rgba(255,255,255,.18);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+}
+.card-prev-name{font-size:14px;font-weight:900;color:#fff;line-height:1.3;max-width:100%;word-break:break-word;}
+.card-prev-stars{font-size:18px;color:#f9b915;}
+.card-prev-btn{
+  display:block;width:100%;padding:9px 10px;border-radius:10px;
+  background:var(--gold);color:#0a192f;
+  font-size:12px;font-weight:900;font-family:'Heebo',sans-serif;
+  border:none;cursor:default;text-align:center;
+}
+
+/* ── Color swatches ── */
+.swatches-grid{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+.swatch{
+  width:36px;height:36px;border-radius:50%;cursor:pointer;flex-shrink:0;
+  border:3px solid transparent;
+  transition:transform .15s,border-color .15s,box-shadow .15s;
+}
+.swatch:hover{transform:scale(1.15);}
+.swatch.active{border-color:#fff;box-shadow:0 0 0 2px rgba(249,185,21,.7);transform:scale(1.15);}
 .color-custom-row{display:flex;align-items:center;gap:10px;margin-top:4px;}
 .color-custom-row input[type=color]{
-  width:38px;height:38px;border:2px solid rgba(250,248,244,.15);
+  width:36px;height:36px;border:2px solid rgba(250,248,244,.15);
   border-radius:50%;cursor:pointer;padding:2px;background:none;
 }
-.color-custom-row span{font-size:13px;color:rgba(250,248,244,.45);font-weight:600;}
+.color-custom-row span{font-size:13px;color:rgba(250,248,244,.6);font-weight:600;}
 
 /* ── Slug ── */
-.slug-field-row{
+.slug-row{
   display:flex;align-items:stretch;
   background:rgba(250,248,244,.06);
-  border:1.5px solid rgba(249,185,21,.3);
+  border:1.5px solid rgba(249,185,21,.32);
   border-radius:12px;overflow:hidden;transition:border-color .2s;
 }
-.slug-field-row:focus-within{border-color:rgba(249,185,21,.6);}
-.slug-prefix{
+.slug-row:focus-within{border-color:rgba(249,185,21,.65);}
+.slug-pfx{
   padding:13px 14px;font-size:13px;font-weight:700;
-  color:rgba(249,185,21,.7);white-space:nowrap;
-  border-left:1px solid rgba(250,248,244,.1);
-  background:rgba(0,0,0,.18);direction:ltr;
+  color:rgba(249,185,21,.75);white-space:nowrap;
+  border-left:1px solid rgba(250,248,244,.1);background:rgba(0,0,0,.18);direction:ltr;
 }
-.slug-field-inp{
+.slug-inp{
   flex:1;padding:13px 14px;background:transparent;border:none;outline:none;
-  color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;
-  direction:ltr;letter-spacing:.01em;
+  color:#fff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;direction:ltr;
 }
-.slug-field-inp::placeholder{color:rgba(250,248,244,.28);font-weight:400;}
+.slug-inp::placeholder{color:rgba(250,248,244,.28);font-weight:400;}
 .slug-status{font-size:13px;font-weight:700;min-height:20px;padding-right:2px;}
 
-/* ── Field error ── */
+/* ── Field errors ── */
 .field-err{font-size:13px;color:#f87171;font-weight:700;display:none;padding-right:2px;}
 
 /* ── Finish button ── */
 .finish-btn{
-  width:100%;padding:20px 24px;
+  width:100%;padding:22px 24px;
   background:linear-gradient(135deg,var(--gold),var(--gold-d));
-  color:#0a192f;border:none;border-radius:var(--r);
-  font-family:'Heebo',sans-serif;font-size:19px;font-weight:900;cursor:pointer;
-  box-shadow:0 10px 40px rgba(249,185,21,.4),0 2px 8px rgba(249,185,21,.2);
-  transition:opacity .2s,transform .1s;letter-spacing:.01em;
+  color:#0a192f;border:none;border-radius:16px;
+  font-family:'Heebo',sans-serif;font-size:20px;font-weight:900;cursor:pointer;
+  box-shadow:0 12px 48px rgba(249,185,21,.45),0 2px 8px rgba(249,185,21,.2);
+  transition:opacity .2s,transform .15s;letter-spacing:.01em;
 }
 .finish-btn:hover:not(:disabled){opacity:.92;transform:translateY(-2px);}
-.finish-btn:disabled{opacity:.55;cursor:default;transform:none;}
+.finish-btn:disabled{opacity:.5;cursor:default;transform:none;}
 
-/* divider */
-.divider{border:none;border-top:1px solid rgba(250,248,244,.07);}
+/* ── Footer ── */
+.site-footer{
+  margin-top:40px;padding:20px;
+  text-align:center;font-size:13px;font-weight:600;
+  color:rgba(250,248,244,.4);line-height:1.7;
+}
 
-@media(max-width:500px){
+@media(max-width:580px){
   .setup-card{padding:24px 18px;}
   .page{padding:24px 14px 0;}
-  .success-banner{padding:24px 18px;}
+  .step2-layout{flex-direction:column;}
+  .card-preview-wrap{width:100%;}
+  .card-preview{max-width:220px;margin:0 auto;}
+  .success-title{font-size:26px;}
 }
 </style>
 </head>
@@ -209,32 +276,28 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
 
 <div class="page">
 
-  <!-- ── Part A: Success banner ── -->
+  <!-- ── Success Banner ── -->
   <div class="success-banner">
-    <div class="success-icon">🎉</div>
+    <span class="success-icon">🏆</span>
     <div class="success-title">התשלום בוצע בהצלחה!</div>
-    <div class="success-sub">
-      ברוכים הבאים למשפחת Review Me 🙌<br>
-      עכשיו נגדיר את המערכת שלכם — לוקח פחות מ-2 דקות.
-    </div>
+    <div class="success-tagline">עכשיו נגדיר את המערכת שלכם — לוקח פחות מ-2 דקות.</div>
   </div>
 
-  <!-- ── Part B: Setup card ── -->
+  <!-- ── Setup card ── -->
   <div class="setup-card">
+
     <div>
-      <div class="setup-title">🛠️ הגדרת המערכת שלכם</div>
-      <div class="setup-sub">מלאו את הפרטים הבאים כדי להפעיל את כל הכלים שרכשתם ולהנפיק את הכרטיס האישי שלכם.</div>
+      <div class="card-header-title">🛠️ הגדרת המערכת שלכם</div>
+      <div class="card-header-sub">מלאו את הפרטים הבאים כדי להפעיל את כל הכלים שרכשתם ולהנפיק את הכרטיס האישי שלכם.</div>
     </div>
 
     <hr class="divider">
 
-    <!-- 1. Business search -->
-    <div class="sec-block">
+    <!-- ── Step 1: Business search ── -->
+    <div>
       <div class="sec-label">📍 שלב 1 — חיפוש העסק בגוגל</div>
       <div class="sec-desc">חפשו את שם העסק כפי שמופיע בגוגל כדי לשייך אליו את כרטיס ההמלצות שלכם.</div>
-
-      <!-- search input -->
-      <div id="bizSearchArea">
+      <div style="margin-top:12px;" id="bizSearchArea">
         <div class="biz-search-row">
           <span class="biz-search-icon">🔍</span>
           <input class="biz-search-inp" id="bizSearchInp" type="text"
@@ -242,11 +305,9 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
                  oninput="onBizInput(this.value)">
           <button class="biz-search-btn" onclick="doBizSearch()">חפש</button>
         </div>
-        <div id="bizDrop" class="biz-drop" style="margin-top:6px;"></div>
+        <div id="bizDrop" class="biz-drop"></div>
       </div>
-
-      <!-- chosen business display -->
-      <div id="bizChosen" class="biz-chosen">
+      <div id="bizChosen" class="biz-chosen" style="margin-top:12px;">
         <div class="biz-chosen-icon">📍</div>
         <div class="biz-chosen-info">
           <div class="biz-chosen-name" id="bizChosenName"></div>
@@ -254,85 +315,182 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
         </div>
         <button class="biz-change-btn" onclick="resetBizSearch()">החלף</button>
       </div>
-
-      <div class="field-err" id="errBiz">אנא חפשו ובחרו את העסק שלכם מהרשימה</div>
+      <div class="field-err" id="errBiz" style="margin-top:6px;">אנא חפשו ובחרו את העסק שלכם מהרשימה</div>
     </div>
 
     <hr class="divider">
 
-    <!-- 2. Brand color -->
-    <div class="sec-block">
-      <div class="sec-label">🎨 שלב 2 — צבע המיתוג</div>
-      <div class="sec-desc">בחרו את הצבע שיופיע בכרטיס ההמלצות ובחומרים הממותגים שלכם.</div>
-      <div class="swatches-row" id="swatchRow"></div>
-      <div class="color-custom-row">
-        <input type="color" id="customColor" value="#0b1d3a">
-        <span>צבע מותאם אישית</span>
+    <!-- ── Step 2: Card details + preview ── -->
+    <div>
+      <div class="sec-label">🪪 שלב 2 — פרטי הכרטיס</div>
+      <div class="sec-desc" style="margin-bottom:18px;">
+        על מנת שנכין לכם כרטיס המלצות שאותו תוכלו להפיץ ולקבל עוד לקוחות — יש למלא את הפרטים הבאים:
       </div>
+
+      <div class="step2-layout">
+
+        <!-- Form fields -->
+        <div class="step2-form">
+          <div class="field-group">
+            <label class="field-label">שם מלא *</label>
+            <input class="field-input" id="fieldName" type="text" placeholder="ישראל ישראלי"
+                   autocomplete="name" oninput="updatePreview()">
+          </div>
+          <div class="field-group">
+            <label class="field-label">שם העסק *</label>
+            <input class="field-input" id="fieldBizName" type="text" placeholder="שם העסק שלכם"
+                   autocomplete="organization" oninput="updatePreview()">
+          </div>
+          <div class="field-group">
+            <label class="field-label">טלפון *</label>
+            <input class="field-input" id="fieldPhone" type="tel" placeholder="050-000-0000"
+                   autocomplete="tel">
+          </div>
+          <div class="field-group">
+            <label class="field-label">כתובת מייל *</label>
+            <input class="field-input" id="fieldEmail" type="email" placeholder="you@email.com"
+                   autocomplete="email">
+          </div>
+
+          <!-- Color swatches -->
+          <div style="margin-top:4px;">
+            <div class="field-label" style="margin-bottom:10px;">צבע הכרטיס</div>
+            <div class="swatches-grid" id="swatchRow"></div>
+            <div class="color-custom-row">
+              <input type="color" id="customColor" value="#0b1d3a">
+              <span>צבע מותאם</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live preview -->
+        <div class="card-preview-wrap">
+          <div class="card-preview-label">תצוגה מקדימה</div>
+          <div class="card-preview" id="cardPreview" style="--preview-color:#0b1d3a">
+            <div class="card-prev-logo">🏢</div>
+            <div class="card-prev-name" id="prevBizName">שם העסק שלכם</div>
+            <div class="card-prev-stars">★★★★★</div>
+            <button class="card-prev-btn">⭐ כתבו המלצה בגוגל</button>
+          </div>
+        </div>
+
+      </div><!-- /step2-layout -->
+
+      <div class="field-err" id="errDetails" style="margin-top:8px;">אנא מלאו שם, שם עסק, טלפון ומייל</div>
     </div>
 
     <hr class="divider">
 
-    <!-- 3. Slug chooser -->
-    <div class="sec-block">
-      <div class="sec-label">🔗 שלב 3 — הכתובת האישית שלכם</div>
-      <div class="sec-desc">זוהי הכתובת הקצרה שתשלחו ללקוחות לקבלת המלצות. ייחודית לכם בלבד.</div>
-      <div class="slug-field-row">
-        <div class="slug-prefix">review-me.org/</div>
-        <input class="slug-field-inp" id="slugInp" type="text"
-               placeholder="שם-העסק" autocomplete="off" autocorrect="off" spellcheck="false"
+    <!-- ── Step 3: Slug ── -->
+    <div>
+      <div class="sec-label">🔗 שלב 3 — סיומת לקישור הכרטיס</div>
+      <div class="sec-desc" style="margin-bottom:12px;">זוהי הכתובת הקצרה שתשלחו ללקוחות לקבלת המלצות — ייחודית לכם בלבד. הקלידו בעצמכם:</div>
+      <div class="slug-row">
+        <div class="slug-pfx">review-me.org/</div>
+        <input class="slug-inp" id="slugInp" type="text"
+               placeholder="הקלידו כתובת ייחודית" autocomplete="off" autocorrect="off" spellcheck="false"
                oninput="onSlugInput(this.value)">
       </div>
-      <div class="slug-status" id="slugStatus"></div>
-      <div class="field-err" id="errSlug">אנא הזינו כתובת אישית לכרטיס שלכם</div>
+      <div class="slug-status" id="slugStatus" style="margin-top:6px;"></div>
+      <div class="field-err" id="errSlug" style="margin-top:4px;">אנא הזינו כתובת ייחודית לכרטיס</div>
     </div>
 
     <hr class="divider">
 
-    <!-- Part C: Finish button -->
+    <!-- ── Finish button ── -->
     <button class="finish-btn" id="finishBtn" onclick="handleFinish()">
       🚀 סיום הקמה — קחו אותי לדאשבורד
     </button>
 
   </div><!-- /setup-card -->
+
+  <!-- ── Footer ── -->
+  <div class="site-footer">
+    המלצות לקידום פרופיל העסק בגוגל | נבנה ע״י הדס אדלר
+  </div>
+
 </div><!-- /page -->
 
 <script>
 (function(){
   'use strict';
 
+  /* ── Confetti on load ── */
+  function launchConfetti(){
+    var colors = ['#f9b915','#22d3ee','#ffffff','#f59e0b','#fde68a','#bae6fd'];
+    for (var i = 0; i < 70; i++){
+      (function(idx){
+        setTimeout(function(){
+          var el = document.createElement('div');
+          el.className = 'confetti-piece';
+          var size = Math.random()*8 + 4;
+          el.style.cssText = [
+            'left:' + Math.random()*100 + 'vw',
+            'width:' + size + 'px',
+            'height:' + size + 'px',
+            'background:' + colors[Math.floor(Math.random()*colors.length)],
+            'animation-duration:' + (Math.random()*1.8+1.6) + 's',
+            'border-radius:' + (Math.random()>.4 ? '50%' : '2px'),
+            'opacity:.95'
+          ].join(';');
+          document.body.appendChild(el);
+          setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 4000);
+        }, idx * 28);
+      })(i);
+    }
+  }
+  window.addEventListener('load', function(){ setTimeout(launchConfetti, 300); });
+
   /* ── Supabase ── */
   var SUPA_URL = 'https://kjykdleskbqewntkfzky.supabase.co';
   var SUPA_KEY = 'sb_publishable__14W1IrEqGnHdyiIUuo39A_1j0gpnls';
   var _sb = null;
   try {
-    if (window.supabase) {
+    if (window.supabase){
       _sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
-      console.log('%c✅ Supabase מחובר (success-setup)', 'color:#22c55e;font-weight:bold');
+      console.log('%c✅ Supabase מחובר', 'color:#22c55e;font-weight:bold');
     }
-  } catch(e){ console.warn('Supabase init:', e.message); }
+  } catch(e){ console.warn('Supabase:', e.message); }
 
-  /* ── Read lead data from localStorage (saved by analysis.html / index.html) ── */
+  /* ── Read lead data from localStorage ── */
   var gcLead = {}, rlLead = {}, rlBiz = {};
   try { gcLead = JSON.parse(localStorage.getItem('_gcLead') || '{}'); } catch(e){}
   try { rlLead = JSON.parse(localStorage.getItem('rl_lead')  || '{}'); } catch(e){}
   try { rlBiz  = JSON.parse(localStorage.getItem('rl_biz')   || '{}'); } catch(e){}
 
+  /* Pre-fill name / email from previous steps if available */
+  if (rlLead.name)  document.getElementById('fieldName').value  = rlLead.name;
+  if (rlLead.email) document.getElementById('fieldEmail').value = rlLead.email;
+  if (rlLead.phone) document.getElementById('fieldPhone').value = rlLead.phone;
+  if (rlLead.bizName || rlBiz.name){
+    document.getElementById('fieldBizName').value = rlLead.bizName || rlBiz.name;
+    updatePreview();
+  }
+
   /* ── State ── */
-  var selBiz     = null;   // { placeId, name, address }
+  var selBiz     = null;
   var brandColor = '#0b1d3a';
   var slugAvail  = true;
   var slugTimer  = null;
   var bizTimer   = null;
 
-  /* ── Color swatches ── */
+  /* ── Live card preview ── */
+  window.updatePreview = function(){
+    var biz  = (document.getElementById('fieldBizName').value || '').trim() || 'שם העסק שלכם';
+    document.getElementById('prevBizName').textContent = biz;
+  };
+
+  /* ── Color swatches (9 vivid colors) ── */
   var SWATCHES = [
-    { c:'#0b1d3a', label:'כחול כהה'  },
-    { c:'#1e3a8a', label:'כחול עז'   },
-    { c:'#7c3aed', label:'סגול'      },
-    { c:'#0f766e', label:'ירוק ים'   },
-    { c:'#991b1b', label:'אדום כהה'  },
-    { c:'#1c1917', label:'שחור'      }
+    { c:'#0b1d3a', label:'כחול נייבי'  },
+    { c:'#1d4ed8', label:'כחול מלכותי' },
+    { c:'#0891b2', label:'ציאן'        },
+    { c:'#7c3aed', label:'סגול'        },
+    { c:'#059669', label:'ירוק אמרלד'  },
+    { c:'#16a34a', label:'ירוק עז'     },
+    { c:'#dc2626', label:'אדום קרמיזי' },
+    { c:'#ea580c', label:'כתום'        },
+    { c:'#ca8a04', label:'זהב'         }
   ];
   var swatchRow = document.getElementById('swatchRow');
   SWATCHES.forEach(function(s, i){
@@ -348,17 +506,18 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
     document.querySelectorAll('.swatch').forEach(function(s){ s.classList.remove('active'); });
   });
 
-  function setColor(c, activeEl) {
+  function setColor(c, activeEl){
     brandColor = c;
     document.querySelectorAll('.swatch').forEach(function(s){ s.classList.remove('active'); });
     if (activeEl) activeEl.classList.add('active');
     document.getElementById('customColor').value = c;
+    document.getElementById('cardPreview').style.setProperty('--preview-color', c);
   }
 
   /* ── Helpers ── */
   function esc(s){
-    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   }
   function toSlug(s){
     return (s||'').trim().replace(/\s+/g,'-')
@@ -382,7 +541,7 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
       .then(function(r){ return r.json(); })
       .then(function(d){
         if (!d.predictions || !d.predictions.length){
-          drop.innerHTML = '<div class="biz-drop-info">לא נמצאו תוצאות — נסו שם מדויק יותר או הוסיפו עיר.</div>';
+          drop.innerHTML = '<div class="biz-drop-info">לא נמצאו תוצאות — נסו שם מדויק יותר.</div>';
           return;
         }
         drop.innerHTML = d.predictions.slice(0,6).map(function(p){
@@ -395,25 +554,19 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
             + '</div></div>';
         }).join('');
       })
-      .catch(function(){
-        drop.innerHTML = '<div class="biz-drop-info">שגיאה בחיפוש — נסו שוב.</div>';
-      });
+      .catch(function(){ drop.innerHTML = '<div class="biz-drop-info">שגיאה — נסו שוב.</div>'; });
   };
 
   window.selectBiz = function(placeId, name, addr){
     selBiz = { placeId: placeId, name: name, address: addr };
     document.getElementById('bizSearchArea').style.display = 'none';
-    var chosen = document.getElementById('bizChosen');
     document.getElementById('bizChosenName').textContent = name;
     document.getElementById('bizChosenAddr').textContent = addr;
-    chosen.style.display = 'flex';
+    document.getElementById('bizChosen').style.display = 'flex';
     document.getElementById('errBiz').style.display = 'none';
-    /* auto-fill slug from business name if empty */
-    var slugInp = document.getElementById('slugInp');
-    if (!slugInp.value){
-      var s = toSlug(name);
-      if (s){ slugInp.value = s; checkSlugAvail(s); }
-    }
+    /* Auto-fill bizName field if empty */
+    var bizInp = document.getElementById('fieldBizName');
+    if (!bizInp.value){ bizInp.value = name; updatePreview(); }
   };
 
   window.resetBizSearch = function(){
@@ -432,7 +585,7 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
     if (!e.target.closest('#bizSearchArea')) closeBizDrop();
   });
 
-  /* ── Slug ── */
+  /* ── Slug availability check ── */
   function setSlugStatus(msg, color){
     var el = document.getElementById('slugStatus');
     el.textContent = msg; el.style.color = color;
@@ -444,17 +597,12 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
     clearTimeout(slugTimer);
     slugTimer = setTimeout(function(){
       if (!_sb){ setSlugStatus('✅ הכתובת זמינה', '#22c55e'); slugAvail = true; return; }
-      var cardUrl = 'https://review-me.org/' + slug;
-      _sb.from('leads').select('id').eq('card_url', cardUrl)
+      _sb.from('leads').select('id').eq('card_url','https://review-me.org/'+slug)
         .then(function(res){
-          if (res.error || !res.data){
-            setSlugStatus('✅ הכתובת זמינה', '#22c55e'); slugAvail = true;
-          } else if (res.data.length > 0){
-            setSlugStatus('❌ הכתובת תפוסה — נסו שם אחר', '#ef4444'); slugAvail = false;
-          } else {
-            setSlugStatus('✅ הכתובת זמינה', '#22c55e'); slugAvail = true;
-          }
-        }).catch(function(){ setSlugStatus('✅ הכתובת זמינה', '#22c55e'); slugAvail = true; });
+          if (res.error || !res.data){ setSlugStatus('✅ הכתובת זמינה','#22c55e'); slugAvail=true; }
+          else if (res.data.length>0){ setSlugStatus('❌ הכתובת תפוסה — נסו שם אחר','#ef4444'); slugAvail=false; }
+          else { setSlugStatus('✅ הכתובת זמינה','#22c55e'); slugAvail=true; }
+        }).catch(function(){ setSlugStatus('✅ הכתובת זמינה','#22c55e'); slugAvail=true; });
     }, 600);
   }
 
@@ -465,28 +613,27 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
     document.getElementById('errSlug').style.display = 'none';
     checkSlugAvail(clean);
   };
-
-  /* Pre-fill slug from rl_biz name if we have it */
-  var preSlug = toSlug(rlBiz.name || rlLead.bizName || '');
-  if (preSlug){
-    setTimeout(function(){
-      var inp = document.getElementById('slugInp');
-      if (!inp.value){ inp.value = preSlug; checkSlugAvail(preSlug); }
-    }, 400);
-  }
+  /* Slug starts empty — no auto-fill */
 
   /* ── Finish / submit ── */
   window.handleFinish = function(){
-    var slug = document.getElementById('slugInp').value.trim();
-    var err  = false;
+    var name    = document.getElementById('fieldName').value.trim();
+    var bizName = document.getElementById('fieldBizName').value.trim();
+    var phone   = document.getElementById('fieldPhone').value.trim();
+    var email   = document.getElementById('fieldEmail').value.trim();
+    var slug    = document.getElementById('slugInp').value.trim();
+    var err = false;
 
     if (!selBiz){
       document.getElementById('errBiz').style.display = 'block'; err = true;
     }
+    if (!name || !bizName || !phone || !email){
+      document.getElementById('errDetails').style.display = 'block'; err = true;
+    }
     if (!slug){
       document.getElementById('errSlug').style.display = 'block'; err = true;
     } else if (!slugAvail){
-      setSlugStatus('❌ הכתובת תפוסה — נסו שם אחר', '#ef4444'); err = true;
+      setSlugStatus('❌ הכתובת תפוסה — נסו שם אחר','#ef4444'); err = true;
     }
     if (err) return;
 
@@ -495,38 +642,36 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
     btn.disabled = true;
 
     var cardUrl   = 'https://review-me.org/' + slug;
-    var reviewUrl = 'https://search.google.com/local/writereview?placeid=' + encodeURIComponent(selBiz.placeId);
-    var name  = rlLead.name  || gcLead.name  || '';
-    var phone = rlLead.phone || gcLead.phone || '';
-    var email = rlLead.email || gcLead.email || '';
+    var reviewUrl = selBiz
+      ? 'https://search.google.com/local/writereview?placeid=' + encodeURIComponent(selBiz.placeId)
+      : (gcLead.brandUrl || '');
 
     /* ── Save to localStorage ── */
     try {
-      localStorage.setItem('rl_biz', JSON.stringify({ placeId: selBiz.placeId, name: selBiz.name }));
+      localStorage.setItem('rl_biz',   JSON.stringify({ placeId: selBiz.placeId, name: selBiz.name }));
       localStorage.setItem('rl_brand', JSON.stringify({ url: reviewUrl, color: brandColor, cardUrl: cardUrl }));
       var updLead = Object.assign({}, rlLead, {
-        slug: slug, cardUrl: cardUrl, bizName: selBiz.name
+        name: name, bizName: bizName, phone: phone, email: email,
+        slug: slug, cardUrl: cardUrl
       });
       localStorage.setItem('rl_lead', JSON.stringify(updLead));
       var updGc = Object.assign({}, gcLead, {
-        placeId: selBiz.placeId, brandUrl: reviewUrl,
-        slug: slug, cardUrl: cardUrl, name: name || gcLead.name
+        name: name, placeId: selBiz.placeId, brandUrl: reviewUrl,
+        slug: slug, cardUrl: cardUrl
       });
       localStorage.setItem('_gcLead', JSON.stringify(updGc));
     } catch(e){}
 
     /* ── Save to Supabase ── */
-    function _goToDashboard(){
-      setTimeout(function(){ window.location.href = '/dashboard'; }, 300);
-    }
+    function _go(){ setTimeout(function(){ window.location.href = '/dashboard'; }, 300); }
 
-    if (_sb && (name || phone)){
+    if (_sb){
       try {
-        _sb.rpc('upsert_lead', {
-          p_name:        name        || selBiz.name,
-          p_biz_name:    selBiz.name,
-          p_phone:       phone       || '',
-          p_email:       email       || '',
+        _sb.rpc('upsert_lead',{
+          p_name:        name,
+          p_biz_name:    bizName,
+          p_phone:       phone,
+          p_email:       email,
           p_card_url:    cardUrl,
           p_upsell:      false,
           p_brand_color: brandColor,
@@ -534,14 +679,11 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:80px;}
           p_has_logo:    false
         }).then(function(res){
           if (res && res.error) console.error('❌ Supabase:', res.error.message);
-          else console.log('%c✅ נשמר ב-Supabase', 'color:#22c55e;font-weight:bold');
-          _goToDashboard();
-        }).catch(function(){ _goToDashboard(); });
-      } catch(e){ _goToDashboard(); }
-    } else {
-      console.warn('Supabase: אין שם/טלפון — עובר ל-dashboard בלי שמירה ל-DB');
-      _goToDashboard();
-    }
+          else console.log('%c✅ נשמר ב-Supabase','color:#22c55e;font-weight:bold');
+          _go();
+        }).catch(function(){ _go(); });
+      } catch(e){ _go(); }
+    } else { _go(); }
   };
 
 })();
