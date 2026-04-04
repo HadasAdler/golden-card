@@ -151,9 +151,20 @@ html,body{
   var SUPA_KEY = 'sb_publishable__14W1IrEqGnHdyiIUuo39A_1j0gpnls';
   var BASE_URL = 'https://review-me.org';
 
-  /* ── Extract slug from path ── */
+  /* ── Extract slug ──
+     Priority 1: path  → review-me.org/irit-nave
+     Priority 2: ?card= → review-me.org/ReviewCard?card=irit-nave (legacy)
+  ── */
   var pathParts = window.location.pathname.split('/').filter(Boolean);
-  var slug = pathParts[pathParts.length - 1] || '';
+  var pathSlug  = pathParts[pathParts.length - 1] || '';
+  /* If path is literally "ReviewCard" (legacy URL), use ?card= param instead */
+  var qSlug = new URLSearchParams(window.location.search).get('card') || '';
+  var slug  = (pathSlug && pathSlug !== 'ReviewCard') ? pathSlug : qSlug;
+
+  /* Silently rewrite URL bar to clean /slug format (no page reload, no redirect) */
+  if (slug && (pathSlug === 'ReviewCard' || !pathSlug)) {
+    try { history.replaceState(null, '', '/' + slug); } catch(e){}
+  }
 
   /* ── DOM refs ── */
   var loadEl    = document.getElementById('loadingState');
