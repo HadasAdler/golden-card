@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a192f">
+<title>Review Me — כרטיס המלצות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{
+  min-height:100%;font-family:'Heebo',sans-serif;direction:rtl;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--bg,#0a192f);
+  padding:24px 16px 40px;
+  transition:background .5s;
+}
+
+/* ── Loading ── */
+#loadingState{
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+  color:rgba(255,255,255,.7);font-size:16px;
+}
+.load-spinner{
+  width:44px;height:44px;border-radius:50%;
+  border:3px solid rgba(249,185,21,.25);
+  border-top-color:#f9b915;
+  animation:spin .9s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Error ── */
+#errorState{
+  display:none;text-align:center;max-width:320px;padding:28px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;color:#fff;
+}
+#errorState h2{font-size:22px;margin-bottom:10px;}
+#errorState p{font-size:14px;color:rgba(255,255,255,.55);line-height:1.6;}
+
+/* ── Card ── */
+#cardState{display:none;}
+.review-card{
+  width:100%;max-width:360px;
+  border-radius:28px;
+  background:var(--card-bg,#112240);
+  box-shadow:0 24px 80px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06);
+  padding:36px 28px 32px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;gap:0;
+  animation:cardIn .5s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:none}}
+
+.card-logo-wrap{
+  width:88px;height:88px;border-radius:50%;
+  background:rgba(255,255,255,.14);
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;margin-bottom:22px;overflow:hidden;
+  border:3px solid rgba(255,255,255,.15);
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+  flex-shrink:0;
+}
+.card-logo-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+
+.card-biz-name{
+  font-size:clamp(20px,5vw,26px);font-weight:900;color:#fff;
+  line-height:1.2;margin-bottom:10px;
+}
+.card-stars{
+  font-size:28px;color:#f9b915;letter-spacing:2px;margin-bottom:20px;
+  filter:drop-shadow(0 0 6px rgba(249,185,21,.4));
+}
+.card-divider{
+  width:48px;height:2px;
+  background:rgba(249,185,21,.4);
+  border-radius:2px;margin-bottom:20px;
+}
+.card-invite{
+  font-size:15px;font-weight:600;color:rgba(255,255,255,.72);
+  line-height:1.55;margin-bottom:28px;max-width:260px;
+}
+.card-cta{
+  display:block;width:100%;
+  padding:17px 20px;border-radius:15px;border:none;cursor:pointer;
+  font-family:'Heebo',sans-serif;font-size:18px;font-weight:900;
+  background:linear-gradient(135deg,#f9b915,#e8a800);
+  color:#0a192f;text-decoration:none;
+  box-shadow:0 8px 28px rgba(249,185,21,.45);
+  transition:transform .15s,box-shadow .15s,opacity .15s;
+  letter-spacing:.01em;
+}
+.card-cta:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(249,185,21,.55);}
+.card-cta:active{transform:translateY(0);opacity:.9;}
+
+.card-footer{
+  margin-top:24px;font-size:12px;color:rgba(255,255,255,.28);
+  letter-spacing:.02em;
+}
+
+/* ── Powered-by strip ── */
+.powered-by{
+  margin-top:28px;display:flex;align-items:center;gap:8px;
+  color:rgba(255,255,255,.25);font-size:12px;font-weight:600;
+}
+.powered-by a{color:rgba(249,185,21,.45);text-decoration:none;}
+.powered-by a:hover{color:rgba(249,185,21,.7);}
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loadingState">
+  <div class="load-spinner"></div>
+  <span>טוען כרטיס...</span>
+</div>
+
+<!-- Error -->
+<div id="errorState">
+  <h2>🔍 כרטיס לא נמצא</h2>
+  <p>לא מצאנו כרטיס המלצות בכתובת זו.<br>אם אתה בעל עסק, פנה להדס אדלר לסיוע.</p>
+</div>
+
+<!-- Card -->
+<div id="cardState">
+  <div class="review-card" id="theCard">
+    <div class="card-logo-wrap" id="cardLogoWrap">🏢</div>
+    <div class="card-biz-name" id="cardBizName">שם העסק</div>
+    <div class="card-stars">★★★★★</div>
+    <div class="card-divider"></div>
+    <div class="card-invite">הדעה שלכם חשובה לנו!<br>דקה אחת מצידכם שווה הכל עבורנו 🙏</div>
+    <a class="card-cta" id="cardCta" href="#" target="_blank" rel="noopener">
+      ⭐ כתבו לנו המלצה בגוגל
+    </a>
+    <div class="card-footer" id="cardFooter"></div>
+  </div>
+
+  <div class="powered-by">
+    מופעל על ידי <a href="https://review-me.org" target="_blank">Review Me</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ── Config ── */
+  var SUPA_URL = 'https://kjykdleskbqewntkfzky.supabase.co';
+  var SUPA_KEY = 'sb_publishable__14W1IrEqGnHdyiIUuo39A_1j0gpnls';
+  var BASE_URL = 'https://review-me.org';
+
+  /* ── Extract slug from path ── */
+  var pathParts = window.location.pathname.split('/').filter(Boolean);
+  var slug = pathParts[pathParts.length - 1] || '';
+
+  /* ── DOM refs ── */
+  var loadEl    = document.getElementById('loadingState');
+  var errorEl   = document.getElementById('errorState');
+  var cardEl    = document.getElementById('cardState');
+  var theCard   = document.getElementById('theCard');
+  var nameEl    = document.getElementById('cardBizName');
+  var logoWrap  = document.getElementById('cardLogoWrap');
+  var ctaEl     = document.getElementById('cardCta');
+  var footerEl  = document.getElementById('cardFooter');
+
+  function showError(){
+    loadEl.style.display  = 'none';
+    cardEl.style.display  = 'none';
+    errorEl.style.display = 'block';
+  }
+  function showCard(d){
+    /* apply brand color */
+    var color = d.brand_color || '#112240';
+    document.documentElement.style.setProperty('--bg', color);
+    theCard.style.setProperty('--card-bg', color);
+    /* darken the body BG slightly */
+    document.body.style.background =
+      'linear-gradient(160deg,' + color + ' 0%, #0a192f 100%)';
+
+    /* business name */
+    nameEl.textContent = d.biz_name || 'עסק';
+
+    /* logo */
+    if (d.logo_url){
+      logoWrap.innerHTML =
+        '<img src="' + esc(d.logo_url) + '" alt="' + esc(d.biz_name) + '">';
+    } else {
+      logoWrap.textContent = '🏢';
+    }
+
+    /* CTA — Google review link */
+    var reviewUrl = d.review_url || '';
+    if (reviewUrl){
+      ctaEl.href = reviewUrl;
+    } else {
+      ctaEl.style.display = 'none';
+    }
+
+    /* footer */
+    footerEl.textContent = d.biz_name || '';
+
+    /* update page title */
+    document.title = (d.biz_name || 'עסק') + ' | Review Me';
+
+    /* show */
+    loadEl.style.display  = 'none';
+    errorEl.style.display = 'none';
+    cardEl.style.display  = 'block';
+  }
+
+  if (!slug){
+    showError();
+    return;
+  }
+
+  /* ── Fetch from Supabase ── */
+  var _sb = null;
+  try {
+    if (window.supabase){
+      _sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+    }
+  } catch(e){}
+
+  if (!_sb){ showError(); return; }
+
+  var cardUrl = BASE_URL + '/' + slug;
+  _sb.from('leads').select('biz_name,review_url,brand_color,logo_url')
+    .eq('card_url', cardUrl)
+    .maybeSingle()
+    .then(function(res){
+      if (res.error || !res.data){ showError(); return; }
+      showCard(res.data);
+    })
+    .catch(function(){ showError(); });
+
+  function esc(s){
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+})();
+</script>
+</body>
+</html>

@@ -5,8 +5,10 @@
     { "source": "/analysis",      "destination": "/analysis.html"      },
     { "source": "/success",       "destination": "/success.html"       },
     { "source": "/final-success", "destination": "/final-success.html" },
-    { "source": "/dashboard",      "destination": "/dashboard.html"      },
-    { "source": "/success-setup", "destination": "/success-setup.html"  },
-    { "source": "/((?!api/).*)",  "destination": "/index.html"          }
+    { "source": "/dashboard",     "destination": "/dashboard.html"     },
+    { "source": "/success-setup", "destination": "/success-setup.html" },
+    { "source": "/card",          "destination": "/card.html"          },
+    { "source": "/:slug",         "destination": "/card.html"          },
+    { "source": "/((?!api/).*)",  "destination": "/index.html"         }
   ]
 }

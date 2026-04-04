@@ -216,6 +216,21 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
 }
 .color-custom-row span{font-size:16px;color:#fff;font-weight:600;}
 
+/* ── Logo upload ── */
+.logo-upload-label{
+  display:flex;align-items:center;justify-content:center;
+  border:2px dashed rgba(249,185,21,.35);border-radius:12px;
+  padding:16px 20px;cursor:pointer;transition:border-color .2s,background .2s;
+  background:rgba(249,185,21,.04);
+}
+.logo-upload-label:hover{border-color:rgba(249,185,21,.65);background:rgba(249,185,21,.08);}
+.logo-upload-label img{
+  width:56px;height:56px;object-fit:cover;border-radius:50%;
+  border:2px solid rgba(249,185,21,.5);
+}
+#logoUploadText{font-size:14px;color:rgba(250,248,244,.6);font-weight:600;}
+.logo-upload-status{font-size:13px;min-height:18px;margin-top:4px;font-weight:700;}
+
 /* ── Slug ── */
 .slug-row{
   display:flex;align-items:stretch;
@@ -352,6 +367,17 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
                    autocomplete="email">
           </div>
 
+          <!-- Logo upload -->
+          <div class="field-group" style="margin-top:4px;">
+            <label class="field-label">לוגו / תמונת עסק</label>
+            <label class="logo-upload-label" id="logoUploadLabel" for="logoFile">
+              <span id="logoUploadText">📷 לחצו להעלאת לוגו (אופציונלי)</span>
+            </label>
+            <input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp,image/gif"
+                   style="display:none" onchange="onLogoSelect(this)">
+            <div class="logo-upload-status" id="logoUploadStatus"></div>
+          </div>
+
           <!-- Color swatches -->
           <div style="margin-top:4px;">
             <div class="field-label" style="margin-bottom:10px;">צבע הכרטיס</div>
@@ -367,7 +393,7 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
         <div class="card-preview-wrap">
           <div class="card-preview-label">תצוגה מקדימה</div>
           <div class="card-preview" id="cardPreview" style="--preview-color:#0b1d3a">
-            <div class="card-prev-logo">🏢</div>
+            <div class="card-prev-logo" id="cardPrevLogoEl">🏢</div>
             <div class="card-prev-name" id="prevBizName">שם העסק שלכם</div>
             <div class="card-prev-stars">★★★★★</div>
             <button class="card-prev-btn">⭐ כתבו המלצה בגוגל</button>
@@ -461,6 +487,7 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
   /* ── State ── */
   var selBiz     = null;
   var brandColor = '#0b1d3a';
+  var logoUrl    = '';
   var slugAvail  = true;
   var slugTimer  = null;
   var bizTimer   = null;
@@ -470,6 +497,64 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
     var biz  = (document.getElementById('fieldBizName').value || '').trim() || 'שם העסק שלכם';
     document.getElementById('prevBizName').textContent = biz;
   };
+
+  /* ── Logo upload ── */
+  window.onLogoSelect = function(input){
+    var file = input.files && input.files[0];
+    if (!file) return;
+    if (file.size > 3 * 1024 * 1024){
+      setLogoStatus('הקובץ גדול מדי — מקסימום 3MB', '#f87171'); return;
+    }
+
+    /* Preview immediately */
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var img = document.createElement('img');
+      img.src = e.target.result;
+      var label = document.getElementById('logoUploadLabel');
+      label.innerHTML = '';
+      label.appendChild(img);
+      /* update card preview */
+      var prevLogo = document.getElementById('cardPrevLogoEl');
+      if (prevLogo){
+        prevLogo.innerHTML = '';
+        var prevImg = document.createElement('img');
+        prevImg.src = e.target.result;
+        prevImg.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;';
+        prevLogo.appendChild(prevImg);
+      }
+    };
+    reader.readAsDataURL(file);
+
+    /* Upload to Supabase Storage */
+    if (!_sb){ setLogoStatus('✅ לוגו נבחר (יישמר בסיום)', '#22c55e'); return; }
+    setLogoStatus('⏳ מעלה לוגו...', 'rgba(250,248,244,.5)');
+
+    var ext      = file.name.split('.').pop() || 'jpg';
+    var fileName = 'logo-' + Date.now() + '.' + ext;
+    var filePath = 'logos/' + fileName;
+
+    _sb.storage.from('logos').upload(filePath, file, { upsert: true })
+      .then(function(res){
+        if (res.error){
+          /* Storage bucket may not exist — store DataURL as fallback */
+          console.warn('[logo upload]', res.error.message);
+          setLogoStatus('✅ לוגו נבחר (יישמר מקומית)', '#f9b915');
+          return;
+        }
+        var pub = _sb.storage.from('logos').getPublicUrl(filePath);
+        logoUrl = pub.data && pub.data.publicUrl ? pub.data.publicUrl : '';
+        setLogoStatus('✅ לוגו הועלה בהצלחה', '#22c55e');
+      })
+      .catch(function(e){
+        console.warn('[logo upload catch]', e.message);
+        setLogoStatus('✅ לוגו נבחר', '#f9b915');
+      });
+  };
+  function setLogoStatus(msg, color){
+    var el = document.getElementById('logoUploadStatus');
+    if (el){ el.textContent = msg; el.style.color = color; }
+  }
 
   /* ── Color swatches (9 vivid colors) ── */
   var SWATCHES = [
@@ -673,7 +758,9 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
     /* ── Save to Supabase ── */
     function _go(){
       sendNotify();
-      setTimeout(function(){ window.location.href = '/dashboard'; }, 400);
+      setTimeout(function(){
+        window.location.href = '/dashboard?slug=' + encodeURIComponent(slug);
+      }, 400);
     }
 
     if (_sb){
@@ -687,10 +774,18 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
           p_upsell:      false,
           p_brand_color: brandColor,   /* hex color chosen by user */
           p_review_url:  reviewUrl,
-          p_has_logo:    false
+          p_has_logo:    !!logoUrl
         }).then(function(res){
-          if (res && res.error) console.error('❌ Supabase:', res.error.message);
+          if (res && res.error) console.error('❌ Supabase RPC:', res.error.message);
           else console.log('%c✅ נשמר ב-Supabase','color:#22c55e;font-weight:bold');
+          /* If we have a logo URL, try to update the logo_url column directly */
+          if (logoUrl && _sb){
+            _sb.from('leads')
+              .update({ logo_url: logoUrl })
+              .eq('card_url', cardUrl)
+              .then(function(){})
+              .catch(function(){});
+          }
           _go();
         }).catch(function(){ _go(); });
       } catch(e){ _go(); }

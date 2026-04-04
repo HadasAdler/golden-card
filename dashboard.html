@@ -1005,6 +1005,15 @@ html,body{
                       style="width:100%;background:var(--gold);color:#0a192f;font-weight:800;">
                 🔗 העתק קישור לכרטיס החכם
               </button>
+              <a id="viewCardBtn" href="#" target="_blank" rel="noopener"
+                 style="display:block;width:100%;margin-top:10px;padding:13px 20px;
+                        border-radius:10px;background:rgba(34,211,238,.15);
+                        border:1.5px solid rgba(34,211,238,.45);
+                        color:#22d3ee;font-family:'Heebo',sans-serif;font-weight:800;
+                        font-size:15px;text-align:center;text-decoration:none;
+                        transition:background .2s;">
+                👁️ צפה בכרטיס החכם שלי
+              </a>
             </div>
 
             <!-- ── קישור גוגל (משני) ── -->
@@ -1075,65 +1084,10 @@ html,body{
     <!-- ── TAB 3: תוכנית עבודה ── -->
     <div class="tab-panel" id="tab-2">
       <div class="page-title">תוכנית עבודה שבועית — 4 שבועות</div>
-      <div class="page-sub">5 משימות לשבוע, ימי א׳–ה׳</div>
+      <div class="page-sub">5 משימות לשבוע, ימי א׳–ה׳ | קראו, בצעו, גדלו</div>
 
-      <div class="cal-wrap">
-        <table class="cal-table">
-          <thead>
-            <tr>
-              <th class="col-week"></th>
-              <th class="col-day-header">ראשון</th>
-              <th class="col-day-header">שני</th>
-              <th class="col-day-header">שלישי</th>
-              <th class="col-day-header">רביעי</th>
-              <th class="col-day-header">חמישי</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="col-week">שבוע 1</td>
-              <td class="cal-task">פוסט פתיחת חודש</td>
-              <td class="cal-task">בדיקת נוכחות בביו</td>
-              <td class="cal-task">סטורי מאחורי הקלעים</td>
-              <td class="cal-task">סידור חתימת מייל</td>
-              <td class="cal-task">פנייה אישית בוואטסאפ</td>
-            </tr>
-            <tr>
-              <td class="col-week">שבוע 2</td>
-              <td class="cal-task">הודעה בקבוצה משפחתית</td>
-              <td class="cal-task">תחזוקת תגובות בגוגל</td>
-              <td class="cal-task">הוכחה חברתית בסטורי</td>
-              <td class="cal-task">משימת דלפק / QR</td>
-              <td class="cal-task">דיוור לרשימת תפוצה</td>
-            </tr>
-            <tr>
-              <td class="col-week">שבוע 3</td>
-              <td class="cal-task">תמונה לסטטוס וואטסאפ</td>
-              <td class="cal-task">גיוס קולגות</td>
-              <td class="cal-task">קידום אישי לחברים</td>
-              <td class="cal-task">פנייה ללקוח עבר</td>
-              <td class="cal-task">פוסט 3 המלצות חזקות</td>
-            </tr>
-            <tr>
-              <td class="col-week">שבוע 4</td>
-              <td class="cal-task">פוסט / סטורי חוזר</td>
-              <td class="cal-task">פנייה פנים אל פנים</td>
-              <td class="cal-task">סטורי הדרכה</td>
-              <td class="cal-task">פוסט תודה לקהילה</td>
-              <td class="cal-task">תכנון לשבוע הבא</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <button class="btn-download-cal" onclick="triggerCalendarDownload()">
-        📥 הורד PDF מעוצב
-      </button>
-
-      <!-- ── פירוט מלא ── -->
-      <div style="margin-top:32px;">
-        <div style="font-size:18px;font-weight:800;color:var(--cream);margin-bottom:4px;">פירוט המשימות השבועיות</div>
-        <div style="font-size:13px;color:rgba(250,248,244,.45);margin-bottom:16px;">לחצו על כל שבוע לצפייה בפרטים</div>
+      <!-- ── רשימת משימות נקייה ── -->
+      <div style="margin-top:24px;">
 
         <div class="detail-week-header">שבוע 1</div>
         <div class="detail-row"><div class="detail-day">ראשון</div><div><div class="detail-task-title">פוסט פתיחת חודש</div><div class="detail-task-desc">שתפו הצלחה מהחודש שעבר עם קישור להמלצות.</div></div></div>
@@ -1506,27 +1460,23 @@ html,body{
 
 <script>
 // ═══════════════════════════════════════
-//  TEST DATA — מיכל מוזס (בדיקת מערכת)
-// ═══════════════════════════════════════
-(function seedTestData() {
-  var existing = localStorage.getItem('rl_lead');
-  if (!existing || existing === '{}') {
-    localStorage.setItem('rl_lead',  JSON.stringify({ name: 'מיכל מוזס', bizName: 'מיכל מוזס חברת עו"ד' }));
-  }
-  var existingBrand = localStorage.getItem('rl_brand');
-  if (!existingBrand || existingBrand === '{}') {
-    localStorage.setItem('rl_brand', JSON.stringify({ url: 'https://search.google.com/local/writereview?placeid=ChIJ5STF2epJHRUR84efkJj5lkM' }));
-  }
-})();
-
-// ═══════════════════════════════════════
 //  DATA LOADING
 // ═══════════════════════════════════════
+/* Read ?slug= from URL — source of truth when coming from onboarding */
+var _urlParams  = new URLSearchParams(window.location.search);
+var _urlSlug    = _urlParams.get('slug') || '';
+
 var lead = {}, biz = {}, brand = {}, gcLead = {};
 try { lead   = JSON.parse(localStorage.getItem('rl_lead')  || '{}'); } catch(e){}
 try { biz    = JSON.parse(localStorage.getItem('rl_biz')   || '{}'); } catch(e){}
 try { brand  = JSON.parse(localStorage.getItem('rl_brand') || '{}'); } catch(e){}
 try { gcLead = JSON.parse(localStorage.getItem('_gcLead')  || '{}'); } catch(e){}
+
+/* If slug comes from URL override localStorage slug */
+if (_urlSlug) {
+  lead.slug    = _urlSlug;
+  lead.cardUrl = 'https://review-me.org/' + _urlSlug;
+}
 
 var customerName = lead.name    || gcLead.name    || '';
 var bizName      = lead.bizName || biz.name       || gcLead.name || 'העסק שלך';
@@ -1570,14 +1520,14 @@ if (bizName) {
 
   if (!_sb) return;
 
-  /* מחפש לפי טלפון (עדיפות) או לפי card_url/slug (גיבוי) */
+  /* עדיפות: slug מ-URL → card_url → טלפון */
   var phone   = lead.phone   || gcLead.phone   || '';
-  var cardUrl = lead.cardUrl || gcLead.cardUrl || '';
-  if (!phone && !cardUrl) return;
+  var cardUrl = lead.cardUrl || gcLead.cardUrl || (_urlSlug ? 'https://review-me.org/' + _urlSlug : '');
+  if (!cardUrl && !phone) return;
 
-  var _query = phone
-    ? _sb.from('leads').select('*').eq('phone', phone).maybeSingle()
-    : _sb.from('leads').select('*').eq('card_url', cardUrl).maybeSingle();
+  var _query = cardUrl
+    ? _sb.from('leads').select('*').eq('card_url', cardUrl).maybeSingle()
+    : _sb.from('leads').select('*').eq('phone', phone).maybeSingle();
 
   _query.then(function(res) {
       if (res.error || !res.data) {
@@ -1630,10 +1580,60 @@ if (bizName) {
     var bizEl2 = document.getElementById('bizNameEl');
     if (bizEl2 && d.biz_name) bizEl2.textContent = d.biz_name;
 
+    /* שמירת placeId מה-review_url לצורך Places API */
+    var reviewUrlForPlace = d.review_url || reviewLink || '';
+    var placeIdMatch = reviewUrlForPlace.match(/placeid=([^&]+)/i);
+    if (placeIdMatch) {
+      var extractedPlaceId = decodeURIComponent(placeIdMatch[1]);
+      if (!biz.placeId) biz.placeId = extractedPlaceId;
+      /* שמירה לשימוש ב-fetchLivePlacesData */
+      window._dashPlaceId = extractedPlaceId;
+    }
+
     /* רענון לשונית הקישור עם נתוני DB עדכניים */
     initLinkTab();
+
+    /* משיכת נתוני גוגל חיים */
+    if (window._dashPlaceId) fetchLivePlacesData(window._dashPlaceId);
   }
 })();
+
+// ═══════════════════════════════════════
+//  GOOGLE PLACES — נתונים חיים בזמן אמת
+// ═══════════════════════════════════════
+function fetchLivePlacesData(placeId){
+  if (!placeId) return;
+  fetch('/api/place-details?placeId=' + encodeURIComponent(placeId))
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (!d || d.status !== 'OK') return;
+      console.log('%c📊 Google Places נטען', 'color:#22d3ee;font-weight:bold', d);
+
+      /* עדכון דירוג */
+      var ratingEls = document.querySelectorAll('.live-rating');
+      ratingEls.forEach(function(el){
+        if (d.rating != null) el.textContent = d.rating.toFixed(1) + ' ⭐';
+      });
+      /* עדכון מספר ביקורות */
+      var countEls = document.querySelectorAll('.live-review-count');
+      countEls.forEach(function(el){
+        if (d.reviewCount != null) el.textContent = d.reviewCount + ' ביקורות';
+      });
+      /* עדכון שם עסק אם חסר */
+      if (d.name && (!bizName || bizName === 'העסק שלך')){
+        bizName = d.name;
+        var bizEl3 = document.getElementById('bizNameEl');
+        if (bizEl3) bizEl3.textContent = d.name;
+      }
+      /* עדכון פתוח/סגור */
+      var openEls = document.querySelectorAll('.live-open-status');
+      openEls.forEach(function(el){
+        if (d.openNow === true)  { el.textContent = '● פתוח עכשיו'; el.style.color = '#4ade80'; }
+        if (d.openNow === false) { el.textContent = '● סגור עכשיו'; el.style.color = '#f87171'; }
+      });
+    })
+    .catch(function(e){ console.warn('[places-details]', e.message); });
+}
 
 // ═══════════════════════════════════════
 //  TAB 1 — CARD LINK (dynamic)
@@ -1663,6 +1663,10 @@ function initLinkTab() {
 
   /* שמירת URL הכרטיס החכם לשימוש ב-copySmartLink */
   window._smartCardUrl = smartCardUrl;
+
+  /* כפתור "צפה בכרטיס שלי" */
+  var viewBtn = document.getElementById('viewCardBtn');
+  if (viewBtn) viewBtn.href = smartCardUrl;
 }
 
 function copyCardLink() {
