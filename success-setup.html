@@ -653,8 +653,28 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
       localStorage.setItem('_gcLead', JSON.stringify(updGc));
     } catch(e){}
 
+    /* ── Send admin notification ── */
+    function sendNotify(){
+      try {
+        fetch('/api/notify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name, bizName: bizName, phone: phone,
+            email: email, slug: slug, brandColor: brandColor
+          })
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(d){ console.log('%c📧 מייל התראה נשלח','color:#f9b915;font-weight:bold', d); })
+        .catch(function(e){ console.warn('[notify]', e.message); });
+      } catch(e){}
+    }
+
     /* ── Save to Supabase ── */
-    function _go(){ setTimeout(function(){ window.location.href = '/dashboard'; }, 300); }
+    function _go(){
+      sendNotify();
+      setTimeout(function(){ window.location.href = '/dashboard'; }, 400);
+    }
 
     if (_sb){
       try {
@@ -663,9 +683,9 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
           p_biz_name:    bizName,
           p_phone:       phone,
           p_email:       email,
-          p_card_url:    cardUrl,
+          p_card_url:    cardUrl,      /* https://review-me.org/[slug] */
           p_upsell:      false,
-          p_brand_color: brandColor,
+          p_brand_color: brandColor,   /* hex color chosen by user */
           p_review_url:  reviewUrl,
           p_has_logo:    false
         }).then(function(res){
