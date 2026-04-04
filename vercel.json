@@ -1,6 +1,14 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/ReviewCard",
+      "has": [{ "type": "query", "key": "card", "value": "(?<slug>.*)" }],
+      "destination": "https://app.base44.com/apps/697b1245ab9294b3879fdd08/preview?card=:slug",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/analysis",      "destination": "/analysis.html"      },
     { "source": "/success",       "destination": "/success.html"       },
