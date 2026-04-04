@@ -149,11 +149,11 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
 .biz-chosen-icon{font-size:24px;flex-shrink:0;}
 .biz-chosen-info{flex:1;}
 .biz-chosen-name{font-size:18px;font-weight:800;color:var(--turquoise);}
-.biz-chosen-addr{font-size:14px;color:rgba(250,248,244,.6);margin-top:3px;}
+.biz-chosen-addr{font-size:14px;color:rgba(250,248,244,.85);margin-top:3px;}
 .biz-change-btn{
-  background:none;border:1px solid rgba(250,248,244,.2);border-radius:8px;
-  padding:6px 12px;cursor:pointer;color:rgba(250,248,244,.6);
-  font-family:'Heebo',sans-serif;font-size:12px;font-weight:700;
+  background:none;border:1px solid rgba(250,248,244,.35);border-radius:8px;
+  padding:6px 12px;cursor:pointer;color:#fff;
+  font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;
   transition:all .15s;white-space:nowrap;
 }
 .biz-change-btn:hover{border-color:var(--gold);color:var(--gold);}
@@ -162,7 +162,7 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
 .step2-layout{display:flex;gap:24px;align-items:flex-start;}
 .step2-form{flex:1;display:flex;flex-direction:column;gap:14px;}
 .field-group{display:flex;flex-direction:column;gap:6px;}
-.field-label{font-size:16px;font-weight:800;color:rgba(250,248,244,.8);}
+.field-label{font-size:16px;font-weight:800;color:#fff;}
 .field-input{
   width:100%;padding:14px 16px;
   background:rgba(250,248,244,.06);
@@ -178,7 +178,7 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
 
 /* Card preview */
 .card-preview-wrap{flex-shrink:0;width:200px;}
-.card-preview-label{font-size:14px;font-weight:700;color:rgba(250,248,244,.45);text-align:center;margin-bottom:8px;letter-spacing:.06em;}
+.card-preview-label{font-size:14px;font-weight:700;color:#fff;text-align:center;margin-bottom:8px;letter-spacing:.06em;}
 .card-preview{
   border-radius:18px;padding:22px 18px 18px;
   text-align:center;transition:background .35s;
@@ -214,7 +214,7 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
   width:36px;height:36px;border:2px solid rgba(250,248,244,.15);
   border-radius:50%;cursor:pointer;padding:2px;background:none;
 }
-.color-custom-row span{font-size:16px;color:rgba(250,248,244,.6);font-weight:600;}
+.color-custom-row span{font-size:16px;color:#fff;font-weight:600;}
 
 /* ── Slug ── */
 .slug-row{
@@ -254,8 +254,8 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
 /* ── Footer ── */
 .site-footer{
   margin-top:40px;padding:20px;
-  text-align:center;font-size:13px;font-weight:600;
-  color:rgba(250,248,244,.4);line-height:1.7;
+  text-align:center;font-size:14px;font-weight:600;
+  color:rgba(250,248,244,.7);line-height:1.7;
 }
 
 @media(max-width:580px){
@@ -457,15 +457,6 @@ body{display:flex;flex-direction:column;align-items:center;padding-bottom:100px;
   try { gcLead = JSON.parse(localStorage.getItem('_gcLead') || '{}'); } catch(e){}
   try { rlLead = JSON.parse(localStorage.getItem('rl_lead')  || '{}'); } catch(e){}
   try { rlBiz  = JSON.parse(localStorage.getItem('rl_biz')   || '{}'); } catch(e){}
-
-  /* Pre-fill name / email from previous steps if available */
-  if (rlLead.name)  document.getElementById('fieldName').value  = rlLead.name;
-  if (rlLead.email) document.getElementById('fieldEmail').value = rlLead.email;
-  if (rlLead.phone) document.getElementById('fieldPhone').value = rlLead.phone;
-  if (rlLead.bizName || rlBiz.name){
-    document.getElementById('fieldBizName').value = rlLead.bizName || rlBiz.name;
-    updatePreview();
-  }
 
   /* ── State ── */
   var selBiz     = null;
