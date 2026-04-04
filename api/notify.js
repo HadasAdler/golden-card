@@ -3,9 +3,10 @@
  * שולח מייל התראה להדס כשלקוח מסיים Onboarding
  *
  * הגדרה ב-Vercel Dashboard → Settings → Environment Variables:
- *   RESEND_API_KEY = re_xxxxxxxxxxxxxxxx
+ *   RESEND_API_KEY        = re_xxxxxxxxxxxxxxxx   (חובה)
+ *   NEXT_PUBLIC_BASE_URL  = https://review-me.org (אופציונלי — ברירת מחדל קיימת)
  *
- * שירות: resend.com (חינמי עד 100 מיילים/יום, ללא צורך בהגדרת דומיין)
+ * שירות: resend.com (חינמי עד 100 מיילים/יום)
  * https://resend.com/signup → API Keys → Create API Key
  */
 module.exports = async function handler(req, res) {
@@ -28,7 +29,8 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ ok: true, skipped: true });
   }
 
-  const cardUrl  = slug ? `https://review-me.org/${slug}` : '—';
+  const BASE_URL = (process.env.NEXT_PUBLIC_BASE_URL || 'https://review-me.org').replace(/\/$/, '');
+  const cardUrl  = slug ? `${BASE_URL}/${slug}` : '—';
   const dateStr  = new Date().toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' });
 
   const html = `
@@ -132,8 +134,3 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ ok: true, warning: err.message }); // לא חוסמים לקוח
   }
 };
-
-function esc(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}

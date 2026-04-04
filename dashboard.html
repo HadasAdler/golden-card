@@ -1570,50 +1570,69 @@ if (bizName) {
 
   if (!_sb) return;
 
-  /* מחפש לפי טלפון (מפתח ייחודי) */
-  var phone = lead.phone || gcLead.phone || '';
-  if (!phone) return;
+  /* מחפש לפי טלפון (עדיפות) או לפי card_url/slug (גיבוי) */
+  var phone   = lead.phone   || gcLead.phone   || '';
+  var cardUrl = lead.cardUrl || gcLead.cardUrl || '';
+  if (!phone && !cardUrl) return;
 
-  _sb.from('leads').select('*').eq('phone', phone).maybeSingle()
-    .then(function(res) {
+  var _query = phone
+    ? _sb.from('leads').select('*').eq('phone', phone).maybeSingle()
+    : _sb.from('leads').select('*').eq('card_url', cardUrl).maybeSingle();
+
+  _query.then(function(res) {
       if (res.error || !res.data) {
-        console.info('ℹ️ Supabase: לא נמצא ליד עבור', phone);
+        /* אם חיפוש טלפון נכשל — ננסה card_url כגיבוי */
+        if (phone && cardUrl) {
+          _sb.from('leads').select('*').eq('card_url', cardUrl).maybeSingle()
+            .then(function(res2) {
+              if (!res2.error && res2.data) processDashboardData(res2.data);
+              else console.info('ℹ️ Supabase: לא נמצא ליד');
+            }).catch(function(){});
+          return;
+        }
+        console.info('ℹ️ Supabase: לא נמצא ליד עבור', phone || cardUrl);
         return;
       }
-      var d = res.data;
-      console.log('%c✅ נתונים נטענו מ-Supabase', 'color:#22c55e;font-weight:bold', d);
-
-      /* עדכון משתנים גלובליים */
-      if (d.biz_name)    { bizName    = d.biz_name;    }
-      if (d.review_url)  { reviewLink = d.review_url;  }
-      if (d.card_url)    {
-        /* חילוץ slug מה-card_url */
-        var parts = (d.card_url || '').split('/');
-        var dbSlug = parts[parts.length - 1];
-        if (dbSlug && !lead.slug) lead.slug = dbSlug;
-        lead.cardUrl = d.card_url;
-      }
-      if (d.brand_color && brand) brand.color = d.brand_color;
-
-      /* עדכון localStorage */
-      try {
-        if (d.biz_name)   { lead.bizName = d.biz_name; localStorage.setItem('rl_lead', JSON.stringify(lead)); }
-        if (d.review_url) { brand.url = d.review_url;  localStorage.setItem('rl_brand', JSON.stringify(brand)); }
-        if (d.biz_name)   { biz.name = d.biz_name;     localStorage.setItem('rl_biz', JSON.stringify(biz)); }
-      } catch(ex){}
-
-      /* רענון ה-UI */
-      var nameEl = document.getElementById('customerNameEl');
-      if (nameEl && d.name) nameEl.textContent = d.name;
-      var bizEl2 = document.getElementById('bizNameEl');
-      if (bizEl2 && d.biz_name) bizEl2.textContent = d.biz_name;
-
-      /* רענון לשונית הקישור */
-      initLinkTab();
+      processDashboardData(res.data);
     })
     .catch(function(err) {
       console.info('ℹ️ Supabase fetch שגיאה:', err && err.message);
     });
+
+  /* ── מעבד נתוני Supabase ועדכון UI ── */
+  function processDashboardData(d) {
+    console.log('%c✅ נתונים נטענו מ-Supabase', 'color:#22c55e;font-weight:bold', d);
+
+    /* עדכון משתנים גלובליים */
+    if (d.biz_name)   { bizName    = d.biz_name;   }
+    if (d.review_url) { reviewLink = d.review_url; }
+    if (d.card_url)   {
+      /* חילוץ slug מה-card_url — https://review-me.org/[slug] */
+      var parts  = (d.card_url || '').split('/');
+      var dbSlug = parts[parts.length - 1];
+      if (dbSlug) lead.slug = dbSlug;  /* תמיד מעדכנים מה-DB */
+      lead.cardUrl = d.card_url;
+    }
+    if (d.brand_color && brand) brand.color = d.brand_color;
+    if (d.name) lead.name = d.name;
+    if (d.phone && !lead.phone) lead.phone = d.phone;
+
+    /* עדכון localStorage */
+    try {
+      localStorage.setItem('rl_lead',  JSON.stringify(lead));
+      if (d.review_url) { brand.url = d.review_url; localStorage.setItem('rl_brand', JSON.stringify(brand)); }
+      if (d.biz_name)   { biz.name  = d.biz_name;   localStorage.setItem('rl_biz',   JSON.stringify(biz)); }
+    } catch(ex){}
+
+    /* רענון ה-UI */
+    var nameEl = document.getElementById('customerNameEl');
+    if (nameEl && d.name) nameEl.textContent = d.name;
+    var bizEl2 = document.getElementById('bizNameEl');
+    if (bizEl2 && d.biz_name) bizEl2.textContent = d.biz_name;
+
+    /* רענון לשונית הקישור עם נתוני DB עדכניים */
+    initLinkTab();
+  }
 })();
 
 // ═══════════════════════════════════════
