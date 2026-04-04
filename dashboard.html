@@ -1496,6 +1496,8 @@ html,body{
   </main>
 </div>
 
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <!-- External PDF scripts (loaded relative to page location on server) -->
 <script src="/pdf-guide.js"></script>
 <script src="/pdf-calendar.js"></script>
@@ -1552,6 +1554,67 @@ if (bizName) {
   var bizEl = document.getElementById('bizNameEl');
   if (bizEl) bizEl.textContent = bizName;
 }
+
+// ═══════════════════════════════════════
+//  SUPABASE — משיכת נתונים חיים מה-DB
+// ═══════════════════════════════════════
+(function() {
+  var SUPA_URL = 'https://kjykdleskbqewntkfzky.supabase.co';
+  var SUPA_KEY = 'sb_publishable__14W1IrEqGnHdyiIUuo39A_1j0gpnls';
+  var _sb = null;
+  try {
+    if (window.supabase) {
+      _sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+    }
+  } catch(e){}
+
+  if (!_sb) return;
+
+  /* מחפש לפי טלפון (מפתח ייחודי) */
+  var phone = lead.phone || gcLead.phone || '';
+  if (!phone) return;
+
+  _sb.from('leads').select('*').eq('phone', phone).maybeSingle()
+    .then(function(res) {
+      if (res.error || !res.data) {
+        console.info('ℹ️ Supabase: לא נמצא ליד עבור', phone);
+        return;
+      }
+      var d = res.data;
+      console.log('%c✅ נתונים נטענו מ-Supabase', 'color:#22c55e;font-weight:bold', d);
+
+      /* עדכון משתנים גלובליים */
+      if (d.biz_name)    { bizName    = d.biz_name;    }
+      if (d.review_url)  { reviewLink = d.review_url;  }
+      if (d.card_url)    {
+        /* חילוץ slug מה-card_url */
+        var parts = (d.card_url || '').split('/');
+        var dbSlug = parts[parts.length - 1];
+        if (dbSlug && !lead.slug) lead.slug = dbSlug;
+        lead.cardUrl = d.card_url;
+      }
+      if (d.brand_color && brand) brand.color = d.brand_color;
+
+      /* עדכון localStorage */
+      try {
+        if (d.biz_name)   { lead.bizName = d.biz_name; localStorage.setItem('rl_lead', JSON.stringify(lead)); }
+        if (d.review_url) { brand.url = d.review_url;  localStorage.setItem('rl_brand', JSON.stringify(brand)); }
+        if (d.biz_name)   { biz.name = d.biz_name;     localStorage.setItem('rl_biz', JSON.stringify(biz)); }
+      } catch(ex){}
+
+      /* רענון ה-UI */
+      var nameEl = document.getElementById('customerNameEl');
+      if (nameEl && d.name) nameEl.textContent = d.name;
+      var bizEl2 = document.getElementById('bizNameEl');
+      if (bizEl2 && d.biz_name) bizEl2.textContent = d.biz_name;
+
+      /* רענון לשונית הקישור */
+      initLinkTab();
+    })
+    .catch(function(err) {
+      console.info('ℹ️ Supabase fetch שגיאה:', err && err.message);
+    });
+})();
 
 // ═══════════════════════════════════════
 //  TAB 1 — CARD LINK (dynamic)

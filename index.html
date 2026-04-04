@@ -1861,8 +1861,8 @@ body{
   </div>
 </section>
 
-<!-- ══ STEP 5 — THANK YOU + UPSELL ══ -->
-<section class="sec" id="s5">
+<!-- ══ STEP 5 — הוסר מה-flow הנוכחי (הלקוח עובר ל-/success-setup אחרי תשלום) ══ -->
+<section class="sec" id="s5" style="display:none">
   <div class="thanks-sec">
     <div class="thanks-inner">
 
@@ -3049,26 +3049,23 @@ function initReport() {
   updatePdfMock();
 }
 
-// ── Payment — שמירת מצב + מעבר לדאשבורד (TESTING MODE) ──
-// להחזרה לייצור: החלף '/dashboard' ב-CARDCOM_MAIN
+// ── Payment — שמירת פרטי לקוח + מעבר לתשלום ──
+// Testing: מעביר ל-/success-setup  |  Production: CARDCOM_MAIN
 document.getElementById('paybtn').addEventListener('click', function(){
   var btn = this;
-  btn.innerHTML = '<div class="pay-btn-main">⏳ שומר נתונים ומעביר לדאשבורד...</div>';
+  btn.innerHTML = '<div class="pay-btn-main">⏳ מעביר לתשלום מאובטח...</div>';
   btn.style.opacity = '.8';
   btn.disabled = true;
 
-  /* שמירת מצב ב-localStorage */
+  /* שמירת פרטי הלקוח לשחזור אחרי התשלום */
   try {
     localStorage.setItem('rl_lead',  JSON.stringify(lead));
     localStorage.setItem('rl_biz',   JSON.stringify(biz));
     localStorage.setItem('rl_brand', JSON.stringify(brand));
   } catch(e) {}
 
-  /* שמירה ב-Supabase */
-  registerLeadPurchase(false);
-
   setTimeout(function(){
-    window.location.href = '/dashboard'; // PRODUCTION: CARDCOM_MAIN
+    window.location.href = '/success-setup'; // PRODUCTION: CARDCOM_MAIN
   }, 600);
 });
 
