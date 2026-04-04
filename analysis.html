@@ -210,7 +210,7 @@
       width:fit-content;letter-spacing:.3px;
     }
     .ai-main{font-size:22px;font-weight:900;color:#fff;line-height:1.4}
-    .ai-sub{font-size:16px;color:rgba(250,248,244,.58);line-height:1.65;font-weight:500}
+    .ai-sub{font-size:16px;color:#fff;line-height:1.7;font-weight:600}
 
     /* Divider */
     .styled-divider{display:flex;align-items:center;gap:14px;margin:6px 0}
@@ -219,8 +219,8 @@
       background:linear-gradient(90deg,transparent,rgba(249,185,21,.35),transparent);
     }
     .divider-text{
-      font-size:18px;color:var(--orange);font-weight:900;
-      letter-spacing:.5px;white-space:nowrap;
+      font-size:26px;color:var(--orange);font-weight:900;
+      letter-spacing:.3px;white-space:nowrap;text-align:center;
     }
 
     /* Package */
@@ -280,8 +280,8 @@
     .mega-btn:hover{transform:translateY(-2px);box-shadow:0 18px 54px rgba(249,185,21,.55)}
     .mega-btn:active{transform:translateY(0)}
     .cta-trust{
-      font-size:14px;color:rgba(250,248,244,.4);text-align:center;
-      display:flex;gap:18px;flex-wrap:wrap;justify-content:center;
+      font-size:14px;color:rgba(250,248,244,.78);text-align:center;
+      display:flex;gap:18px;flex-wrap:wrap;justify-content:center;font-weight:600;
     }
     .cta-trust span{display:flex;align-items:center;gap:5px}
 
@@ -851,22 +851,20 @@
     }
   }
 
-  /* ── CTA - scroll to build section ── */
+  /* ── CTA — מעביר ישירות לתשלום (ללא שלב הרישום המקדים) ──
+     לפי האסטרטגיה: איסוף נתונים מתבצע ב-success-setup לאחר התשלום בלבד.
+     Testing: החלף את כתובת קארדקום ב-'/success-setup'               */
+  var CARDCOM_URL = 'https://secure.cardcom.solutions/EA/EA5/izkLsqHzXE2BUeMo5vOAOg/PaymentSP';
+
   window.handleCTA = function(){
-    var section = document.getElementById('buildSection');
-    section.style.display = 'flex';
+    var btn = document.getElementById('mainCTA');
+    btn.textContent = '⏳ מעביר לתשלום מאובטח...';
+    btn.style.opacity = '.75';
+    btn.disabled = true;
     setTimeout(function(){
-      section.scrollIntoView({ behavior:'smooth', block:'start' });
-    }, 80);
-    document.getElementById('mainCTA').textContent = 'ממלאים פרטים למטה...';
-    document.getElementById('mainCTA').style.opacity = '.6';
-    document.getElementById('mainCTA').style.cursor = 'default';
-    document.getElementById('mainCTA').onclick = function(){
-      section.scrollIntoView({ behavior:'smooth', block:'start' });
-    };
-    setTimeout(function(){
-      document.getElementById('fieldName').focus();
-    }, 700);
+      window.location.href = CARDCOM_URL;
+      // TESTING: window.location.href = '/success-setup';
+    }, 500);
   };
 
   /* ── Color swatches ── */
