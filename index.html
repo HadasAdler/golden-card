@@ -2732,9 +2732,7 @@ function openAnalysis() {
         contactLabel: contactLabel,
         contactIconChar: contactIconChar,
         contactValHtml: contactValHtml,
-        contactCls: contactCls,
-        postVal: postVal,
-        postCls: postCls
+        contactCls: contactCls
       };
 
       loading.style.display = 'none';
@@ -2867,11 +2865,11 @@ function openResultsPage() {
     if (top && nameEl && cardsEl) {
       nameEl.textContent = snap2.bizName || (biz ? biz.name : '');
       var s3cards = [
-        { icon:'★',  cls:'ic-rating',   label:'דירוג נוכחי בגוגל',         vhtml: escHtml((snap2.rating||0).toFixed(1)+' / 5.0'), vcls: snap2.ratingCls||'' },
-        { icon:'◉',  cls:'ic-reviews',  label:'כמות ביקורות בגוגל',         vhtml: escHtml((snap2.reviews||0).toLocaleString()),    vcls: '' },
-        { icon:'◑',  cls:'ic-time',     label:'ביקורת אחרונה',               vhtml: escHtml(snap2.lastReviewRelative||'לא זמין'),    vcls: '' },
-        { icon:'◈',  cls:'ic-post',     label:'פוסט אחרון בפרופיל',          vhtml: escHtml(snap2.postVal||'אין פעילות בפרופיל'),   vcls: snap2.postCls||'sm' },
-        { icon:'⊙',  cls:'ic-status',   label:'סטטוס עסק',                   vhtml: escHtml(snap2.openNowVal||'לא זמין'),            vcls: snap2.openCls||'sm' },
+        { icon:'★',  cls:'ic-rating',   label:'דירוג נוכחי בגוגל',  vhtml: escHtml((snap2.rating||0).toFixed(1)+' / 5.0'), vcls: snap2.ratingCls||'' },
+        { icon:'◉',  cls:'ic-reviews',  label:'כמות ביקורות בגוגל', vhtml: escHtml((snap2.reviews||0).toLocaleString()),    vcls: '' },
+        { icon:'◑',  cls:'ic-time',     label:'ביקורת אחרונה',       vhtml: escHtml(snap2.lastReviewDisplay||'לא זמין'),    vcls: snap2.lastReviewDisplay&&snap2.lastReviewDisplay!=='לא זמין'?'':'sm' },
+        { icon:'◈',  cls:'ic-post',     label:'פוסט אחרון בפרופיל', vhtml: '<span style="font-size:13px;color:rgba(250,248,244,.35)">סריקה מוגבלת</span>', vcls: 'sm' },
+        { icon:'⊙',  cls:'ic-status',   label:'סטטוס עסק',           vhtml: escHtml(snap2.openNowVal||'לא זמין'),            vcls: snap2.openCls||'sm' },
         { icon: snap2.contactIconChar||'✆', cls:'ic-contact', label: snap2.contactLabel||'פרטי קשר', vhtml: snap2.contactValHtml||'<span style="color:rgba(250,248,244,.3);font-size:13px">לא זמין</span>', vcls: snap2.contactCls||'sm' }
       ];
       cardsEl.innerHTML = s3cards.map(function(c,i){
