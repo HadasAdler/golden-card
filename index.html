@@ -402,6 +402,12 @@ body{
   width:100%;
   max-width:560px;
 }
+/* קובייה בודדת מרכזית בשורה 3 (פריסת 2-2-1) */
+.analysis-item.full-row{
+  grid-column:1/-1;
+  max-width:calc(50% - 7px);
+  margin:0 auto;
+}
 .analysis-item{
   background:rgba(250,248,244,.08);
   border:1.5px solid rgba(250,248,244,.16);
@@ -419,7 +425,6 @@ body{
 .analysis-item-icon.ic-rating  { background:rgba(249,185,21,.2);  border:2px solid rgba(249,185,21,.55);  color:#fff; }
 .analysis-item-icon.ic-reviews { background:rgba(34,211,238,.2);  border:2px solid rgba(34,211,238,.55);  color:#fff; }
 .analysis-item-icon.ic-time    { background:rgba(167,139,250,.22); border:2px solid rgba(167,139,250,.55); color:#fff; }
-.analysis-item-icon.ic-post    { background:rgba(249,115,22,.2);   border:2px solid rgba(249,115,22,.55);  color:#fff; }
 .analysis-item-icon.ic-status  { background:rgba(74,222,128,.2);   border:2px solid rgba(74,222,128,.55);  color:#fff; }
 .analysis-item-icon.ic-contact { background:rgba(99,179,237,.2);   border:2px solid rgba(99,179,237,.55);  color:#fff; }
 .analysis-item-label{
@@ -847,7 +852,6 @@ body{
 .s3-card-icon.ic-rating  {background:rgba(249,185,21,.2);border:2px solid rgba(249,185,21,.4);color:#f9b915}
 .s3-card-icon.ic-reviews {background:rgba(34,211,238,.2);border:2px solid rgba(34,211,238,.4);color:#22d3ee}
 .s3-card-icon.ic-time    {background:rgba(167,139,250,.2);border:2px solid rgba(167,139,250,.4);color:#a78bfa}
-.s3-card-icon.ic-post    {background:rgba(249,115,22,.2); border:2px solid rgba(249,115,22,.4); color:#f97316}
 .s3-card-icon.ic-stability{background:rgba(74,222,128,.2);border:2px solid rgba(74,222,128,.4);color:#4ade80}
 .s3-card-label{font-size:13px;color:rgba(250,248,244,.7);font-weight:700;margin-bottom:8px;display:block}
 .s3-card-val{font-size:clamp(22px,4vw,30px);font-weight:900;display:block;color:#fff;line-height:1.2}
@@ -2662,15 +2666,11 @@ function openAnalysis() {
         var yyyy = d.getFullYear();
         lastReviewDisplay = dd+'/'+mm+'/'+yyyy;
       }
-      // זמן יחסי לביקורת האחרונה (לפני X זמן)
-      var lastReviewRelative = biz.lastReview || (lastReviewDisplay !== 'לא זמין' ? lastReviewDisplay : 'לא זמין');
-
       document.getElementById('analysisName').textContent = biz.name;
 
       var ratingCls = rating >= 4.5 ? 'good' : rating >= 4.0 ? 'warn' : 'bad';
 
-      // ── 6 קוביות ויזואליות בגריד 2×2×2 ──
-      // סטטוס עסק
+      // ── 5 קוביות בפריסת 2-2-1 ──
       var openNowVal = (biz.openNow !== null && biz.openNow !== undefined)
         ? (biz.openNow ? 'פתוח כעת' : 'סגור כעת') : 'לא זמין';
       var openCls = biz.openNow === true ? 'good' : biz.openNow === false ? 'bad' : 'sm';
@@ -2679,27 +2679,26 @@ function openAnalysis() {
       var contactLabel = 'פרטי קשר', contactIconChar = '✆', contactValHtml = null, contactCls = 'sm';
       if (biz.phone) {
         contactLabel = 'טלפון'; contactIconChar = '✆';
-        contactValHtml = escHtml(biz.phone); contactCls = 'sm';
+        contactValHtml = escHtml(biz.phone);
       } else if (biz.website) {
         var shortUrl = biz.website.replace(/^https?:\/\/(www\.)?/,'').split('/')[0];
         contactLabel = 'אתר'; contactIconChar = '⊕';
         contactValHtml = '<a class="bsi-link" href="'+escHtml(biz.website)+'" target="_blank" rel="noopener">'+escHtml(shortUrl)+'</a>';
-        contactCls = 'sm';
       } else {
         contactValHtml = '<span style="color:rgba(250,248,244,.3);font-size:13px">לא זמין</span>';
       }
 
+      // שורה 1: דירוג + ביקורות | שורה 2: ביקורת אחרונה + סטטוס | שורה 3: קשר (מרכזי)
       var cards = [
-        { icon:'★',  iconCls:'ic-rating',  label:'דירוג נוכחי בגוגל',  valHtml: escHtml(rating.toFixed(1)+' / 5.0'), cls: ratingCls },
-        { icon:'◉',  iconCls:'ic-reviews', label:'כמות ביקורות בגוגל', valHtml: escHtml(reviews.toLocaleString()),   cls: '' },
-        { icon:'◑',  iconCls:'ic-time',    label:'ביקורת אחרונה',       valHtml: escHtml(lastReviewDisplay),         cls: lastReviewDisplay !== 'לא זמין' ? 'date' : 'sm' },
-        { icon:'◈',  iconCls:'ic-post',    label:'פוסט אחרון בפרופיל', valHtml: '<span style="font-size:13px;color:rgba(250,248,244,.35)">דורש חיבור ידני</span>', cls: 'sm' },
-        { icon:'⊙',  iconCls:'ic-status',  label:'סטטוס עסק',           valHtml: escHtml(openNowVal),               cls: openCls },
-        { icon: contactIconChar, iconCls:'ic-contact', label: contactLabel, valHtml: contactValHtml,                 cls: contactCls }
+        { icon:'★', iconCls:'ic-rating',  label:'דירוג נוכחי בגוגל',  valHtml: escHtml(rating.toFixed(1)+' / 5.0'), cls: ratingCls,   full: false },
+        { icon:'◉', iconCls:'ic-reviews', label:'כמות ביקורות בגוגל', valHtml: escHtml(reviews.toLocaleString()),   cls: '',          full: false },
+        { icon:'◑', iconCls:'ic-time',    label:'ביקורת אחרונה',       valHtml: escHtml(lastReviewDisplay),         cls: lastReviewDisplay !== 'לא זמין' ? 'date' : 'sm', full: false },
+        { icon:'⊙', iconCls:'ic-status',  label:'סטטוס עסק',           valHtml: escHtml(openNowVal),               cls: openCls,     full: false },
+        { icon: contactIconChar, iconCls:'ic-contact', label: contactLabel, valHtml: contactValHtml, cls: contactCls, full: true }
       ];
       document.getElementById('analysisItems').innerHTML = cards.map(function(item, i) {
         var valClass = 'analysis-item-val'+(item.cls?' '+item.cls:'');
-        return '<div class="analysis-item" style="animation-delay:'+(i*0.1)+'s">'
+        return '<div class="analysis-item'+(item.full?' full-row':'')+'" style="animation-delay:'+(i*0.1)+'s">'
           +'<span class="analysis-item-icon '+item.iconCls+'">'+item.icon+'</span>'
           +'<span class="analysis-item-label">'+item.label+'</span>'
           +'<span class="'+valClass+'">'+item.valHtml+'</span>'
@@ -2725,7 +2724,6 @@ function openAnalysis() {
         rating: rating,
         reviews: reviews,
         lastReviewDisplay: lastReviewDisplay,
-        lastReviewRelative: lastReviewRelative,
         ratingCls: ratingCls,
         openNowVal: openNowVal,
         openCls: openCls,
@@ -2865,11 +2863,10 @@ function openResultsPage() {
     if (top && nameEl && cardsEl) {
       nameEl.textContent = snap2.bizName || (biz ? biz.name : '');
       var s3cards = [
-        { icon:'★',  cls:'ic-rating',   label:'דירוג נוכחי בגוגל',  vhtml: escHtml((snap2.rating||0).toFixed(1)+' / 5.0'), vcls: snap2.ratingCls||'' },
-        { icon:'◉',  cls:'ic-reviews',  label:'כמות ביקורות בגוגל', vhtml: escHtml((snap2.reviews||0).toLocaleString()),    vcls: '' },
-        { icon:'◑',  cls:'ic-time',     label:'ביקורת אחרונה',       vhtml: escHtml(snap2.lastReviewDisplay||'לא זמין'),    vcls: snap2.lastReviewDisplay&&snap2.lastReviewDisplay!=='לא זמין'?'':'sm' },
-        { icon:'◈',  cls:'ic-post',     label:'פוסט אחרון בפרופיל', vhtml: '<span style="font-size:13px;color:rgba(250,248,244,.35)">סריקה מוגבלת</span>', vcls: 'sm' },
-        { icon:'⊙',  cls:'ic-status',   label:'סטטוס עסק',           vhtml: escHtml(snap2.openNowVal||'לא זמין'),            vcls: snap2.openCls||'sm' },
+        { icon:'★', cls:'ic-rating',  label:'דירוג נוכחי בגוגל',  vhtml: escHtml((snap2.rating||0).toFixed(1)+' / 5.0'), vcls: snap2.ratingCls||'' },
+        { icon:'◉', cls:'ic-reviews', label:'כמות ביקורות בגוגל', vhtml: escHtml((snap2.reviews||0).toLocaleString()),    vcls: '' },
+        { icon:'◑', cls:'ic-time',    label:'ביקורת אחרונה',       vhtml: escHtml(snap2.lastReviewDisplay||'לא זמין'),    vcls: snap2.lastReviewDisplay&&snap2.lastReviewDisplay!=='לא זמין'?'':'sm' },
+        { icon:'⊙', cls:'ic-status',  label:'סטטוס עסק',           vhtml: escHtml(snap2.openNowVal||'לא זמין'),            vcls: snap2.openCls||'sm' },
         { icon: snap2.contactIconChar||'✆', cls:'ic-contact', label: snap2.contactLabel||'פרטי קשר', vhtml: snap2.contactValHtml||'<span style="color:rgba(250,248,244,.3);font-size:13px">לא זמין</span>', vcls: snap2.contactCls||'sm' }
       ];
       cardsEl.innerHTML = s3cards.map(function(c,i){
