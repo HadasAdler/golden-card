@@ -395,11 +395,14 @@ body{
   display:flex;align-items:center;gap:8px;
 }
 .analysis-items{
-  display:flex;gap:14px;padding:16px 12px;
-  flex-wrap:wrap;justify-content:center;align-items:stretch;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  padding:16px 12px;
+  width:100%;
+  max-width:560px;
 }
 .analysis-item{
-  flex:1;min-width:155px;max-width:195px;
   background:rgba(250,248,244,.08);
   border:1.5px solid rgba(250,248,244,.16);
   border-radius:var(--r-lg);
@@ -417,6 +420,8 @@ body{
 .analysis-item-icon.ic-reviews { background:rgba(34,211,238,.2);  border:2px solid rgba(34,211,238,.55);  color:#fff; }
 .analysis-item-icon.ic-time    { background:rgba(167,139,250,.22); border:2px solid rgba(167,139,250,.55); color:#fff; }
 .analysis-item-icon.ic-post    { background:rgba(249,115,22,.2);   border:2px solid rgba(249,115,22,.55);  color:#fff; }
+.analysis-item-icon.ic-status  { background:rgba(74,222,128,.2);   border:2px solid rgba(74,222,128,.55);  color:#fff; }
+.analysis-item-icon.ic-contact { background:rgba(99,179,237,.2);   border:2px solid rgba(99,179,237,.55);  color:#fff; }
 .analysis-item-label{
   font-size:14px;color:rgba(250,248,244,.72);font-weight:700;
   line-height:1.35;display:block;margin-bottom:10px;
@@ -2628,7 +2633,7 @@ function openAnalysis() {
   }
 
   // שליפת נתונים אמיתיים מגוגל (rating, reviews, last review time)
-  fetch('/api/place-details?placeId=' + encodeURIComponent(biz.placeId))
+  fetch('/api/place-details?placeId=' + encodeURIComponent(biz.placeId) + '&_t=' + Date.now(), { cache: 'no-store' })
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.status !== 'OK' || data.rating === null) {
@@ -2664,21 +2669,43 @@ function openAnalysis() {
 
       var ratingCls = rating >= 4.5 ? 'good' : rating >= 4.0 ? 'warn' : 'bad';
 
-      // 4 כרטיסים ויזואליים בראש — כרטיס שיפור מוצג בנפרד מתחת
-      // אייקונים: תווים Unicode שמגיבים ל-CSS color לתצוגה אחידה
+      // ── 6 קוביות ויזואליות בגריד 2×2×2 ──
+      // סטטוס עסק
+      var openNowVal = (biz.openNow !== null && biz.openNow !== undefined)
+        ? (biz.openNow ? 'פתוח כעת' : 'סגור כעת') : 'לא זמין';
+      var openCls = biz.openNow === true ? 'good' : biz.openNow === false ? 'bad' : 'sm';
+
+      // פרטי קשר — טלפון מועדף על אתר
+      var contactLabel = 'פרטי קשר', contactIconChar = '✆', contactValHtml = null, contactCls = 'sm';
+      if (biz.phone) {
+        contactLabel = 'טלפון'; contactIconChar = '✆';
+        contactValHtml = escHtml(biz.phone); contactCls = 'sm';
+      } else if (biz.website) {
+        var shortUrl = biz.website.replace(/^https?:\/\/(www\.)?/,'').split('/')[0];
+        contactLabel = 'אתר'; contactIconChar = '⊕';
+        contactValHtml = '<a class="bsi-link" href="'+escHtml(biz.website)+'" target="_blank" rel="noopener">'+escHtml(shortUrl)+'</a>';
+        contactCls = 'sm';
+      } else {
+        contactValHtml = '<span style="color:rgba(250,248,244,.3);font-size:13px">לא זמין</span>';
+      }
+
+      var postVal = lastReviewDisplay !== 'לא זמין' ? lastReviewDisplay : 'אין פעילות בפרופיל';
+      var postCls = lastReviewDisplay !== 'לא זמין' ? 'date' : 'sm';
+
       var cards = [
-        { icon:'★', iconCls:'ic-rating',  label:'דירוג נוכחי בגוגל',       val: rating.toFixed(1)+' / 5.0', cls: ratingCls },
-        { icon:'◉', iconCls:'ic-reviews', label:'כמות ההמלצות שלכם בגוגל', val: reviews.toLocaleString(),   cls: '' },
-        { icon:'◑', iconCls:'ic-time',    label:'ביקורת אחרונה',            val: lastReviewRelative,         cls: 'date' },
-        { icon:'◈', iconCls:'ic-post',    label:'פוסט אחרון בפרופיל',       val: lastReviewDisplay !== 'לא זמין' ? lastReviewDisplay : 'אין פעילות פוסטים בפרופיל', cls: lastReviewDisplay !== 'לא זמין' ? 'date' : 'sm' }
+        { icon:'★',  iconCls:'ic-rating',  label:'דירוג נוכחי בגוגל',  valHtml: escHtml(rating.toFixed(1)+' / 5.0'), cls: ratingCls },
+        { icon:'◉',  iconCls:'ic-reviews', label:'כמות ביקורות בגוגל', valHtml: escHtml(reviews.toLocaleString()),   cls: '' },
+        { icon:'◑',  iconCls:'ic-time',    label:'ביקורת אחרונה',       valHtml: escHtml(lastReviewRelative),        cls: '' },
+        { icon:'◈',  iconCls:'ic-post',    label:'פוסט אחרון בפרופיל', valHtml: escHtml(postVal),                   cls: postCls },
+        { icon:'⊙',  iconCls:'ic-status',  label:'סטטוס עסק',           valHtml: escHtml(openNowVal),               cls: openCls },
+        { icon: contactIconChar, iconCls:'ic-contact', label: contactLabel, valHtml: contactValHtml,                 cls: contactCls }
       ];
       document.getElementById('analysisItems').innerHTML = cards.map(function(item, i) {
-        var valClass = 'analysis-item-val'+(item.cls?' '+item.cls:'')+((!item.cls && item.val.length>10)?' sm':'');
-        return '<div class="analysis-item" style="animation-delay:'+(i*0.12)+'s">'
+        var valClass = 'analysis-item-val'+(item.cls?' '+item.cls:'');
+        return '<div class="analysis-item" style="animation-delay:'+(i*0.1)+'s">'
           +'<span class="analysis-item-icon '+item.iconCls+'">'+item.icon+'</span>'
           +'<span class="analysis-item-label">'+item.label+'</span>'
-          +'<span class="'+valClass+'">'+ escHtml(item.val)+'</span>'
-          +(item.sub ? '<span class="analysis-item-sub">'+escHtml(item.sub)+'</span>' : '')
+          +'<span class="'+valClass+'">'+item.valHtml+'</span>'
           +'</div>';
       }).join('');
 
@@ -2692,51 +2719,6 @@ function openAnalysis() {
       var improvEl = document.getElementById('improvementTeaser');
       if (improvEl) improvEl.style.display = 'flex';
 
-      // מידע נוסף מסריקת גוגל - שעות, טלפון, אתר
-      var scanBox = document.getElementById('bizScanInfo');
-      var rowHours = document.getElementById('bsiHours');
-      var rowPhone = document.getElementById('bsiPhone');
-      var rowWeb   = document.getElementById('bsiWeb');
-      if (scanBox) {
-        var MISSING = '<div class="bsi-val" style="color:rgba(250,248,244,.3);font-size:13px">מידע חסר</div>';
-        // שעות — כרטיס מיני
-        if (rowHours) {
-          if (biz.openNow !== null && biz.openNow !== undefined) {
-            rowHours.innerHTML =
-              '<div class="bsi-icon">🕐</div>'
-              +'<div class="bsi-label">סטטוס</div>'
-              +'<div class="bsi-val '+(biz.openNow?'bsi-open':'bsi-closed')+'">'
-              +(biz.openNow ? 'פתוח כעת' : 'סגור כעת')+'</div>';
-          } else {
-            rowHours.innerHTML = '<div class="bsi-icon">🕐</div><div class="bsi-label">סטטוס</div>'+MISSING;
-          }
-        }
-        // טלפון — כרטיס מיני
-        if (rowPhone) {
-          if (biz.phone) {
-            rowPhone.innerHTML =
-              '<div class="bsi-icon">📞</div>'
-              +'<div class="bsi-label">טלפון</div>'
-              +'<div class="bsi-val">'+escHtml(biz.phone)+'</div>';
-          } else {
-            rowPhone.innerHTML = '<div class="bsi-icon">📞</div><div class="bsi-label">טלפון</div>'+MISSING;
-          }
-        }
-        // אתר — כרטיס מיני
-        if (rowWeb) {
-          if (biz.website) {
-            var shortUrl = biz.website.replace(/^https?:\/\/(www\.)?/,'').split('/')[0];
-            rowWeb.innerHTML =
-              '<div class="bsi-icon">🌐</div>'
-              +'<div class="bsi-label">אתר</div>'
-              +'<div class="bsi-val"><a class="bsi-link" href="'+escHtml(biz.website)+'" target="_blank" rel="noopener">'+escHtml(shortUrl)+'</a></div>';
-          } else {
-            rowWeb.innerHTML = '<div class="bsi-icon">🌐</div><div class="bsi-label">אתר</div>'+MISSING;
-          }
-        }
-        scanBox.style.display = 'flex';
-      }
-
       // עדכן analysisText לשיתוף
       analysisText = 'האבחון של '+biz.name+':\n★ דירוג: '+rating.toFixed(1)+' | ביקורות: '+reviews+'\n🕐 ביקורת אחרונה: '+lastReviewDisplay+'\n'+window.location.href;
 
@@ -2747,7 +2729,15 @@ function openAnalysis() {
         reviews: reviews,
         lastReviewDisplay: lastReviewDisplay,
         lastReviewRelative: lastReviewRelative,
-        ratingCls: ratingCls
+        ratingCls: ratingCls,
+        openNowVal: openNowVal,
+        openCls: openCls,
+        contactLabel: contactLabel,
+        contactIconChar: contactIconChar,
+        contactValHtml: contactValHtml,
+        contactCls: contactCls,
+        postVal: postVal,
+        postCls: postCls
       };
 
       loading.style.display = 'none';
@@ -2880,17 +2870,18 @@ function openResultsPage() {
     if (top && nameEl && cardsEl) {
       nameEl.textContent = snap2.bizName || (biz ? biz.name : '');
       var s3cards = [
-        { icon:'★', cls:'ic-rating',    label:'דירוג נוכחי בגוגל', val: (snap2.rating||0).toFixed(1)+' / 5.0', vcls: snap2.ratingCls||'' },
-        { icon:'◉', cls:'ic-reviews',   label:'כמות ההמלצות שלכם בגוגל', val: (snap2.reviews||0).toLocaleString(),    vcls: '' },
-        { icon:'◑', cls:'ic-time',      label:'ביקורת אחרונה',            val: snap2.lastReviewRelative||'לא זמין',    vcls: '' },
-        { icon:'◈', cls:'ic-post',      label:'פוסט אחרון בפרופיל',       val: (snap2.lastReviewDisplay && snap2.lastReviewDisplay!=='לא זמין') ? snap2.lastReviewDisplay : 'אין פעילות פוסטים בפרופיל', vcls: (snap2.lastReviewDisplay && snap2.lastReviewDisplay!=='לא זמין') ? '' : 'sm' },
-        { icon:'◆', cls:'ic-stability', label:'המלצות לשיפור וקידום הדירוג', val: 'יופיעו בדוח המפורט',               vcls: 'sm' }
+        { icon:'★',  cls:'ic-rating',   label:'דירוג נוכחי בגוגל',         vhtml: escHtml((snap2.rating||0).toFixed(1)+' / 5.0'), vcls: snap2.ratingCls||'' },
+        { icon:'◉',  cls:'ic-reviews',  label:'כמות ביקורות בגוגל',         vhtml: escHtml((snap2.reviews||0).toLocaleString()),    vcls: '' },
+        { icon:'◑',  cls:'ic-time',     label:'ביקורת אחרונה',               vhtml: escHtml(snap2.lastReviewRelative||'לא זמין'),    vcls: '' },
+        { icon:'◈',  cls:'ic-post',     label:'פוסט אחרון בפרופיל',          vhtml: escHtml(snap2.postVal||'אין פעילות בפרופיל'),   vcls: snap2.postCls||'sm' },
+        { icon:'⊙',  cls:'ic-status',   label:'סטטוס עסק',                   vhtml: escHtml(snap2.openNowVal||'לא זמין'),            vcls: snap2.openCls||'sm' },
+        { icon: snap2.contactIconChar||'✆', cls:'ic-contact', label: snap2.contactLabel||'פרטי קשר', vhtml: snap2.contactValHtml||'<span style="color:rgba(250,248,244,.3);font-size:13px">לא זמין</span>', vcls: snap2.contactCls||'sm' }
       ];
       cardsEl.innerHTML = s3cards.map(function(c,i){
         return '<div class="s3-card" style="animation-delay:'+(i*0.1)+'s">'
           +'<div class="s3-card-icon '+c.cls+'">'+c.icon+'</div>'
           +'<span class="s3-card-label">'+c.label+'</span>'
-          +'<span class="s3-card-val'+(c.vcls?' '+c.vcls:'')+'">'+escHtml(c.val)+'</span>'
+          +'<span class="s3-card-val'+(c.vcls?' '+c.vcls:'')+'">'+c.vhtml+'</span>'
           +'</div>';
       }).join('');
       top.style.display = 'block';
