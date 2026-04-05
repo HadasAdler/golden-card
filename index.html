@@ -2689,25 +2689,47 @@ function openAnalysis() {
         contactValHtml = '<span style="color:rgba(250,248,244,.3);font-size:13px">לא זמין</span>';
       }
 
-      var postVal = lastReviewDisplay !== 'לא זמין' ? lastReviewDisplay : 'אין פעילות בפרופיל';
-      var postCls = lastReviewDisplay !== 'לא זמין' ? 'date' : 'sm';
-
       var cards = [
         { icon:'★',  iconCls:'ic-rating',  label:'דירוג נוכחי בגוגל',  valHtml: escHtml(rating.toFixed(1)+' / 5.0'), cls: ratingCls },
         { icon:'◉',  iconCls:'ic-reviews', label:'כמות ביקורות בגוגל', valHtml: escHtml(reviews.toLocaleString()),   cls: '' },
-        { icon:'◑',  iconCls:'ic-time',    label:'ביקורת אחרונה',       valHtml: escHtml(lastReviewRelative),        cls: '' },
-        { icon:'◈',  iconCls:'ic-post',    label:'פוסט אחרון בפרופיל', valHtml: escHtml(postVal),                   cls: postCls },
+        { icon:'◑',  iconCls:'ic-time',    label:'ביקורת אחרונה',       valHtml: escHtml(lastReviewDisplay),         cls: lastReviewDisplay !== 'לא זמין' ? 'date' : 'sm' },
+        { icon:'◈',  iconCls:'ic-post',    label:'פוסט אחרון בפרופיל', valHtml: '<span id="postDateSpinner" style="display:inline-block;width:18px;height:18px;border:2px solid rgba(249,115,22,.3);border-top-color:#f97316;border-radius:50%;animation:spin .9s linear infinite;vertical-align:middle"></span>', cls: 'sm', tileId:'tile-post' },
         { icon:'⊙',  iconCls:'ic-status',  label:'סטטוס עסק',           valHtml: escHtml(openNowVal),               cls: openCls },
         { icon: contactIconChar, iconCls:'ic-contact', label: contactLabel, valHtml: contactValHtml,                 cls: contactCls }
       ];
       document.getElementById('analysisItems').innerHTML = cards.map(function(item, i) {
         var valClass = 'analysis-item-val'+(item.cls?' '+item.cls:'');
-        return '<div class="analysis-item" style="animation-delay:'+(i*0.1)+'s">'
+        return '<div class="analysis-item"'+(item.tileId?' id="'+item.tileId+'"':'')+' style="animation-delay:'+(i*0.1)+'s">'
           +'<span class="analysis-item-icon '+item.iconCls+'">'+item.icon+'</span>'
           +'<span class="analysis-item-label">'+item.label+'</span>'
-          +'<span class="'+valClass+'">'+item.valHtml+'</span>'
+          +'<span class="'+valClass+'" id="'+(item.tileId?item.tileId+'-val':'')+'">'+item.valHtml+'</span>'
           +'</div>';
       }).join('');
+
+      // ── Async: שלוף תאריך פוסט אחרון מגוגל ──
+      (function loadGbpPost(placeId) {
+        fetch('/api/gbp-post?placeId=' + encodeURIComponent(placeId) + '&_t=' + Date.now(), { cache: 'no-store' })
+          .then(function(r){ return r.json(); })
+          .then(function(d){
+            var valEl = document.getElementById('tile-post-val');
+            if (!valEl) return;
+            if (d.postTimestamp) {
+              var dt = new Date(d.postTimestamp * 1000);
+              var dd2 = String(dt.getDate()).padStart(2,'0');
+              var mm2 = String(dt.getMonth()+1).padStart(2,'0');
+              var yy2 = dt.getFullYear();
+              valEl.textContent = dd2+'/'+mm2+'/'+yy2;
+              valEl.className = 'analysis-item-val date';
+            } else {
+              valEl.textContent = 'אין פוסטים בפרופיל';
+              valEl.className = 'analysis-item-val sm';
+            }
+          })
+          .catch(function(){
+            var valEl = document.getElementById('tile-post-val');
+            if (valEl) { valEl.textContent = 'לא זמין'; valEl.className = 'analysis-item-val sm'; }
+          });
+      })(biz.placeId);
 
       // כרטיס Top 3 - אם דירוג או ביקורות נמוכים מסף
       var rankCard = document.getElementById('localRankCard');
