@@ -416,6 +416,7 @@ body{
 .analysis-item-icon.ic-rating  { background:rgba(249,185,21,.2);  border:2px solid rgba(249,185,21,.55);  color:#fff; }
 .analysis-item-icon.ic-reviews { background:rgba(34,211,238,.2);  border:2px solid rgba(34,211,238,.55);  color:#fff; }
 .analysis-item-icon.ic-time    { background:rgba(167,139,250,.22); border:2px solid rgba(167,139,250,.55); color:#fff; }
+.analysis-item-icon.ic-post    { background:rgba(249,115,22,.2);   border:2px solid rgba(249,115,22,.55);  color:#fff; }
 .analysis-item-label{
   font-size:14px;color:rgba(250,248,244,.72);font-weight:700;
   line-height:1.35;display:block;margin-bottom:10px;
@@ -841,6 +842,7 @@ body{
 .s3-card-icon.ic-rating  {background:rgba(249,185,21,.2);border:2px solid rgba(249,185,21,.4);color:#f9b915}
 .s3-card-icon.ic-reviews {background:rgba(34,211,238,.2);border:2px solid rgba(34,211,238,.4);color:#22d3ee}
 .s3-card-icon.ic-time    {background:rgba(167,139,250,.2);border:2px solid rgba(167,139,250,.4);color:#a78bfa}
+.s3-card-icon.ic-post    {background:rgba(249,115,22,.2); border:2px solid rgba(249,115,22,.4); color:#f97316}
 .s3-card-icon.ic-stability{background:rgba(74,222,128,.2);border:2px solid rgba(74,222,128,.4);color:#4ade80}
 .s3-card-label{font-size:13px;color:rgba(250,248,244,.7);font-weight:700;margin-bottom:8px;display:block}
 .s3-card-val{font-size:clamp(22px,4vw,30px);font-weight:900;display:block;color:#fff;line-height:1.2}
@@ -2646,7 +2648,7 @@ function openAnalysis() {
       var rating   = biz.rating;
       var reviews  = biz.count;
 
-      // חישוב תאריך אמיתי מ-Unix timestamp — מציג DD/MM/YYYY בלבד
+      // חישוב תאריך אמיתי מ-Unix timestamp — מציג DD/MM/YYYY
       var lastReviewDisplay = 'לא זמין';
       if (biz.lastReviewTs) {
         var d = new Date(biz.lastReviewTs * 1000);
@@ -2654,20 +2656,21 @@ function openAnalysis() {
         var mm = String(d.getMonth()+1).padStart(2,'0');
         var yyyy = d.getFullYear();
         lastReviewDisplay = dd+'/'+mm+'/'+yyyy;
-      } else if (biz.lastReview) {
-        lastReviewDisplay = biz.lastReview;
       }
+      // זמן יחסי לביקורת האחרונה (לפני X זמן)
+      var lastReviewRelative = biz.lastReview || (lastReviewDisplay !== 'לא זמין' ? lastReviewDisplay : 'לא זמין');
 
       document.getElementById('analysisName').textContent = biz.name;
 
       var ratingCls = rating >= 4.5 ? 'good' : rating >= 4.0 ? 'warn' : 'bad';
 
-      // 3 כרטיסים ויזואליים בראש — כרטיס שיפור מוצג בנפרד מתחת
+      // 4 כרטיסים ויזואליים בראש — כרטיס שיפור מוצג בנפרד מתחת
       // אייקונים: תווים Unicode שמגיבים ל-CSS color לתצוגה אחידה
       var cards = [
         { icon:'★', iconCls:'ic-rating',  label:'דירוג נוכחי בגוגל',       val: rating.toFixed(1)+' / 5.0', cls: ratingCls },
         { icon:'◉', iconCls:'ic-reviews', label:'כמות ההמלצות שלכם בגוגל', val: reviews.toLocaleString(),   cls: '' },
-        { icon:'◑', iconCls:'ic-time',    label:'ביקורת אחרונה',            val: lastReviewDisplay,          cls: 'date' }
+        { icon:'◑', iconCls:'ic-time',    label:'ביקורת אחרונה',            val: lastReviewRelative,         cls: 'date' },
+        { icon:'◈', iconCls:'ic-post',    label:'פוסט אחרון בפרופיל',       val: lastReviewDisplay !== 'לא זמין' ? lastReviewDisplay : 'אין פעילות פוסטים בפרופיל', cls: lastReviewDisplay !== 'לא זמין' ? 'date' : 'sm' }
       ];
       document.getElementById('analysisItems').innerHTML = cards.map(function(item, i) {
         var valClass = 'analysis-item-val'+(item.cls?' '+item.cls:'')+((!item.cls && item.val.length>10)?' sm':'');
@@ -2743,6 +2746,7 @@ function openAnalysis() {
         rating: rating,
         reviews: reviews,
         lastReviewDisplay: lastReviewDisplay,
+        lastReviewRelative: lastReviewRelative,
         ratingCls: ratingCls
       };
 
@@ -2878,7 +2882,8 @@ function openResultsPage() {
       var s3cards = [
         { icon:'★', cls:'ic-rating',    label:'דירוג נוכחי בגוגל', val: (snap2.rating||0).toFixed(1)+' / 5.0', vcls: snap2.ratingCls||'' },
         { icon:'◉', cls:'ic-reviews',   label:'כמות ההמלצות שלכם בגוגל', val: (snap2.reviews||0).toLocaleString(),    vcls: '' },
-        { icon:'◑', cls:'ic-time',      label:'ביקורת אחרונה',            val: snap2.lastReviewDisplay||'לא זמין',     vcls: '' },
+        { icon:'◑', cls:'ic-time',      label:'ביקורת אחרונה',            val: snap2.lastReviewRelative||'לא זמין',    vcls: '' },
+        { icon:'◈', cls:'ic-post',      label:'פוסט אחרון בפרופיל',       val: (snap2.lastReviewDisplay && snap2.lastReviewDisplay!=='לא זמין') ? snap2.lastReviewDisplay : 'אין פעילות פוסטים בפרופיל', vcls: (snap2.lastReviewDisplay && snap2.lastReviewDisplay!=='לא זמין') ? '' : 'sm' },
         { icon:'◆', cls:'ic-stability', label:'המלצות לשיפור וקידום הדירוג', val: 'יופיעו בדוח המפורט',               vcls: 'sm' }
       ];
       cardsEl.innerHTML = s3cards.map(function(c,i){
